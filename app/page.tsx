@@ -1,5 +1,5 @@
-import ColorPalette from "@/app/components/ColorPalette";
-
 export default function Home() {
-    return <ColorPalette />;
+    return <div>
+        <h1>Hello World</h1>
+    </div>
 }
