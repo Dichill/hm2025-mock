@@ -1,55 +1,57 @@
-name: Build and Deploy Frontend (web2025)
+name: Build & Deploy Frontend (web2025)
 
 on:
-    push:
-        branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-    build-and-publish:
-        runs-on: ubuntu-latest
+  build-and-publish:
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-            - name: Log in to GHCR
-              run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+      - name: Log in to GHCR
+        run: echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-            - name: Build and Push Docker Image
-              run: |
-                  echo "${{ secrets.ENV_PROD_FRONTEND }}" > .env.production
-                  docker build -t ghcr.io/hackmesa/web2025:latest .
-                  docker push ghcr.io/hackmesa/web2025:latest
+      - name: Build and Push Docker Image
+        env:
+          GHCR_REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          echo "${{ secrets.ENV_PROD_FRONTEND }}" > .env.production
+          IMAGE_NAME=ghcr.io/hackmesa/web2025:latest
+          docker build -t $IMAGE_NAME .
+          docker push $IMAGE_NAME
 
-    deploy:
-        needs: build-and-publish
-        runs-on: ubuntu-latest
+  deploy:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Decode SSH Key
-              run: |
-                  echo "${{ secrets.EC2_KEY_B64 }}" | base64 -d > ec2_key
-                  chmod 600 ec2_key
+    steps:
+      - name: Decode SSH Key
+        run: |
+          echo "${{ secrets.EC2_KEY_B64 }}" | base64 -d > ec2_key
+          chmod 600 ec2_key
 
-            - name: Deploy via SSH
-              uses: appleboy/ssh-action@v1.0.0
-              with:
-                  host: ${{ secrets.EC2_HOST }}
-                  username: ubuntu
-                  key_path: ec2_key
-                  script: |
-                      cd /home/ubuntu/app/web2025
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key_path: ec2_key
+          script: |
+            echo "📝 Writing .env.production"
+            mkdir -p /home/ubuntu/app/web2025
+            cat > /home/ubuntu/app/web2025/.env.production <<EOF
+${{ secrets.ENV_PROD_FRONTEND }}
+EOF
 
-                      echo "📝 Writing .env.production"
-                      cat > .env.production <<EOF
-                      ${{ secrets.ENV_PROD_FRONTEND }}
-                      EOF
+            echo "🔐 Logging into GHCR"
+            echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
+            echo "📦 Pulling latest image"
+            cd /home/ubuntu/app/web2025
+            docker-compose pull web2025
 
-                      echo "🔐 Logging into GHCR"
-                      echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-
-                      echo "📦 Pulling latest image"
-                      docker-compose pull web2025
-
-                      echo "🚀 Restarting container"
-                      docker-compose up -d web2025
+            echo "🚀 Restarting container"
+            docker-compose up -d web2025
