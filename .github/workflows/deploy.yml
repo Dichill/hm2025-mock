@@ -17,10 +17,8 @@ jobs:
             - name: Build and Push Docker Image
               run: |
                   echo "${{ secrets.ENV_PROD_FRONTEND }}" > .env.production
-                  LOWERCASE_OWNER=$(echo "$GHCR_REPO_OWNER" | tr '[:upper:]' '[:lower:]')
-                  IMAGE_NAME=ghcr.io/$LOWERCASE_OWNER/web2025:latest
-                  docker build -t $IMAGE_NAME .
-                  docker push $IMAGE_NAME
+                  docker build -t ghcr.io/hackmesa/web2025:latest .
+                  docker push ghcr.io/hackmesa/web2025:latest
 
     deploy:
         needs: build-and-publish
