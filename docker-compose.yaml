@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web2025:
-    image: ghcr.io/dichill/web2025:latest
+    image: ghcr.io/hackmesa/web2025:latest
     ports:
       - "3000:3000"
     env_file: .env.production
