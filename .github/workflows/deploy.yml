@@ -46,13 +46,8 @@ jobs:
                       EOF
 
                       echo "🧹 Cleaning old container & image..."
-
-            CID=$(docker ps -aq --filter "name=web2025")
-            [ -n "$CID" ] && docker rm -f $CID
-
-            IID=$(docker images -q app_web2025)
-            [ -n "$IID" ] && docker rmi -f $IID
-
+                      docker rm -f $(docker ps -aq --filter "name=web2025") || true
+                      docker rmi -f $(docker images -q "$IMAGE_NAME") || true
 
                       echo "🐳 Rebuilding and restarting container..."
                       cd "$BASE_DIR"
