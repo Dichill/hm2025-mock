@@ -1,0 +1,63 @@
+name: Build & Deploy Frontend (web2025-dev)
+
+on:
+    push:
+        branches: [dev]
+
+jobs:
+    build-and-publish:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Log in to GHCR
+              run: echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+            - name: Build and Push Dev Docker Image
+              run: |
+                  echo "${{ secrets.ENV_DEV_FRONTEND }}" > .env.dev
+                  IMAGE_NAME=ghcr.io/hackmesa/web2025:dev
+                  docker build -t $IMAGE_NAME .
+                  docker push $IMAGE_NAME
+
+    deploy:
+        needs: build-and-publish
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Decode SSH Key
+              run: |
+                  echo "${{ secrets.EC2_KEY_B64 }}" | base64 -d > ec2_key
+                  chmod 600 ec2_key
+
+            - name: Deploy to EC2 (Dev)
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  key_path: ec2_key
+                  script: |
+                      echo "📝 Writing .env.dev"
+                      mkdir -p /home/ubuntu/app/dev
+                      cat > /home/ubuntu/app/dev/.env.dev <<EOF
+                      ${{ secrets.ENV_DEV_FRONTEND }}
+                      EOF
+
+                      cd /home/ubuntu/app/dev
+
+                      echo "🧼 Cleaning old container and image (if any)..."
+                      CID=$(docker ps -aq --filter "name=web2025-dev")
+                      [ -n "$CID" ] && docker rm -f $CID || true
+
+                      IID=$(docker images -q ghcr.io/hackmesa/web2025:dev)
+                      [ -n "$IID" ] && docker rmi -f $IID || true
+
+                      echo "🔐 Logging into GHCR"
+                      echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+                      echo "📦 Pulling latest image"
+                      docker-compose pull web2025-dev
+
+                      echo "🚀 Restarting container"
+                      docker-compose up -d web2025-dev
