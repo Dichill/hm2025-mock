@@ -40,7 +40,10 @@ jobs:
                       cd /home/ubuntu/app/web2025
 
                       echo "📝 Writing .env.production"
-                      cat > .env.production <<EOF ${{ secrets.ENV_PROD_FRONTEND }} EOF
+                      cat > .env.production <<EOF
+                      ${{ secrets.ENV_PROD_FRONTEND }}
+                      EOF
+
 
                       echo "🔐 Logging into GHCR"
                       echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
