@@ -46,11 +46,19 @@ jobs:
                       ${{ secrets.ENV_PROD_FRONTEND }}
                       EOF
 
+                      cd /home/ubuntu/app/web2025
+
+                      echo "🧼 Cleaning old container and image (if any)..."
+                      CID=$(docker ps -aq --filter "name=web2025")
+                      [ -n "$CID" ] && docker rm -f $CID || true
+
+                      IID=$(docker images -q ghcr.io/hackmesa/web2025:latest)
+                      [ -n "$IID" ] && docker rmi -f $IID || true
+
                       echo "🔐 Logging into GHCR"
                       echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
                       echo "📦 Pulling latest image"
-                      cd /home/ubuntu/app/web2025
                       docker-compose pull web2025
 
                       echo "🚀 Restarting container"
