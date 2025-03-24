@@ -1,0 +1,35 @@
+#navbar {
+  z-index: 1000;
+  display: grid;
+  background-color: white;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  position: sticky;
+  top: 0;
+}
+
+#nav__logo {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+#nav__button1 {
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+#nav__button2 {
+  grid-area: 1 / 3 / 2 / 4;
+}
+
+#nav__button3 {
+  grid-area: 1 / 4 / 2 / 5;
+}
+
+#nav__button4 {
+  grid-area: 1 / 5 / 2 / 6;
+}
+
+#nav__register {
+  grid-area: 1 / 6 / 2 / 7;
+}
