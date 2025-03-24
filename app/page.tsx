@@ -4,7 +4,7 @@
 
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer"
 
-import NavBar from "./components/NavBar/NavBar"
+// import NavBar from "./components/NavBar/NavBar"
 
 import HeroHeader from "./components/HeroHeader/HeroHeader";
 
