@@ -1,10 +1,10 @@
 import Image from "next/image"
 
-const UnderConstruction = () => {
-  return (
-    <Image src="./under_construction.svg" height={80} width={80} alt="A man digging, a symbol of a webpage under construction"/>
-  )
-}
+// const UnderConstruction = () => {
+//   return (
+//     <Image src="./under_construction.svg" height={80} width={80} alt="A man digging, a symbol of a webpage under construction"/>
+//   )
+// }
 
 
 interface LogoProps {
