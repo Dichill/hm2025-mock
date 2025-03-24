@@ -4,21 +4,22 @@ import { mobile_size_reference } from "@/lib/colors";
 import { PRIMARY_COLORS } from "@/lib/colors";
 import Logo from "../Logo/Logo";
 import MESA_Graphic from "../MESA_Graphic/MESA_Graphic";
-import { HackMESA_casing } from "@/lib/colors";
 
 const HeroHeader = () => {
   const {/* height */ width } = useWindowSize();
 
   return (
     <>
-      {width < mobile_size_reference && <Logo size={200} />}
+      {width < mobile_size_reference &&
+        <Logo size={350} />
+      }
       {width >= mobile_size_reference && <>
         <div className="mb-20 -mt-10">
-          <Logo size={300} />
+          <Logo size={500} />
         </div>
       </>}
       <header style={{ textAlign: "center", marginTop: width > mobile_size_reference ? "0em" : "4em" }}>
-        <h1 style={{ fontSize: width > mobile_size_reference ? "5em" : "2em", fontWeight: "900", color: `${PRIMARY_COLORS.GREY_432.hex}` }}>{HackMESA_casing} 2025</h1>
+        {/* <h1 style={{ fontSize: width > mobile_size_reference ? "5em" : "2em", fontWeight: "900", color: `${PRIMARY_COLORS.GREY_432.hex}` }}>{HackMESA_casing} 2025</h1> */}
         <p style={{ color: PRIMARY_COLORS.GREY_432.hex, fontSize: width > mobile_size_reference ? "2em" : "1.5em", fontWeight: "600" }}>May 10th and 11th</p>
       </header>
       <div style={{ display: "flex", justifyContent: "center" }}>

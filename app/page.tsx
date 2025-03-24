@@ -15,7 +15,7 @@ function App() {
   return (
     <>
 
-      <div className="">
+
 
         <NavBar />
 
@@ -50,7 +50,7 @@ function App() {
 
           <TrifectaGraphic />
         </footer>
-      </div>
+
     </>
   )
 }
