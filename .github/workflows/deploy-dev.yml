@@ -40,8 +40,8 @@ jobs:
                   key_path: ec2_key
                   script: |
                       echo "📝 Writing .env.dev"
-                      mkdir -p /home/ubuntu/app/dev
-                      cat > /home/ubuntu/app/dev/.env.dev <<EOF
+                      mkdir -p /home/ubuntu/app
+                      cat > /home/ubuntu/app/.env.dev <<EOF
                       ${{ secrets.ENV_DEV_FRONTEND }}
                       EOF
 
