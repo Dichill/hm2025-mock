@@ -2,7 +2,7 @@
   z-index: 1000;
   display: grid;
   background-color: white;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   grid-template-rows: 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -28,6 +28,10 @@
 
 #nav__button4 {
   grid-area: 1 / 5 / 2 / 6;
+}
+
+#nav__button4 {
+  grid-area: 1 / 6 / 2 / 7;
 }
 
 #nav__register {
