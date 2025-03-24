@@ -1,4 +1,5 @@
 name: Build & Deploy Frontend (web2025-dev)
+run-name: ${{ github.actor }} is deploying to development server 🚀
 
 on:
     push:
