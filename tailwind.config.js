@@ -1,5 +1,7 @@
+import { TAILWIND_COLORS } from "./lib/colors.ts";
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
     content: [
         "./app/**/*.{js,ts,jsx,tsx}",
         "./pages/**/*.{js,ts,jsx,tsx}",
@@ -7,18 +9,7 @@ module.exports = {
     ],
     theme: {
         extend: {
-            colors: {
-                mesa: {
-                    "warm-red": "rgb(var(--mesa-warm-red) / <alpha-value>)",
-                    grey: "rgb(var(--mesa-grey) / <alpha-value>)",
-                    "yellow-107": "rgb(var(--mesa-yellow-107) / <alpha-value>)",
-                    "yellow-116": "rgb(var(--mesa-yellow-116) / <alpha-value>)",
-                    orange: "rgb(var(--mesa-orange) / <alpha-value>)",
-                    rhodamine: "rgb(var(--mesa-rhodamine) / <alpha-value>)",
-                    purple: "rgb(var(--mesa-purple) / <alpha-value>)",
-                    green: "rgb(var(--mesa-green) / <alpha-value>)",
-                },
-            },
+            colors: TAILWIND_COLORS,
         },
     },
     plugins: [],
