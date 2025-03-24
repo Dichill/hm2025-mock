@@ -1,4 +1,5 @@
 import { PRIMARY_COLORS } from "@/lib/colors";
+import useWindowSize from "@/lib/useWindowSize";
 import { JSX, useEffect, useState } from "react";
 
 type TimeLeft = {
@@ -10,6 +11,8 @@ type TimeLeft = {
 
 
 function CountdownTimer(): JSX.Element {
+    const { width } = useWindowSize();
+
     const [timeLeft, setTimeLeft] = useState<TimeLeft>({
         days: 0,
         hours: 0,
@@ -19,7 +22,7 @@ function CountdownTimer(): JSX.Element {
     const [isComplete, setIsComplete] = useState(false);
 
     useEffect(() => {
-        const targetDate = new Date("2025-05-10T00:00:00-07:00"); // Target date: May 10, 2024 at midnight Pacific Time
+        const targetDate = new Date("2025-05-10T00:00:00-07:00"); // Target date: May 10, 2025 at midnight Pacific Time
 
         const calculateTimeLeft = () => {
             const now = new Date();
@@ -53,22 +56,56 @@ function CountdownTimer(): JSX.Element {
         );
     }
 
-    return (
-        <div style={{backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", display: "flex", justifyContent: "center", paddingBottom: "1em"}}>
-            <div style={{ width: "500px" }} className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                {Object.entries(timeLeft).map(([key, value]) => (
-                    <div key={key} className="flex flex-col items-center">
-                        <div className="text-3xl md:text-4xl font-bold rounded-xl p-4 w-full md:min-w-[100px]">
-                            {value.toString().padStart(2, "0")}
+    if (!isComplete && width > 800) {
+        return (
+            <div style={{ backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", display: "flex", justifyContent: "center", paddingBottom: "1em" }}>
+                <div style={{ width: "500px" }} className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    {Object.entries(timeLeft).map(([key, value]) => (
+                        <div key={key} className="flex flex-col items-center">
+                            <div className="text-3xl md:text-4xl font-bold rounded-xl p-4 w-full md:min-w-[100px]">
+                                {value.toString().padStart(2, "0")}
+                            </div>
+                            <div className="text-xl mt-2 text-muted-foreground capitalize text-white">
+                                {key}
+                            </div>
                         </div>
-                        <div className="text-xl mt-2 text-muted-foreground capitalize text-white">
-                            {key}
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </div>
-    );
+        );
+    } else if (!isComplete && width <= 800) {
+        return (
+            <div style={{ backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", justifyContent: "center", paddingBottom: "1em" }}>
+                <div className="">
+                    {Object.entries(timeLeft).filter(([key]) => key == "days").map(([key, value]) => (
+                        <div key={key} className="flex flex-col items-center">
+                            <div className="text-5xl font-bold rounded-xl p-4">
+                                {value.toString().padStart(2, "0")} 
+                                <p className="inline text-lg capitalize ml-5 relative -top-2">{key}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div style={{ width: "500px" }} className="grid grid-cols-3 gap-4 text-center">
+
+                    {Object.entries(timeLeft).filter(([key]) => key != "days").map(([key, value]) => (
+                        <div key={key} className="flex flex-col items-center">
+                            <div className="text-3xl md:text-4xl font-bold rounded-xl p-4 w-full md:min-w-[100px]">
+                                {value.toString().padStart(2, "0")}
+                            </div>
+                            <div className="text-xl -mt-3 text-muted-foreground text-white">
+                                {key}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    } else {
+        return (
+            <></>
+        )
+    }
 }
 
 
