@@ -122,4 +122,6 @@ export const TAILWIND_COLORS = {
     },
 };
 
+export const HackMESA_casing = "HackeMESA";
+
 export default MESA_COLORS;

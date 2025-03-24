@@ -1,32 +1,126 @@
-import MESAColorDemo from "./components/MESAColorDemo";
+"use client";
 
-export default function Home() {
+import {
+    PRIMARY_COLORS,
+    SECONDARY_COLORS,
+    TERTIARY_COLORS,
+} from "@/lib/colors";
+
+import { HackMESA_casing } from "@/lib/colors";
+import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
+import LACC_Graphic from "./components/LACC_Graphic/LACC_Graphic";
+import LACCD_Graphic from "./components/LACCD_Graphic/LACCD_Graphic";
+import MESA_Graphic from "./components/MESA_Graphic/MESA_Graphic";
+import NavBar from "./components/NavBar/NavBar";
+import SectionBase from "./components/SectionBase/SectionBase";
+
+const HeroHeader = () => {
     return (
-        <main className="min-h-screen p-6">
-            <h1 className="text-3xl font-bold mb-8">MESA Color System Demo</h1>
+        <header style={{ textAlign: "center" }}>
+            <h1
+                style={{
+                    fontSize: "5em",
+                    fontWeight: "900",
+                    color: `${PRIMARY_COLORS.GREY_432.hex}`,
+                }}
+            >
+                {HackMESA_casing} 2025
+            </h1>
+        </header>
+    );
+};
 
-            <div className="space-y-8">
-                <section className="p-4 border border-[rgb(var(--mesa-grey))] rounded-lg">
-                    <h2 className="text-xl font-semibold mb-4">
-                        Basic Examples
-                    </h2>
-                    <div className="space-y-4">
-                        <div className="bg-[rgb(var(--mesa-warm-red))] text-white p-4 rounded-md">
-                            Warm Red Background (bg-[rgb(var(--mesa-warm-red))])
-                        </div>
-                        <p className="text-[rgb(var(--mesa-purple))] text-lg p-2">
-                            This text uses MESA Purple
-                            (text-[rgb(var(--mesa-purple))])
-                        </p>
-                        <button className="bg-[rgb(var(--mesa-yellow-116))] hover:bg-[rgb(var(--mesa-orange))] text-black px-4 py-2 rounded-md transition-colors duration-300">
-                            Button with Yellow background that changes to Orange
-                            on hover
-                        </button>
-                    </div>
-                </section>
-
-                <MESAColorDemo />
+const Trifecta_Graphic = () => {
+    return (
+        <>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "20px",
+                }}
+            >
+                <div>
+                    <LACC_Graphic width={240} />
+                </div>
+                <div>
+                    <LACCD_Graphic width={180} />
+                </div>
+                <div style={{ position: "relative", top: "15px" }}>
+                    <MESA_Graphic width={260} />
+                </div>
             </div>
-        </main>
+        </>
+    );
+};
+
+function App() {
+    return (
+        <>
+            <NavBar />
+            <HeroHeader />
+
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <div style={{ display: "inline-block" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: "1em",
+                        }}
+                    >
+                        <MESA_Graphic width={150} />
+                        <p
+                            style={{
+                                fontSize: "2em",
+                                position: "relative",
+                                top: "-6px",
+                                paddingLeft: "7px",
+                            }}
+                        >
+                            sponsored Hackathon
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <Trifecta_Graphic />
+
+            <div style={{ marginTop: "3em", marginBottom: "10em" }}>
+                <CountdownTimer />
+            </div>
+            <SectionBase
+                section_title="About"
+                bg_color={`${SECONDARY_COLORS.YELLOW_107.hex}`}
+            >
+                <MESA_Graphic width={200} />
+            </SectionBase>
+            <SectionBase
+                section_title="Schedule"
+                bg_color={`${SECONDARY_COLORS.RHODAMINE_RED.hex}`}
+            >
+                stuff
+            </SectionBase>
+            <SectionBase
+                section_title="Location"
+                bg_color={`${TERTIARY_COLORS.GREEN_367.hex}`}
+            >
+                stuff
+            </SectionBase>
+            <SectionBase
+                section_title="Sponsors"
+                bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}
+            >
+                stuff
+            </SectionBase>
+
+            <footer style={{ padding: "3em" }}>
+                <Trifecta_Graphic />
+            </footer>
+        </>
     );
 }
+
+export default App;
