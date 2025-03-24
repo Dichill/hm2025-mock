@@ -34,7 +34,7 @@ jobs:
             - name: Deploy to EC2 (Dev)
               uses: appleboy/ssh-action@v1.0.0
               with:
-                  host: ${{ secrets.EC2_HOST }}
+                  host: ${{ secrets.DEV_EC2_HOST }}
                   username: ${{ secrets.SSH_USERNAME }}
                   key_path: ec2_key
                   script: |
@@ -44,7 +44,7 @@ jobs:
                       ${{ secrets.ENV_DEV_FRONTEND }}
                       EOF
 
-                      cd /home/ubuntu/app/dev
+                      cd /home/ubuntu/app
 
                       echo "🧼 Cleaning old container and image (if any)..."
                       CID=$(docker ps -aq --filter "name=web2025-dev")
