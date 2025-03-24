@@ -13,7 +13,7 @@ import useWindowSize from "@/lib/useWindowSize"
 
 
 
-export const mobile_size_reference = 800;
+const mobile_size_reference = 800;
 
 const HeroHeader = () => {
   const {/* height */ width } = useWindowSize();
