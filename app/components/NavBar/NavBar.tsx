@@ -9,12 +9,12 @@ import { motion } from "framer-motion";
 //Components and Interfaces prefixed with Mobile- are mobile only;
 //Components and Interfaces without prefix Mobile- are web only
 
-interface MobileMenuButtonProps {
+interface MobileNavProps {
     open_nav: Dispatch<SetStateAction<boolean>>,
 
 }
 
-const MobileMenuButton = (props: MobileMenuButtonProps) => {
+const MobileNav = (props: MobileNavProps) => {
     const [isPressed, setIsPressed] = useState(false);
     const [isPressed2, setIsPressed2] = useState(false);
 
@@ -115,15 +115,12 @@ const NavBar = () => {
             set_mobile_nav_open(false);
         }
 
-
-
-
         //large screen
         return (
             <>
                 <div id="nav__container" className="sticky top-2 z-100 bg-white shadow-lg rounded-lg m-2">
                     <div className="flex content-center items-center">
-                        <h4 style={{ color: PRIMARY_COLORS.GREY_432.hex }} id="nav__logo" className="text-center">{HackMESA_casing}</h4>
+                        <h4 style={{ color: PRIMARY_COLORS.GREY_432.hex }} id="nav__logo" className="text-center text-xl text-justify w-full">{HackMESA_casing}</h4>
                     </div>
                     <nav id="nav__routes" className="inline" >
                         <NavBarButton text="About" />
@@ -161,15 +158,13 @@ const NavBar = () => {
         return (
             <>
                 {!mobileNav_open && <>
-
-
-                    <MobileMenuButton open_nav={set_mobile_nav_open} />
-
-
-
-
+                    <MobileNav open_nav={set_mobile_nav_open} />
                 </>}
                 {mobileNav_open &&
+                    <>
+                    <div className="h-23">
+                        {/* This is here just so that there is no jumpiness when the mobile nav is opened */}
+                    </div>
                     <div style={{ backgroundColor: PRIMARY_COLORS.WARM_RED.hex }} className="fixed top-0 z-1000 w-full">
                         <div className="flex ml-10 h-18 block items-center justify-end">
                             <button className="border-solid border-black border-1 mr-6 h-13 w-13" onClick={() => set_mobile_nav_open(false)} >X</button>
@@ -183,10 +178,8 @@ const NavBar = () => {
                         <MobileNavButton close_nav={set_mobile_nav_open} text="Sponsors" />
                         <MobileNavDivider />
                         <MobileNavButton close_nav={set_mobile_nav_open} text="FAQ" />
-
-
-
-                    </div>}
+                    </div>
+                    </>}
             </>
         )
     }

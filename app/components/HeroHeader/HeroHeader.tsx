@@ -1,7 +1,6 @@
 
 import useWindowSize from "@/lib/useWindowSize";
 import { mobile_size_reference } from "@/lib/colors";
-import { PRIMARY_COLORS } from "@/lib/colors";
 import Logo from "../Logo/Logo";
 import MESA_Graphic from "../MESA_Graphic/MESA_Graphic";
 
@@ -18,16 +17,20 @@ const HeroHeader = () => {
           <Logo size={500} />
         </div>
       </>}
-      <header style={{ textAlign: "center", marginTop: width > mobile_size_reference ? "0em" : "4em" }}>
-        {/* <h1 style={{ fontSize: width > mobile_size_reference ? "5em" : "2em", fontWeight: "900", color: `${PRIMARY_COLORS.GREY_432.hex}` }}>{HackMESA_casing} 2025</h1> */}
-        <p style={{ color: PRIMARY_COLORS.GREY_432.hex, fontSize: width > mobile_size_reference ? "2em" : "1.5em", fontWeight: "600" }}>May 10th and 11th</p>
-      </header>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ display: "inline-block" }}>
-          <div style={{ display: width > mobile_size_reference ? "flex" : "block", justifyContent: "center", alignItems: "center", padding: "1em" }}>
-            {width > mobile_size_reference && <MESA_Graphic width={150} />}
-            {width <= mobile_size_reference && <div style={{ display: "flex", justifyContent: "center" }}><MESA_Graphic width={150} /></div>}
-            <p style={{ fontSize: width > mobile_size_reference ? "2em" : "1em", position: "relative", top: "-6px", paddingLeft: "7px" }}>sponsored, LACCD student Hackathon</p>
+      <div className="text-center" style={{ marginTop: width > mobile_size_reference ? "0em" : "4em" }}>
+        <p className="font-bold p-5" style={{ fontSize: width > mobile_size_reference ? "6em" : "4em" }}>May 9th-10th</p>
+      </div>
+      <div className="flex justify-center mb-10">
+        <div className="inline-block">
+          <div className="block justify-center items-center padding-2">
+              <>
+                <div className="-ml-2 flex flex-row">
+                  <MESA_Graphic width={150} />
+                  <p className="inline text-4xl relative mt-[10] pl-1 h-10">sponsored</p>
+                </div>
+                <p className="text-6xl -mt-5 font-black text-center">Hackathon</p>
+                <p className="text-2xl text-center font-black">open to LACCD students</p>
+                </>
           </div>
         </div>
       </div>
