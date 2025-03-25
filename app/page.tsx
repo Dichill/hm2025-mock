@@ -21,6 +21,9 @@ function App() {
       <HeroHeader />
 
       <CountdownTimer />
+      <div className="mb-15">
+
+      </div>
      
     </>
   )
