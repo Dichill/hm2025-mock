@@ -1,7 +1,6 @@
 
 import useWindowSize from "@/lib/useWindowSize";
 import { mobile_size_reference } from "@/lib/colors";
-import { PRIMARY_COLORS } from "@/lib/colors";
 import Logo from "../Logo/Logo";
 import MESA_Graphic from "../MESA_Graphic/MESA_Graphic";
 
