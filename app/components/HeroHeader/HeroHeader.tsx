@@ -2,7 +2,7 @@
 import useWindowSize from "@/lib/useWindowSize";
 import { mobile_size_reference } from "@/lib/colors";
 import Logo from "../Logo/Logo";
-import MESA_Graphic from "../MESA_Graphic/MESA_Graphic";
+// import MESA_Graphic from "../MESA_Graphic/MESA_Graphic";
 
 const HeroHeader = () => {
   const {/* height */ width } = useWindowSize();
