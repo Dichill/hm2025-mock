@@ -117,7 +117,7 @@ const NavBar = () => {
 
         //large screen
         return (
-            <>
+            <div className="sticky top-2 z-100" style={{backgroundColor: "#ea4d99"}}>
                 <div id="nav__container" className="sticky top-2 z-100 bg-white shadow-lg rounded-lg m-2">
                     <div className="flex content-center items-center">
                         <h4 style={{ color: PRIMARY_COLORS.GREY_432.hex }} id="nav__logo" className="text-center text-xl text-justify w-full">{HackMESA_casing}</h4>
@@ -151,12 +151,12 @@ const NavBar = () => {
                         </p>
                     </motion.button>
                 </div>
-            </>
+            </div>
         );
     } else {
         //small screen
         return (
-            <>
+            <div className="sticky top-0 z-100">
                 {!mobileNav_open && <>
                     <MobileNav open_nav={set_mobile_nav_open} />
                 </>}
@@ -180,7 +180,7 @@ const NavBar = () => {
                         <MobileNavButton close_nav={set_mobile_nav_open} text="FAQ" />
                     </div>
                     </>}
-            </>
+            </div>
         )
     }
 }

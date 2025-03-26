@@ -59,7 +59,7 @@ function CountdownTimer(): JSX.Element {
     if (!isComplete && width > 800) {
         return (
             <div style={{ backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", display: "flex", justifyContent: "center", paddingBottom: "1em" }}>
-                <div style={{ width: "500px" }} className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div style={{ width: "100%" }} className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     {Object.entries(timeLeft).map(([key, value]) => (
                         <div key={key} className="flex flex-col items-center">
                             <div className="text-3xl md:text-4xl font-bold rounded-xl p-4 w-full md:min-w-[100px]">
