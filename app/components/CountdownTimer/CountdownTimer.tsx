@@ -86,7 +86,7 @@ function CountdownTimer(): JSX.Element {
                         </div>
                     ))}
                 </div>
-                <div style={{ width: "500px" }} className="grid grid-cols-3 gap-4 text-center">
+                <div className="grid grid-cols-3 gap-4 text-center">
 
                     {Object.entries(timeLeft).filter(([key]) => key != "days").map(([key, value]) => (
                         <div key={key} className="flex flex-col items-center">
