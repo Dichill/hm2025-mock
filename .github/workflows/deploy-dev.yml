@@ -17,7 +17,7 @@ jobs:
 
             - name: Build and Push Dev Docker Image
               run: |
-                  echo "${{ secrets.ENV_DEV_FRONTEND }}" > .env.dev
+                  echo "${{ secrets.ENV_DEV_FRONTEND }}" > .env.frontend.dev
                   IMAGE_NAME=ghcr.io/hackmesa/web2025:dev
                   docker build -t $IMAGE_NAME .
                   docker push $IMAGE_NAME
@@ -39,9 +39,9 @@ jobs:
                   username: ${{ secrets.SSH_USERNAME }}
                   key_path: ec2_key
                   script: |
-                      echo "📝 Writing .env.dev"
+                      echo "📝 Writing .env.frontend.dev"
                       mkdir -p /home/ubuntu/app
-                      cat > /home/ubuntu/app/.env.dev <<EOF
+                      cat > /home/ubuntu/app/.env.frontend.dev <<EOF
                       ${{ secrets.ENV_DEV_FRONTEND }}
                       EOF
 
