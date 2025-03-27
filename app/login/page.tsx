@@ -1,8 +1,7 @@
 "use client";
 
+import supabase from "@/lib/supabase/supabase-client";
 import { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "@/types/supabase";
 
 export default function LoginPage() {
     const [email, setEmail] = useState<string>("");
@@ -10,7 +9,6 @@ export default function LoginPage() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const supabase = createClientComponentClient<Database>();
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
