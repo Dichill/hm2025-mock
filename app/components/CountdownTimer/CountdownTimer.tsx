@@ -58,7 +58,7 @@ function CountdownTimer(): JSX.Element {
 
     if (!isComplete && width > 800) {
         return (
-            <div style={{ backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", display: "flex", justifyContent: "center", paddingBottom: "1em" }}>
+            <div className="shadow-xl" style={{ backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", display: "flex", justifyContent: "center", paddingBottom: "1em" }}>
                 <div style={{ width: "100%" }} className="grid grid-cols-2 md:  grid-cols-4 gap-4 text-center">
                     {Object.entries(timeLeft).map(([key, value]) => (
                         <div key={key} className="flex flex-col items-center">
@@ -76,7 +76,7 @@ function CountdownTimer(): JSX.Element {
     } else if (!isComplete && width <= 800) {
         return (
 
-            <div style={{ backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", justifyContent: "center", paddingBottom: "1em" }}>
+            <div className="shadow-xl" style={{ backgroundColor: `${PRIMARY_COLORS.WARM_RED.hex}`, color: "white", justifyContent: "center", paddingBottom: "1em" }}>
                 <div className="">
                     {Object.entries(timeLeft).filter(([key]) => key == "days").map(([key, value]) => (
                         <div key={key} className="flex flex-col items-center">

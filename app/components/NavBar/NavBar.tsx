@@ -46,7 +46,7 @@ const MobileNav = (props: MobileNavProps) => {
                     key="mob-nav__register"
                     initial={false}
                     className="float-right m-4 mt-5 border-2 border-solid text-white h-12 w-30 rounded-md bg-gray-50 text-black drop-shadow-lg transition-colors duration-150 hover:bg-gray-200"
-                    style={{ border: "2px solid #af4029" }}
+                    style={{ border: "2px solid white" }}
                     whileTap={{ scale: 0.95 }}
                     animate={{ backgroundColor: isPressed2 ? "#af4029" : `${SECONDARY_COLORS.ORANGE_151.hex}` }} // Darkens when pressed
                     transition={{ duration: 0.05 }}
@@ -117,8 +117,8 @@ const NavBar = () => {
 
         //large screen
         return (
-            <div className="sticky top-2 z-100" style={{backgroundColor: "#ea4d99"}}>
-                <div id="nav__container" className="sticky top-2 z-100 bg-white shadow-lg rounded-lg m-2">
+            <div className="sticky top-2 z-100">
+                <div id="nav__container" className="sticky z-100 bg-white shadow-lg rounded-lg m-2">
                     <div className="flex content-center items-center">
                         <h4 style={{ color: PRIMARY_COLORS.GREY_432.hex }} id="nav__logo" className="text-center text-xl text-justify w-full">{HackMESA_casing}</h4>
                     </div>

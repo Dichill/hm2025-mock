@@ -10,7 +10,7 @@ const TrifectaGraphic = () => {
   if (width > mobile_size_reference) {
     return (
       <>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px" }}>
+        <div className="opacity-50" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px" }}>
           <div><LACC_Graphic width={240} /></div>
           <div><LACCD_Graphic width={180} /></div>
           <div style={{ position: "relative", top: "15px" }}><MESA_Graphic width={260} /></div>
@@ -20,7 +20,7 @@ const TrifectaGraphic = () => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px" }}>
+      <div className="opacity-50" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px" }}>
         <div><LACC_Graphic width={100} /></div>
         <div><LACCD_Graphic width={100} /></div>
         <div style={{ position: "relative", top: "9px" }}><MESA_Graphic width={110} /></div>

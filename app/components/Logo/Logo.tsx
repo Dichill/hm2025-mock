@@ -8,7 +8,8 @@
 
 
 interface LogoProps {
-  size: number
+  size: number,
+  opacity: string
 }
 
 const Logo = (props: LogoProps) => {
@@ -23,7 +24,7 @@ const Logo = (props: LogoProps) => {
 
   // return (
     <div className="flex justify-center items-center -mb-30">
-      <img style={{opacity: "0%"}} width={props.size} src="./hackMESA_logo_1.png" alt="HackMESA 2025 Logo; the logo has a cityscape, circuit designs, and it says 'Los Angeles Community College District, 2025 HackMESA.'" />
+      <img style={{opacity: props.opacity}} width={props.size} src="./hackMESA_logo_1.png" alt="HackMESA 2025 Logo; the logo has a cityscape, circuit designs, and it says 'Los Angeles Community College District, 2025 HackMESA.'" />
 
     </div>
   )

@@ -16,7 +16,9 @@ function App() {
   const { width } = useWindowSize();
 
   return (
-    <div style={{backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex}}>
+  <>
+  
+    <div className="relative -top-10" style={{backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex}}>
 
 
 
@@ -28,7 +30,7 @@ function App() {
       <div className="p-10">
         <TrifectaGraphic />
       </div>
-      <SectionBase section_title="About" bg_color={`${SECONDARY_COLORS.YELLOW_107.hex}`} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
+      <SectionBase height={"100vh"} section_title="About" bg_color={`${SECONDARY_COLORS.YELLOW_107.hex}`} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
     
 
         {width > mobile_size_reference &&
@@ -65,21 +67,21 @@ function App() {
 
 
       </SectionBase>
-      <SectionBase section_title="Schedule" bg_color={`${SECONDARY_COLORS.RHODAMINE_RED.hex}`} >
+      <SectionBase  height={"1em"} section_title="Schedule" bg_color={`${SECONDARY_COLORS.RHODAMINE_RED.hex}`} >
         {" "}
       </SectionBase>
-      <SectionBase section_title="Location" bg_color={`${TERTIARY_COLORS.GREEN_367.hex}`}>
+      <SectionBase height={"1em"} section_title="Location" bg_color={`${TERTIARY_COLORS.GREEN_367.hex}`}>
         {" "}
       </SectionBase>
-      <SectionBase section_title="Sponsors" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
-        {" "}
-      </SectionBase>
-
-      <SectionBase section_title="FAQ" bg_color={`${PRIMARY_COLORS.WARM_RED.hex}`}>
+      <SectionBase height={"1em"} section_title="Sponsors" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
         {" "}
       </SectionBase>
 
-      <SectionBase section_title="Team" bg_color={"white"} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
+      <SectionBase height={"1em"} section_title="FAQ" bg_color={`${PRIMARY_COLORS.WARM_RED.hex}`}>
+        {" "}
+      </SectionBase>
+
+      <SectionBase height={"1em"} section_title="Team" bg_color={"white"} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
         {" "}
       </SectionBase>
 
@@ -89,6 +91,8 @@ function App() {
       </footer>
 
     </div>
+  
+  </>
   )
 }
 

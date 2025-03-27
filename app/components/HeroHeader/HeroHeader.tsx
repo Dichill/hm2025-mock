@@ -7,18 +7,24 @@ import Logo from "../Logo/Logo";
 const HeroHeader = () => {
   const {/* height */ width } = useWindowSize();
 
+  let variable_style;
+
+  if (width > mobile_size_reference) {
+    variable_style = "bg-[url(/BG_sunset_sketch.jpg)] bg-cover bg-center"
+  } else {
+    variable_style = "bg-[url(/sunset_sketch1.jpg)] bg-cover bg-center"
+  }
+
   return (
-    <div className="bg-[url(/sunset_sketch1.jpg)] bg-cover bg-center">
+    <div className={variable_style}>
       {width < mobile_size_reference &&
-        <Logo size={350} />
+        <Logo opacity="0%" size={350} />
       }
       {width >= mobile_size_reference && <>
         <div className="mb-4 -mt-10">
-          <Logo size={500} />
+          <Logo opacity="100%" size={500} />
         </div>
       </>}
-
-
       <div className="text-center -mb-35" style={{ marginTop: width > mobile_size_reference ? "0em" : "4em" }}>
         <p className="font-bold" style={{ fontSize: width > mobile_size_reference ? "6em" : "4em" }}>May 9th-10th</p>
       </div>
