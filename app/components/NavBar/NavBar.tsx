@@ -1,4 +1,4 @@
-import { HackMESA_casing, mobile_size_reference, PRIMARY_COLORS, SECONDARY_COLORS } from "@/lib/colors";
+import { HackMESA_casing, mobile_size_reference, PRIMARY_COLORS, SECONDARY_COLORS, TERTIARY_COLORS } from "@/lib/colors";
 
 import "./NavBar.css"
 import useWindowSize from "@/lib/useWindowSize";
@@ -118,9 +118,9 @@ const NavBar = () => {
         //large screen
         return (
             <div className="sticky top-2 z-100">
-                <div id="nav__container" className="sticky z-100 bg-white shadow-lg rounded-lg m-2">
+                <div id="nav__container" style={{backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex}} className="sticky z-100 shadow-lg rounded-lg m-2">
                     <div className="flex content-center items-center">
-                        <h4 style={{ color: PRIMARY_COLORS.GREY_432.hex }} id="nav__logo" className="text-center text-xl text-justify w-full">{HackMESA_casing}</h4>
+                        <h4 id="nav__logo" className="text-center color-black text-xl text-justify w-full">{HackMESA_casing}</h4>
                     </div>
                     <nav id="nav__routes" className="inline" >
                         <NavBarButton text="About" />

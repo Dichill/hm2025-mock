@@ -14,7 +14,7 @@ const TrifectaGraphic = (props: TrifectaGraphicProps) => {
 
   return (
     <>
-      <section className="flex justify-center opacity-50">
+      <section className="invert flex justify-center opacity-50">
         <div className="w-[50%] h-[20vh] flex justify-around items-center p-5 box-border">
           {logos.map((logo, index) => (
             <div key={index} className="flex justify-center items-center max-w-[30%] flex-1">

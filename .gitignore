@@ -44,8 +44,3 @@ DS_Store
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-
-# uninstalling leaflet (map)
-# npm install react-leaflet leaflet
-# npm install --save @types/leaflet

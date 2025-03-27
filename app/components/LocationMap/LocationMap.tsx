@@ -1,33 +1,7 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "./leaflet.css";
-import L from "leaflet";
-
-const defaultIcon = L.icon({
-  iconUrl: "leaflet/dist/images/marker-icon.png",
-  shadowUrl: "leaflet/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-
-
-//TODO: Resolve missing png icons in the leaflet css
 const LocationMap = () => {
-  const position: [number, number] = [34.0906, -118.2918]; // Santa Monica Blvd & Vermont Ave
-
   return (
-    <div className="z-1" style={{ height: "40vh", width: "40vw" }}>
-      <MapContainer center={position} zoom={15} style={{ zIndex: 1, height: "100%", width: "100%" }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <Marker position={position} icon={defaultIcon}>
-          <Popup>Santa Monica Blvd & Vermont Ave</Popup>
-        </Marker>
-      </MapContainer>
-    </div>
-  );
-};
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3304.3544211511157!2d-118.2957693184776!3d34.08605992502113!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c757563c5ab5%3A0x160c1c4565231a5!2sStudent%20Services%20Center%2C%20Los%20Angeles%2C%20CA%2090029!5e0!3m2!1sen!2sus!4v1743065916824!5m2!1sen!2sus" width="600" height="300" style={{border:0, margin: "2em"}} allowFullScreen={false} loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+  )
+}
 
-export default LocationMap;
+export default LocationMap
