@@ -19,7 +19,7 @@ jobs:
               env:
                   GHCR_REPO_OWNER: ${{ github.repository_owner }}
               run: |
-                  echo "${{ secrets.ENV_PROD_FRONTEND }}" > .env.prod
+                  echo "${{ secrets.ENV_PROD_FRONTEND }}" > .env.frontend.prod
                   IMAGE_NAME=ghcr.io/hackmesa/web2025:latest
                   docker build -t $IMAGE_NAME .
                   docker push $IMAGE_NAME
@@ -41,9 +41,9 @@ jobs:
                   username: ${{ secrets.SSH_USERNAME }}
                   key_path: ec2_key
                   script: |
-                      echo "📝 Writing .env.prod"
+                      echo "📝 Writing .env.frontend.prod"
                       mkdir -p /home/ubuntu/app
-                      cat > /home/ubuntu/app/.env.prod <<EOF
+                      cat > /home/ubuntu/app/.env.frontend.prod <<EOF
                       ${{ secrets.ENV_PROD_FRONTEND }}
                       EOF
 
