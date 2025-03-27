@@ -18,8 +18,12 @@ jobs:
             - name: Build and Push Dev Docker Image
               run: |
                   echo "${{ secrets.ENV_DEV_FRONTEND }}" > .env.frontend
+                  source .env.frontend
                   IMAGE_NAME=ghcr.io/hackmesa/web2025:dev
-                  docker build -t $IMAGE_NAME .
+                  docker build \
+                    --build-arg NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
+                    --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY \
+                    -t $IMAGE_NAME .
                   docker push $IMAGE_NAME
 
     deploy:
