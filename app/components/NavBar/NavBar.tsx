@@ -120,7 +120,7 @@ const NavBar = () => {
             <div className="sticky top-2 z-100">
                 <div id="nav__container" style={{backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex}} className="sticky z-100 shadow-lg rounded-lg m-2">
                     <div className="flex content-center items-center">
-                        <h4 id="nav__logo" className="text-center color-black text-xl text-justify w-full">{HackMESA_casing}</h4>
+                        <h4 id="nav__logo" className="text-center color-black text-xl w-full">{HackMESA_casing}</h4>
                     </div>
                     <nav id="nav__routes" className="inline" >
                         <NavBarButton text="About" />
@@ -134,7 +134,7 @@ const NavBar = () => {
                         key="web-nav__register"
                         initial={false}
 
-                        className="float-right m-4 mt-3 border-2 border-solid text-white h-12 w-30 rounded-md bg-gray-50 text-black drop-shadow-lg transition-colors duration-150"
+                        className="float-right m-4 mt-3 border-2 border-solid text-black h-12 w-30 rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
                         style={{ border: "2px solid #af4029" }}
                         whileTap={{ scale: 0.95 }}
                         animate={{ backgroundColor: !isHovering && !isPressed ? SECONDARY_COLORS.ORANGE_151.hex : isHovering && !isPressed ? "#af4029" : "#822d18" }} // Darkens when pressed
@@ -166,7 +166,7 @@ const NavBar = () => {
                         {/* This is here just so that there is no jumpiness when the mobile nav is opened */}
                     </div>
                     <div style={{ backgroundColor: PRIMARY_COLORS.WARM_RED.hex }} className="fixed top-0 z-1000 w-full">
-                        <div className="flex ml-10 h-18 block items-center justify-end">
+                        <div className="flex ml-10 h-18 items-center justify-end">
                             <button className="border-solid border-black border-1 mr-6 h-13 w-13" onClick={() => set_mobile_nav_open(false)} >X</button>
                         </div>
                         <MobileNavButton close_nav={set_mobile_nav_open} text="About" />
@@ -184,8 +184,6 @@ const NavBar = () => {
         )
     }
 }
-
-// const nav_element_style = { height: "3em", width: "10em", margin: "1em", fontSize: "1em" };
 
 
 export default NavBar;

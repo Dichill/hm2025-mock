@@ -16,13 +16,17 @@ import Schedule from "./components/Schedule/Schedule";
 import LocationMap from "./components/LocationMap/LocationMap";
 import FAQ_component from "./components/FAQ_Component/FAQ_Component";
 
+// import "./index.css"
+
 function App() {
   const { width } = useWindowSize();
 
   return (
     <>
-
-      <div className="relative -top-10" style={{ backgroundColor: "#433966" }}>
+      <div style={{ backgroundColor: "#433966", position: 'fixed', height: "500px", top: "0", width: "100%", zIndex: -11 }}>
+        {/* This div only prevents a small white bar */}
+      </div>
+      <div className="relative" style={{ backgroundColor: "#433966" }}>
 
 
 
@@ -77,7 +81,7 @@ function App() {
           </div>
         </SectionBase>
         <SectionBase height={"50vh"} section_title="Location" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
-          <LocationMap/>
+          <LocationMap />
         </SectionBase>
         <SectionBase height={"1em"} section_title="Sponsors" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
           {" "}
@@ -109,12 +113,14 @@ function App() {
           </SectionBase>
         }
         <section className="m-10">
-          <TrifectaGraphic width={100}/>
+          <TrifectaGraphic width={100} />
         </section>
         <Footer />
 
       </div>
-
+      <div style={{ backgroundColor: "#433966", position: 'fixed', height: "100vh", bottom: "0", width: "100%", zIndex: -11 }}>
+        {/* This div only prevents a small white bar */}
+      </div>
     </>
   )
 }
