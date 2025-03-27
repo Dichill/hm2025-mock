@@ -19,8 +19,8 @@ const HeroHeader = () => {
       </>}
 
 
-      <div className="text-center -m-40" style={{ marginTop: width > mobile_size_reference ? "0em" : "4em" }}>
-        <p className="font-bold p-5 " style={{ fontSize: width > mobile_size_reference ? "6em" : "4em" }}>May 9th-10th</p>
+      <div className="text-center -mb-35" style={{ marginTop: width > mobile_size_reference ? "0em" : "4em" }}>
+        <p className="font-bold" style={{ fontSize: width > mobile_size_reference ? "6em" : "4em" }}>May 9th-10th</p>
       </div>
       <div className="flex justify-center mb-10">
         <div className="inline-block">
