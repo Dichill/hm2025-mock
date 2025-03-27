@@ -4,7 +4,10 @@ interface LACC_GraphicProps {
 
 const LACCD_Graphic = (props: LACC_GraphicProps) => {
   return (
-    <img src="./LACCD_logo_lowRes.png" style={{ width: `${props.width}px` }} alt="Logo graphic for Los Angeles Community College District" />
+
+    <img src="./LACCD_logo_lowRes.png" className="inline-block bg-blue-500" style={{ width: `${props.width}%` }} alt="Logo graphic for Los Angeles Community College District" />
+
+
   )
 }
 

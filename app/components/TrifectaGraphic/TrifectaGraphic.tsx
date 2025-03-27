@@ -1,31 +1,47 @@
-import LACCD_Graphic from "../LACCD_Graphic/LACCD_Graphic";
-import LACC_Graphic from "../LACC_Graphic/LACC_Graphic";
-import MESA_Graphic from "../MESA_Graphic/MESA_Graphic";
-import { mobile_size_reference } from "@/lib/colors";
-import useWindowSize from "@/lib/useWindowSize";
+import "./TrifectaGraphic.css"
 
-const TrifectaGraphic = () => {
-  const {/* height */ width } = useWindowSize();
+interface TrifectaGraphicProps {
+  width: number
+}
 
-  if (width > mobile_size_reference) {
-    return (
-      <>
-        <div className="opacity-50" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px" }}>
-          <div><LACC_Graphic width={240} /></div>
-          <div><LACCD_Graphic width={180} /></div>
-          <div style={{ position: "relative", top: "15px" }}><MESA_Graphic width={260} /></div>
-        </div></>
-    )
-  }
+
+//TODO: add alt text to each logo
+//TODO: add scaling capacity to props passed to this component
+const TrifectaGraphic = (props: TrifectaGraphicProps) => {
+  const logos = ["./LACC_BW_Logo.png", "LACCD_logo_lowRes.png", "MESA_logo.svg"];
+
+  console.log(props.width)
 
   return (
     <>
-      <div className="opacity-50" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px" }}>
-        <div><LACC_Graphic width={100} /></div>
-        <div><LACCD_Graphic width={100} /></div>
-        <div style={{ position: "relative", top: "9px" }}><MESA_Graphic width={110} /></div>
-      </div></>
+      <section className="flex justify-center opacity-50">
+        <div className="w-[50%] h-[20vh] flex justify-around items-center p-5 box-border">
+          {logos.map((logo, index) => (
+            <div key={index} className="flex justify-center items-center max-w-[30%] flex-1">
+              <img
+                src={logo}
+                alt={`Logo ${index + 1}`}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
   )
+
 }
 
 export default TrifectaGraphic
+
+
+
+// <div className="w-full bg-black flex justify-center">
+// <section style={{ width: "60vw" }}>
+//   <div className=" flex bg-red-500">
+//     {/* <div> */}<LACC_Graphic width={LACC_size} />{/* ß */}
+//     {/* <div> */}<LACCD_Graphic width={LACCD_size} />{/* ß */}
+//     {/* <div> */}<MESA_Graphic width={MESA_size} />{/* ß */}
+//   </div>
+// </section>
+// </div>
