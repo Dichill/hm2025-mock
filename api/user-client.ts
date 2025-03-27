@@ -9,7 +9,7 @@ if (!process.env.NEXT_PUBLIC_USER_SERVICE_URL) {
 
 export const userClient = axios.create({
     baseURL:
-        process.env.NEXT_PUBLIC_USER_SERVICE_URL! ||
+        process.env.NEXT_PUBLIC_USER_SERVICE_URL! ??
         "http://localhost:4000/auth",
     headers: {
         "Content-Type": "application/json",
