@@ -1,7 +1,7 @@
-import { HackMESA_casing, mobile_size_reference, PRIMARY_COLORS, SECONDARY_COLORS, TERTIARY_COLORS } from "@/lib/colors";
+import { HackMESA_casing, PRIMARY_COLORS, SECONDARY_COLORS, TERTIARY_COLORS } from "@/lib/colors";
 
 import "./NavBar.css"
-import useWindowSize from "@/lib/useWindowSize";
+// import useWindowSize from "@/lib/useWindowSize";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
 import { motion } from "framer-motion";
@@ -9,12 +9,11 @@ import { motion } from "framer-motion";
 //Components and Interfaces prefixed with Mobile- are mobile only;
 //Components and Interfaces without prefix Mobile- are web only
 
-interface MobileNavProps {
-    open_nav: Dispatch<SetStateAction<boolean>>,
-
+interface MobileNavClosed_Props {
+    open_nav: Dispatch<SetStateAction<boolean>>
 }
 
-const MobileNav = (props: MobileNavProps) => {
+const MobileNavClosed = (props: MobileNavClosed_Props) => {
     const [isPressed, setIsPressed] = useState(false);
     const [isPressed2, setIsPressed2] = useState(false);
 
@@ -62,14 +61,41 @@ const MobileNav = (props: MobileNavProps) => {
 
             </div></>
     );
-};
+}
 
-interface MobileNavButtonProps {
+interface MobileNavOpen_Props {
+    set_mobile_nav_open: Dispatch<SetStateAction<boolean>>
+}
+
+const MobileNavOpen = (props: MobileNavOpen_Props) => {
+    return (
+        <>
+            <div className="h-23">
+                {/* This is here just so that there is no jumpiness when the mobile nav is opened */}
+            </div>
+            <div style={{ backgroundColor: PRIMARY_COLORS.WARM_RED.hex }} className="fixed top-0 z-1000 w-full">
+                <div className="flex ml-10 h-18 items-center justify-end">
+                    <button className="border-solid border-black border-1 mr-6 h-13 w-13" onClick={() => props.set_mobile_nav_open(false)} >X</button>
+                </div>
+                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="About" />
+                <MobileNavDivider />
+                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="Schedule" />
+                <MobileNavDivider />
+                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="Location" />
+                <MobileNavDivider />
+                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="Sponsors" />
+                <MobileNavDivider />
+                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="FAQ" />
+            </div></>
+    )
+}
+
+interface MobileNavOpen_Button_Props {
     text: string,
     close_nav: Dispatch<SetStateAction<boolean>>
 }
 
-const MobileNavButton = (props: MobileNavButtonProps) => {
+const MobileNavOpen_Button = (props: MobileNavOpen_Button_Props) => {
 
     return (
         <a href={`#section-${props.text.toLowerCase()}`}>
@@ -88,6 +114,28 @@ const MobileNavDivider = () => {
     )
 }
 
+export const Render_MobileNav = () => {
+    const [mobileNav_open, set_mobile_nav_open] = useState(false);
+    return (
+        <div className="sticky top-0 z-100">
+            {!mobileNav_open && <>
+                <MobileNavClosed open_nav={set_mobile_nav_open} />
+            </>}
+            {mobileNav_open &&
+                <>
+                    <MobileNavOpen set_mobile_nav_open={set_mobile_nav_open} />
+                </>}
+        </div>
+    )
+}
+
+
+
+
+
+
+// **  End MOBILE; start Desktop  **
+
 interface NavBarButtonProps {
     text: string,
 }
@@ -102,88 +150,49 @@ const NavBarButton = (props: NavBarButtonProps) => {
 
 
 const NavBar = () => {
-    const { width } = useWindowSize();
-    const [mobileNav_open, set_mobile_nav_open] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
     const [isHovering, setIsHovering] = useState(false)
 
-    if (width > mobile_size_reference) {
-
-        //close the mobile nav if the screen size is changing
-        //avoiding potentially unappealing side effects
-        if (mobileNav_open) {
-            set_mobile_nav_open(false);
-        }
-
-        //large screen
         return (
-            <div className="sticky top-2 z-100">
-                <div id="nav__container" style={{backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex}} className="sticky z-100 shadow-lg rounded-lg m-2">
-                    <div className="flex content-center items-center">
-                        <h4 id="nav__logo" className="text-center color-black text-xl w-full">{HackMESA_casing}</h4>
-                    </div>
-                    <nav id="nav__routes" className="inline" >
-                        <NavBarButton text="About" />
-                        <NavBarButton text="Schedule" />
-                        <NavBarButton text="Location" />
-                        <NavBarButton text="Sponsors" />
-                        <NavBarButton text="FAQ" />
-                    </nav>
-
-                    <motion.button
-                        key="web-nav__register"
-                        initial={false}
-
-                        className="float-right m-4 mt-3 border-2 border-solid text-black h-12 w-30 rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
-                        style={{ border: "2px solid #af4029" }}
-                        whileTap={{ scale: 0.95 }}
-                        animate={{ backgroundColor: !isHovering && !isPressed ? SECONDARY_COLORS.ORANGE_151.hex : isHovering && !isPressed ? "#af4029" : "#822d18" }} // Darkens when pressed
-                        transition={{ duration: 0.05 }}
-                        onHoverStart={() => setIsHovering(true)}
-                        onHoverEnd={() => setIsHovering(false)}
-                        onTouchStart={() => setIsPressed(true)}
-                        onTouchEnd={() => setIsPressed(false)}
-                        onMouseDown={() => setIsPressed(true)}
-                        onMouseUp={() => setIsPressed(false)}
-                    >
-                        <p className="font-bold flex justify-center content-center">
-                            Register Now
-                        </p>
-                    </motion.button>
+            <div id="nav__container" className="sticky z-100 h-full shadow-lg rounded-lg m-[1%]" style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} >
+                <div id="nav__logo-container" className="flex content-center items-center">
+                    <h4 id="nav__logo" className="text-center color-black md:text-3xl 2xl:text-4xl  sm:text-2xs w-full">{HackMESA_casing}</h4>
+                    {/* USED FOR TESTING FONT SIZE ON RESPONSIVE 2xl:text-white text-black sm:text-blue-500 */}
                 </div>
+                <nav id="nav__routes" className="inline" >
+                    <NavBarButton text="About" />
+                    <NavBarButton text="Schedule" />
+                    <NavBarButton text="Location" />
+                    <NavBarButton text="Sponsors" />
+                    <NavBarButton text="FAQ" />
+                </nav>
+
+                <motion.button
+                    key="web-nav__register"
+                    initial={false}
+
+                    className="float-right m-4 mt-3 border-2 border-solid text-black h-12 w-30 rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
+                    style={{ border: "2px solid #af4029" }}
+                    whileTap={{ scale: 0.95 }}
+                    animate={{ backgroundColor: !isHovering && !isPressed ? SECONDARY_COLORS.ORANGE_151.hex : isHovering && !isPressed ? "#af4029" : "#822d18" }} // Darkens when pressed
+                    transition={{ duration: 0.05 }}
+                    onHoverStart={() => setIsHovering(true)}
+                    onHoverEnd={() => setIsHovering(false)}
+                    onTouchStart={() => setIsPressed(true)}
+                    onTouchEnd={() => setIsPressed(false)}
+                    onMouseDown={() => setIsPressed(true)}
+                    onMouseUp={() => setIsPressed(false)}
+                >
+                    <p className="font-bold flex justify-center content-center">
+                        Register Now
+                    </p>
+                </motion.button>
             </div>
         );
-    } else {
-        //small screen
-        return (
-            <div className="sticky top-0 z-100">
-                {!mobileNav_open && <>
-                    <MobileNav open_nav={set_mobile_nav_open} />
-                </>}
-                {mobileNav_open &&
-                    <>
-                    <div className="h-23">
-                        {/* This is here just so that there is no jumpiness when the mobile nav is opened */}
-                    </div>
-                    <div style={{ backgroundColor: PRIMARY_COLORS.WARM_RED.hex }} className="fixed top-0 z-1000 w-full">
-                        <div className="flex ml-10 h-18 items-center justify-end">
-                            <button className="border-solid border-black border-1 mr-6 h-13 w-13" onClick={() => set_mobile_nav_open(false)} >X</button>
-                        </div>
-                        <MobileNavButton close_nav={set_mobile_nav_open} text="About" />
-                        <MobileNavDivider />
-                        <MobileNavButton close_nav={set_mobile_nav_open} text="Schedule" />
-                        <MobileNavDivider />
-                        <MobileNavButton close_nav={set_mobile_nav_open} text="Location" />
-                        <MobileNavDivider />
-                        <MobileNavButton close_nav={set_mobile_nav_open} text="Sponsors" />
-                        <MobileNavDivider />
-                        <MobileNavButton close_nav={set_mobile_nav_open} text="FAQ" />
-                    </div>
-                    </>}
-            </div>
-        )
-    }
 }
+
+
+
 
 
 export default NavBar;

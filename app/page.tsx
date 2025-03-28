@@ -3,7 +3,7 @@
 import { mobile_size_reference, PRIMARY_COLORS, TERTIARY_COLORS } from "@/lib/colors"
 
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer"
-import NavBar from "./components/NavBar/NavBar"
+import NavBar, { Render_MobileNav } from "./components/NavBar/NavBar"
 import SectionBase from "./components/SectionBase/SectionBase"
 import HeroHeader from "./components/HeroHeader/HeroHeader";
 import TrifectaGraphic from "./components/TrifectaGraphic/TrifectaGraphic";
@@ -15,6 +15,7 @@ import TeamMateCard from "./components/TeamMateCard/TeamMateCard";
 import Schedule from "./components/Schedule/Schedule";
 import LocationMap from "./components/LocationMap/LocationMap";
 import FAQ_component from "./components/FAQ_Component/FAQ_Component";
+import Logo from "./components/Logo/Logo";
 
 // import "./index.css"
 
@@ -23,104 +24,200 @@ function App() {
 
   return (
     <>
-      <div style={{ backgroundColor: "#433966", position: 'fixed', height: "500px", top: "0", width: "100%", zIndex: -11 }}>
-        {/* This div only prevents a small white bar */}
-      </div>
-      <div className="relative" style={{ backgroundColor: "#433966" }}>
+
+      {/* <div style={{ backgroundColor: "#433966", position: 'fixed', height: "500px", top: "0", width: "100%", zIndex: -11 }}> */}
+      {/* This div only prevents a small white bar */}
+      {/* </div> */}
 
 
-
-        <NavBar />
-
-        <HeroHeader />
-
-        <CountdownTimer />
-        {/* <div className="p-10">
-          <TrifectaGraphic width={100} />
-        </div> */}
-        <SectionBase height={"100vh"} section_title="About" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
+      <div id="page-backdrop">
 
 
+        {/* This is the hero logo */}
+        {width > mobile_size_reference &&
+          <div id="hero-logo_container" className="z-100 flex justify-center absolute top-40 w-full">
+            <Logo size={300} opacity="100%" />
+          </div>}
+        {width <= mobile_size_reference &&
+          <div id="hero-logo_container" className="z-100 flex justify-center absolute top-40 w-full">
+            <Logo size={400} opacity="100%" />
+          </div>}
+
+
+        {/* This is the jumbotron */}
+        {width > mobile_size_reference &&
+          <div id="header-container" className="z-10 absolute top-110 flex flex-col justify-center w-full">
+            <HeroHeader />
+          </div>}
+        {width <= mobile_size_reference &&
+          <div id="header-container" className="z-10 absolute top-130 flex justify-center w-full">
+            <HeroHeader />
+          </div>}
+
+
+        {/* This is the svg backdrop (the sunset) */}
+        <div id="graphic__sunset-backdrop" className="z-0">
           {width > mobile_size_reference &&
             <>
-              <div className="w-full h-full relative">
-                <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
-                  <MESA_Color_Graphic width={28} />
-                </div>
-                <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={100} float="right" display="inline" width="40%" height="90vh" margin="2em" />
-                <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
-                  <LACC_Color_Graphic width={22} />
-                </div>
-              </div>
+              {/*Desktop*/}
+              <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 1100 900">
+                <defs>
+                  <linearGradient id="linear-gradient" x1="969.76" y1="979.94" x2="969.76" y2="69.5" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stopColor="#ffe450" />
+                    <stop offset=".63" stopColor="#f58742" />
+                    <stop offset="1" stopColor="#e84d96" />
+                  </linearGradient>
+                </defs>
+                <rect style={{ fill: "url(#linear-gradient)" }} className="cls-1" width="1939.51" height="1099.95" />
+              </svg>
             </>
           }
 
+          {/* //TODO: convert the mobile SVG from IMG into inline SVG */}
+          {/* This is the mobile backdrop for the */}
           {width <= mobile_size_reference &&
             <>
-              <section className="relative">
-                <div className="z-10 bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
-                  <MESA_Color_Graphic width={28} />
-                </div>
+              {/*Mobile*/}
+              <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 350 700">
+                <defs>
+                  <linearGradient id="linear-gradient" x1="0" y1="400" x2="1" y2="1" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stopColor="#ffe450" />
+                    <stop offset=".63" stopColor="#f58742" />
+                    <stop offset="1" stopColor="#e84d96" />
+                  </linearGradient>
+                </defs>
+                <rect style={{ fill: "url(#linear-gradient)" }} className="cls-1" width="350" height="600" />
+              </svg>
+              </>
+              }
+        </div>
 
-                <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={70} float="none" display="block" width="90%" height="90vh" margin="5%" />
 
-                <section>
+
+
+
+
+        {/* This container will render either the NavBar or the mobile NavBar */}
+        <div id="nav-bar__sticky-container"
+          className="fixed w-full top-0 z-100 h-[12vh]">
+          {width > mobile_size_reference && <NavBar />}
+          {width <= mobile_size_reference && <Render_MobileNav />}
+        </div>
+
+
+
+
+        <div className="absolute top-200 w-full" /* style={{ backgroundColor: "#433966" }} */>
+
+          {/* <NavBar /> */}
+
+          <CountdownTimer />
+          {/* <div className="p-10">
+            <TrifectaGraphic width={100} />
+          </div> */}
+          <SectionBase height={"100vh"} section_title="About" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
+
+
+            {width > mobile_size_reference &&
+              <>
+                <div className="w-full h-full relative">
+                  <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
+                    <MESA_Color_Graphic width={28} />
+                  </div>
+                  <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={100} float="right" display="inline" width="40%" height="90vh" margin="2em" />
                   <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
                     <LACC_Color_Graphic width={22} />
                   </div>
+                </div>
+              </>
+            }
+
+            {width <= mobile_size_reference &&
+              <>
+                <section className="relative">
+                  <div className="z-10 bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
+                    <MESA_Color_Graphic width={28} />
+                  </div>
+
+                  <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={70} float="none" display="block" width="90%" height="90vh" margin="5%" />
+
+                  <section>
+                    <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
+                      <LACC_Color_Graphic width={22} />
+                    </div>
+                  </section>
                 </section>
-              </section>
-            </>
+              </>
+            }
+
+
+          </SectionBase>
+          <SectionBase height={"auto"} section_title="Schedule" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`} >
+            <div className="p-4">
+              <Schedule />
+            </div>
+          </SectionBase>
+          <SectionBase height={"50vh"} section_title="Location" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
+            <LocationMap />
+          </SectionBase>
+          <SectionBase height={"1em"} section_title="Sponsors" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
+            {" "}
+          </SectionBase>
+
+          <SectionBase height={"120vh"} section_title="FAQ" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
+            <FAQ_component />
+          </SectionBase>
+
+          {width > mobile_size_reference &&
+            <SectionBase height={"100"} section_title="Team" bg_color={TERTIARY_COLORS.PURPLE_2655.hex} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
+              <div className="flex justify-center  gap-5 p-6 ">
+                <TeamMateCard />
+                <TeamMateCard />
+                <TeamMateCard />
+                <TeamMateCard />
+              </div>
+            </SectionBase>
           }
 
+          {width <= mobile_size_reference &&
+            <SectionBase height={"100"} section_title="Team" bg_color={TERTIARY_COLORS.PURPLE_2655.hex} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
+              <div className="flex justify-center flex-col gap-8 items-center p-6">
+                <TeamMateCard />
+                <TeamMateCard />
+                <TeamMateCard />
+                <TeamMateCard />
+              </div>
+            </SectionBase>
+          }
+          <section className="m-10">
+            <TrifectaGraphic width={100} />
+          </section>
+          <Footer />
 
-        </SectionBase>
-        <SectionBase height={"auto"} section_title="Schedule" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`} >
-          <div className="p-4">
-            <Schedule />
-          </div>
-        </SectionBase>
-        <SectionBase height={"50vh"} section_title="Location" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
-          <LocationMap />
-        </SectionBase>
-        <SectionBase height={"1em"} section_title="Sponsors" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
-          {" "}
-        </SectionBase>
+        </div>
+        <div style={{ backgroundColor: "#433966", position: 'fixed', height: "100vh", bottom: "0", width: "100%", zIndex: -11 }}>
+          {/* This div only prevents a small white bar */}
+        </div>
 
-        <SectionBase height={"120vh"} section_title="FAQ" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
-          <FAQ_component />
-        </SectionBase>
 
-        {width > mobile_size_reference &&
-          <SectionBase height={"100"} section_title="Team" bg_color={TERTIARY_COLORS.PURPLE_2655.hex} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
-            <div className="flex justify-center  gap-5 p-6 ">
-              <TeamMateCard />
-              <TeamMateCard />
-              <TeamMateCard />
-              <TeamMateCard />
-            </div>
-          </SectionBase>
-        }
 
-        {width <= mobile_size_reference &&
-          <SectionBase height={"100"} section_title="Team" bg_color={TERTIARY_COLORS.PURPLE_2655.hex} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
-            <div className="flex justify-center flex-col gap-8 items-center p-6">
-              <TeamMateCard />
-              <TeamMateCard />
-              <TeamMateCard />
-              <TeamMateCard />
-            </div>
-          </SectionBase>
-        }
-        <section className="m-10">
-          <TrifectaGraphic width={100} />
-        </section>
-        <Footer />
+
 
       </div>
-      <div style={{ backgroundColor: "#433966", position: 'fixed', height: "100vh", bottom: "0", width: "100%", zIndex: -11 }}>
-        {/* This div only prevents a small white bar */}
-      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </>
   )
 }
@@ -208,3 +305,5 @@ const Footer = () => {
 
   )
 }
+
+
