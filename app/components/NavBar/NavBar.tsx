@@ -130,10 +130,6 @@ export const Render_MobileNav = () => {
 }
 
 
-
-
-
-
 // **  End MOBILE; start Desktop  **
 
 interface NavBarButtonProps {
@@ -148,16 +144,17 @@ const NavBarButton = (props: NavBarButtonProps) => {
     )
 }
 
-
 const NavBar = () => {
+
     const [isPressed, setIsPressed] = useState(false);
     const [isHovering, setIsHovering] = useState(false)
 
-        return (
-            <div id="nav__container" className="sticky z-100 h-full shadow-lg rounded-lg m-[1%]" style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} >
-                <div id="nav__logo-container" className="flex content-center items-center">
-                    <h4 id="nav__logo" className="text-center color-black md:text-3xl 2xl:text-4xl  sm:text-2xs w-full">{HackMESA_casing}</h4>
-                    {/* USED FOR TESTING FONT SIZE ON RESPONSIVE 2xl:text-white text-black sm:text-blue-500 */}
+    //large screen
+    return (
+        <div className="sticky top-2 z-100">
+            <div id="nav__container" style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} className="sticky z-100 shadow-lg rounded-lg m-2">
+                <div className="flex content-center items-center">
+                    <h4 id="nav__logo" className="text-center color-black text-xl text-justify w-full">{HackMESA_casing}</h4>
                 </div>
                 <nav id="nav__routes" className="inline" >
                     <NavBarButton text="About" />
@@ -171,7 +168,7 @@ const NavBar = () => {
                     key="web-nav__register"
                     initial={false}
 
-                    className="float-right m-4 mt-3 border-2 border-solid text-black h-12 w-30 rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
+                    className="float-right m-4 mt-3 border-2 border-solid text-white h-12 w-30 rounded-md bg-gray-50 text-black drop-shadow-lg transition-colors duration-150"
                     style={{ border: "2px solid #af4029" }}
                     whileTap={{ scale: 0.95 }}
                     animate={{ backgroundColor: !isHovering && !isPressed ? SECONDARY_COLORS.ORANGE_151.hex : isHovering && !isPressed ? "#af4029" : "#822d18" }} // Darkens when pressed
@@ -188,9 +185,10 @@ const NavBar = () => {
                     </p>
                 </motion.button>
             </div>
-        );
-}
+        </div>
+    );
 
+}
 
 
 
