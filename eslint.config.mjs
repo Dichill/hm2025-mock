@@ -13,4 +13,14 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
+// custom config that suppresses no img element warning
+// const eslintConfig = [
+//   ...compat.config({
+//     extends: ["next/core-web-vitals", "next/typescript"],
+//     rules: {
+//       "@next/next/no-img-element": "off",
+//     },
+//   }),
+// ];
+
 export default eslintConfig;
