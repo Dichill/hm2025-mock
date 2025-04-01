@@ -111,7 +111,6 @@ function App() {
 
           {/* Schedule section */}
           <SectionBase height={"auto"} section_title="Schedule" bg_color={backgroundColor}>
-            <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>Schedule Pending...</h4>
             <SectionBase_HeroText text="Schedule" />
 
             <p className="m-8 text-black text-2xl">
@@ -125,7 +124,6 @@ function App() {
 
           {/* Location section */}
           <SectionBase height={"auto"} section_title="Location" bg_color={backgroundColor}>
-            <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>Location</h4>
             <SectionBase_HeroText text="Location" />
             <LocationMap />
           </SectionBase>
@@ -138,7 +136,6 @@ function App() {
 
           {/* Location section */}
           <SectionBase height={"auto"} section_title="FAQ" bg_color={backgroundColor}>
-            <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>FAQ Pending...</h4>
             <SectionBase_HeroText text="FAQ" />
             
             <FAQ_component />
