@@ -11,11 +11,12 @@ import MESA_Color_Graphic from "./components/MESA_Color_Graphic/MESA_Color_Graph
 import LACC_Color_Graphic from "./components/LACC_Color_Graphic/LACC_Color_Graphic";
 import Image_Overlay from "./components/Image_Overlay/Image_Overlay";
 import useWindowSize from "@/lib/useWindowSize";
-import TeamMateCard from "./components/TeamMateCard/TeamMateCard";
 // import Schedule from "./components/Schedule/Schedule";
 import LocationMap from "./components/LocationMap/LocationMap";
 // import FAQ_component from "./components/FAQ_Component/FAQ_Component";
 import Logo from "./components/Logo/Logo";
+import SVG_Window from "./components/SVG_Window/SVG_Window";
+import TheTeam from "./components/TheTeam/TheTeam";
 
 
 const backgroundColor = "#433966"
@@ -52,10 +53,14 @@ function App() {
             <HeroHeader />
           </div>}
         {width <= mobile_size_reference &&
-          <div id="header-container" className="z-10 absolute top-130 flex justify-center w-full">
+          <div id="header-container" className="z-10 absolute top-130 flex flex-col justify-center w-full">
             <HeroHeader />
           </div>}
 
+        {/* Add SVG Window component */}
+        <div className="relative h-screen">
+          <SVG_Window />
+        </div>
 
         {/* This is the svg backdrop (the sunset) */}
         <div id="graphic__sunset-backdrop" className="z-0">
@@ -78,7 +83,7 @@ function App() {
                 <rect style={{ fill: "url(#linear-gradient)" }} className="cls-1" width="1939.51" height="1099.95" />
               </svg> */}
 
-              <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="20 0 1100 900">
+              {/* <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="20 0 1100 900">
                 <defs>
                   <style>
                   </style>
@@ -91,28 +96,14 @@ function App() {
                 <rect className="cls-1" style={{ fill: "url(#linear-gradient)" }} x="16.98" width="1939.51" height="1099.95" />
                 <path className="cls-2" style={{ fill: "#a289d7" }} transform="translate(0,100), scale(.6, .6)" d="M956.05,922.44s2.85-139.67,128.27-133.97c0,0-68.41-96.91,22.8-156.77,91.21-59.86,118.19,100.58,118.19,100.58,0,0-41.42-156.62,53.07-226.51,94.49-69.9,170.86,75.07,170.86,75.07,0,0-102.25-236.87-9.06-287.35,93.19-50.48,240.75,63.42,236.87,126.85,0,0,34.95-174.74,128.14-174.74s160.5,78.96,160.5,78.96l.94,790.21-1100.21-1.9s-77.26-145.21,89.63-190.42Z" />
                 <path className="cls-3" style={{ fill: "#a289d7" }} transform="translate(0,200), scale(.6, .6)" d="M1293.44,923.76s-3.65-139.67-164.17-133.97c0,0,79.84-66.25-36.9-126.11s-143.56,69.91-143.56,69.91c0,0,33.22-123.91-87.71-193.81-120.94-69.9-198.89,42.37-198.89,42.37,0,0,22.68-204.81-92.95-281.9-107.77-71.85-238.99-13.87-234.02,49.56,0,0-32.15-159.69-151.43-159.69S1.2,325.87,1.2,325.87l-1.2,790.21,1408.16-1.9s98.88-145.21-114.72-190.42Z" />
-              </svg>
+              </svg> */}
 
             </>
           }
 
           {/* //TODO: convert the mobile SVG from IMG into inline SVG */}
           {/* This is the mobile backdrop for the */}
-          {width <= mobile_size_reference &&
-            <>
-              {/*Mobile*/}
-              <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 350 700">
-                <defs>
-                  <linearGradient id="linear-gradient" x1="0" y1="400" x2="1" y2="1" gradientUnits="userSpaceOnUse">
-                    <stop offset="0" stopColor="#ffe450" />
-                    <stop offset=".63" stopColor="#f58742" />
-                    <stop offset="1" stopColor="#e84d96" />
-                  </linearGradient>
-                </defs>
-                <rect style={{ fill: "url(#linear-gradient)" }} className="cls-1" width="350" height="600" />
-              </svg>
-            </>
-          }
+         
         </div>
 
 
@@ -205,25 +196,13 @@ Come back to discover the schedule of our sponsored workshops, events, and the f
 
           {width > mobile_size_reference &&
             <SectionBase height={"100"} section_title="Team" bg_color={TERTIARY_COLORS.PURPLE_2655.hex} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
-              <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>Our Team</h4>
-
-              <div className="flex justify-center  gap-5 p-6 ">
-                <TeamMateCard />
-                <TeamMateCard />
-                <TeamMateCard />
-                <TeamMateCard />
-              </div>
+              <TheTeam />
             </SectionBase>
           }
 
           {width <= mobile_size_reference &&
             <SectionBase height={"100"} section_title="Team" bg_color={TERTIARY_COLORS.PURPLE_2655.hex} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
-              <div className="flex justify-center flex-col gap-8 items-center p-6">
-                <TeamMateCard />
-                <TeamMateCard />
-                <TeamMateCard />
-                <TeamMateCard />
-              </div>
+              <TheTeam />
             </SectionBase>
           }
           <section className="m-10">
