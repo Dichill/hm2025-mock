@@ -40,17 +40,27 @@ const teamMembers: TeamMember[] = [
 
 const TeamMemberCard = ({ member }: { member: TeamMember }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const {width} = useWindowSize();
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event from bubbling up
+    setIsFlipped(!isFlipped);
+  };
 
   return (
     <div 
       className="w-full max-w-xs perspective-1000 p-4"
-      onMouseEnter={() => setIsFlipped(true)}
-      onMouseLeave={() => setIsFlipped(false)}
-      onTouchStart={() => setIsFlipped(true)}
-      onTouchEnd={() => setIsFlipped(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       <div 
-        className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+        className={`relative w-full h-full transition-transform duration-200 transform-style-3d 
+          ${ (( ( width < mobile_size_reference  &&  isFlipped )) || isHovered  ) ? 'rotate-y-180' : ''}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Front of card */}
