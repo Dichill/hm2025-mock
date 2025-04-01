@@ -94,9 +94,6 @@ const TheTeam = () => {
 
   return (
     <div className="w-full py-8">
-      <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-        Our Team
-      </h2>
       <div className={`grid gap-6 ${width > mobile_size_reference ? 'grid-cols-4' : 'grid-cols-1'} justify-items-center`}>
         {teamMembers.map((member, index) => (
           <TeamMemberCard key={index} member={member} />
