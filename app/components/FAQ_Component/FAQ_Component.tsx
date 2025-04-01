@@ -70,11 +70,11 @@ const FAQ_Question_Header = (props: FAQ_Question_Header__Props) => {
   }
 
   return (
-    <button className="accordion-toggle group inline-flex items-center justify-between text-2xl font-normal leading-8 text-white w-full transition duration-500" aria-controls="basic-collapse-one-with-arrow-always-open">
+    <div className="accordion-toggle group inline-flex items-center justify-between text-2xl font-normal leading-8 text-white w-full transition duration-500" aria-controls="basic-collapse-one-with-arrow-always-open">
       <h5 className="text-white">How can I reset my password?</h5>
       <svg transform={transform} className="text-white transition duration-500 accordion-active:text-indigo-600 accordion-active:rotate-180" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" >
         <path d="M16.5 8.25L12.4142 12.3358C11.7475 13.0025 11.4142 13.3358 11 13.3358C10.5858 13.3358 10.2525 13.0025 9.58579 12.3358L5.5 8.25" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" ></path>
       </svg>
-    </button>
+    </div>
   )
 }
