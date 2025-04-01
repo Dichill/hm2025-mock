@@ -10,7 +10,7 @@ const HeroHeader = () => {
     <section className="">
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl">{HackMESA_casing} 2025</h1>
-        <p className="mb-8 text-lg font-normal lg:text-xl sm:px-16 lg:px-48 ">LACCD student Hackathon</p>
+        <p className="mb-8 text-3xl font-normal lg:text-xl sm:px-16 lg:px-48 ">LACCD student Hackathon</p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
           <a href={`${register}`} style={{color: "#2c2c2c"}} className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center rounded-lg focus:ring-4">
             Register
