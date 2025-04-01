@@ -17,22 +17,13 @@ import LocationMap from "./components/LocationMap/LocationMap";
 import Logo from "./components/Logo/Logo";
 import SVG_Window from "./components/SVG_Window/SVG_Window";
 import TheTeam from "./components/TheTeam/TheTeam";
-
-
-const backgroundColor = "#433966"
-// import "./index.css"
+import { backgroundColor } from "@/lib/colors";
 
 function App() {
   const { width } = useWindowSize();
 
   return (
     <>
-
-      {/* <div style={{ backgroundColor: "#433966", position: 'fixed', height: "500px", top: "0", width: "100%", zIndex: -11 }}> */}
-      {/* This div only prevents a small white bar */}
-      {/* </div> */}
-
-
       <div id="page-backdrop">
 
 
@@ -103,7 +94,7 @@ function App() {
 
           {/* //TODO: convert the mobile SVG from IMG into inline SVG */}
           {/* This is the mobile backdrop for the */}
-         
+
         </div>
 
 
@@ -121,14 +112,21 @@ function App() {
 
 
 
-        <div className="absolute top-200 w-full" /* style={{ backgroundColor: "#433966" }} */>
+        <div className="absolute top-200 w-full" >
 
           {/* <NavBar /> */}
 
           <CountdownTimer />
-          <div className="p-10">
-            <TrifectaGraphic width={100} />
-          </div>
+
+          {width > mobile_size_reference &&
+            <div className="mt-4">
+              <TrifectaGraphic width={20} />
+            </div>}
+            {width <= mobile_size_reference &&
+            <div className="-mb-2">
+              <TrifectaGraphic width={40} />
+            </div>}
+
           <SectionBase height={"100vh"} section_title="About" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
 
 
@@ -169,15 +167,15 @@ function App() {
           <SectionBase height={"auto"} section_title="Schedule" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`} >
             <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>Schedule Pending...</h4>
             <p className="m-8 text-black text-2xl">
-Come back to discover the schedule of our sponsored workshops, events, and the feeding schedule
-              </p>
+              Come back to discover the schedule of our sponsored workshops, events, and the feeding schedule
+            </p>
             {/* <div className="p-4">
               <Schedule />
             </div> */}
           </SectionBase>
 
           <SectionBase height={"auto"} section_title="Location" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
-          <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>Location</h4>
+            <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>Location</h4>
 
             <LocationMap />
           </SectionBase>
@@ -187,9 +185,9 @@ Come back to discover the schedule of our sponsored workshops, events, and the f
 
           <SectionBase height={"auto"} section_title="FAQ" bg_color={`${TERTIARY_COLORS.PURPLE_2655.hex}`}>
             <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>FAQ Pending...</h4>
-              <p className="m-8 text-black text-2xl">
+            <p className="m-8 text-black text-2xl">
               No questions please
-              </p>
+            </p>
 
             {/* <FAQ_component /> */}
           </SectionBase>
@@ -211,7 +209,7 @@ Come back to discover the schedule of our sponsored workshops, events, and the f
           <Footer />
 
         </div>
-        <div style={{ backgroundColor: "#433966", position: 'fixed', height: "100vh", bottom: "0", width: "100%", zIndex: -11 }}>
+        <div style={{ backgroundColor: backgroundColor, position: 'fixed', height: "100vh", bottom: "0", width: "100%", zIndex: -11 }}>
           {/* This div only prevents a small white bar */}
         </div>
 

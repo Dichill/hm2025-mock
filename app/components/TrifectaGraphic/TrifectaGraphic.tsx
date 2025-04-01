@@ -10,14 +10,14 @@ interface TrifectaGraphicProps {
 const TrifectaGraphic = (props: TrifectaGraphicProps) => {
   const logos = ["./LACC_BW_Logo.png", "LACCD_logo_lowRes.png", "MESA_logo.svg"];
 
-  console.log(props.width)
+
 
   return (
     <>
       <section className="invert flex justify-center opacity-50">
         <div className="w-[50%] h-[20vh] flex justify-around items-center p-5 box-border">
           {logos.map((logo, index) => (
-            <div key={index} className="flex justify-center items-center max-w-[30%] flex-1">
+            <div key={index} style={{ maxWidth: `${props.width}%` }} className="flex justify-center items-center flex-1">
               <img
                 src={logo}
                 alt={`Logo ${index + 1}`}
