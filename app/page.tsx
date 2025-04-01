@@ -13,7 +13,7 @@ import Image_Overlay from "./components/Image_Overlay/Image_Overlay";
 import useWindowSize from "@/lib/useWindowSize";
 // import Schedule from "./components/Schedule/Schedule";
 import LocationMap from "./components/LocationMap/LocationMap";
-// import FAQ_component from "./components/FAQ_Component/FAQ_Component";
+import FAQ_component from "./components/FAQ_Component/FAQ_Component";
 import Logo from "./components/Logo/Logo";
 import SVG_Window from "./components/SVG_Window/SVG_Window";
 import TheTeam from "./components/TheTeam/TheTeam";
@@ -140,10 +140,8 @@ function App() {
           <SectionBase height={"auto"} section_title="FAQ" bg_color={backgroundColor}>
             <h4 className="font-bold text-4xl text-center p-4" style={{ color: backgroundColor }}>FAQ Pending...</h4>
             <SectionBase_HeroText text="FAQ" />
-            <p className="m-8 text-black text-2xl">
-              No questions please
-            </p>
-            {/* <FAQ_component /> */}
+            
+            <FAQ_component />
           </SectionBase>
 
 
