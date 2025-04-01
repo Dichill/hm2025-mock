@@ -7,3 +7,5 @@ export const tiktok = "#";
 
 export const lacc = "https://www.lacc.edu/";
 export const laccd = "https://www.laccd.edu/";
+
+export const register = "#";
