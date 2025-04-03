@@ -23,12 +23,11 @@ import SectionBase_HeroText from "./components/SectionBase_HeroText";
 import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window";
 
 function App() {
-  const { width } = useWindowSize();
+  const { width, height } = useWindowSize();
 
   return (
     <>
-      <div id="page-backdrop">
-
+      <div style={{backgroundColor: backgroundColor}} id="page-backdrop">
 
         {/* This is the hero logo */}
         {width > mobile_size_reference &&
@@ -37,7 +36,9 @@ function App() {
           </div>}
         {width <= mobile_size_reference &&
           <div id="hero-logo_container" className="z-100 flex justify-center absolute top-40 w-full">
-            <Logo size={400} opacity="100%" />
+            {height > 540 && <Logo size={380} opacity="100%" />}
+            {/* wierd but possible edge case */}
+            {height <= 540 && <Logo size={200} opacity="100%" />}
           </div>}
 
 
@@ -46,18 +47,17 @@ function App() {
           {width > mobile_size_reference &&
             <SVG_Window />}
           {width <= mobile_size_reference &&
-            <Mobile_SVG_Window />
-          }
+            <Mobile_SVG_Window />}
         </div>
 
         {/* This is the jumbotron */}
         {width > mobile_size_reference &&
-          <div id="header-container" className="z-10 absolute top-120 flex flex-col justify-center w-full">
+          <div id="header-container" style={{}} className="z-10 top-120 flex flex-col justify-center w-full">
             <HeroHeader />
           </div>}
 
         {width <= mobile_size_reference &&
-          <div id="header-container" className="z-10 top-130 flex flex-col justify-center w-full">
+          <div id="header-container" className=" z-10 top-130 flex flex-col justify-center w-full">
             <HeroHeader />
             </div>}
 
@@ -70,7 +70,7 @@ function App() {
 
         {/* This container renders everything below the hero area */}
 
-        <div className={width > mobile_size_reference ? "absolute top-210 w-full" : "absolute top-270 w-full"} >
+        <div className={"w-full"} >
           <CountdownTimer />
 
           {width > mobile_size_reference &&
