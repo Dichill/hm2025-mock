@@ -20,6 +20,7 @@ import TheTeam from "./components/TheTeam/TheTeam";
 import { backgroundColor } from "@/lib/colors";
 import Footer from "./components/Footer/Footer";
 import SectionBase_HeroText from "./components/SectionBase_HeroText";
+import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window";
 
 function App() {
   const { width } = useWindowSize();
@@ -52,7 +53,14 @@ function App() {
 
         {/* Contains the hero SVG component */}
         <div className="relative h-screen">
-          <SVG_Window />
+
+
+          {width > mobile_size_reference &&
+            <SVG_Window />}
+          {width <= mobile_size_reference &&
+            <Mobile_SVG_Window />
+          }
+
         </div>
 
         {/* This container will render either the NavBar or the mobile NavBar */}
@@ -137,7 +145,7 @@ function App() {
           {/* Location section */}
           <SectionBase height={"auto"} section_title="FAQ" bg_color={backgroundColor}>
             <SectionBase_HeroText text="FAQ" />
-            
+
             <FAQ_component />
           </SectionBase>
 
