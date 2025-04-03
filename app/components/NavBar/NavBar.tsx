@@ -1,4 +1,4 @@
-import { HackMESA_casing, PRIMARY_COLORS, SECONDARY_COLORS, TERTIARY_COLORS } from "@/lib/colors";
+import { darkenColor, HackMESA_casing, PRIMARY_COLORS, SECONDARY_COLORS, TERTIARY_COLORS } from "@/lib/colors";
 
 import "./NavBar.css"
 // import useWindowSize from "@/lib/useWindowSize";
@@ -68,15 +68,33 @@ interface MobileNavOpen_Props {
 }
 
 const MobileNavOpen = (props: MobileNavOpen_Props) => {
+    const [isPressed, setIsPressed] = useState(false);
+
     return (
         <>
             <div className="h-23">
-                {/* This is here just so that there is no jumpiness when the mobile nav is opened */}
+                {/* This is here just so that there is no sudden empty space behind the menu when the mobile nav is opened */}
             </div>
             <div style={{ backgroundColor: PRIMARY_COLORS.WARM_RED.hex }} className="fixed top-0 z-1000 w-full">
-                <div className="flex ml-10 h-18 items-center justify-end">
-                    <button className="border-solid border-black border-1 mr-6 h-13 w-13" onClick={() => props.set_mobile_nav_open(false)} >X</button>
-                </div>
+                <motion.button
+                    key="mob-nav__menu"
+                    initial={false}
+                    style={{ borderColor: isPressed ? "white" : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50), color: isPressed ? "white" : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) }}
+                    className="m-4 h-13 w-13 border-solid font-black border-4 text-2xl float-right transition-colors duration-150"
+                    animate={{ backgroundColor: isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) : PRIMARY_COLORS.WARM_RED.hex }} // Darkens when pressed
+                    // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
+                    transition={{ duration: 0.05 }}
+                    onClick={() => props.set_mobile_nav_open(false)}
+                    onTouchStart={() => setIsPressed(true)}
+                    onTouchEnd={() => setIsPressed(false)}
+                    onMouseDown={() => setIsPressed(true)}
+                    onMouseUp={() => setIsPressed(false)}
+                >
+                    <div>
+                        <button onClick={() => props.set_mobile_nav_open(false)} >X</button>
+                    </div>
+                </motion.button>
+
                 <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="About" />
                 <MobileNavDivider />
                 <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="Schedule" />
@@ -96,17 +114,31 @@ interface MobileNavOpen_Button_Props {
 }
 
 const MobileNavOpen_Button = (props: MobileNavOpen_Button_Props) => {
+    const [isPressed, setIsPressed] = useState(false);
 
     return (
         <a href={`#section-${props.text.toLowerCase()}`}>
-            <button onClick={() => props.close_nav(false)} className="h-18 block text-xl w-full">
-                <p className="text-left ml-10 font-bold">
+            <motion.button
+                key="mob-nav__menu"
+                initial={false}
+                className="w-full p-6 transition-colors text-2xl font-medium duration-150 active:text-white"
+                animate={{ backgroundColor: isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) : PRIMARY_COLORS.WARM_RED.hex }} // Darkens when pressed
+                // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
+                transition={{ duration: 0.05 }}
+                onClick={() => props.close_nav(false)}
+                onTouchStart={() => setIsPressed(true)}
+                onTouchEnd={() => setIsPressed(false)}
+                onMouseDown={() => setIsPressed(true)}
+                onMouseUp={() => setIsPressed(false)}
+            >
+                <div>
+                    {/*This hamburger icon is generously provided by Font Awesome*/}
                     {props.text}
-                </p>
-            </button>
+                </div>
+            </motion.button>
         </a>
-    )
-}
+    );
+};
 
 const MobileNavDivider = () => {
     return (

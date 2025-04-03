@@ -11,7 +11,6 @@ import MESA_Color_Graphic from "./components/MESA_Color_Graphic/MESA_Color_Graph
 import LACC_Color_Graphic from "./components/LACC_Color_Graphic/LACC_Color_Graphic";
 import Image_Overlay from "./components/Image_Overlay/Image_Overlay";
 import useWindowSize from "@/lib/useWindowSize";
-// import Schedule from "./components/Schedule/Schedule";
 import LocationMap from "./components/LocationMap/LocationMap";
 import FAQ_component from "./components/FAQ_Component/FAQ_Component";
 import Logo from "./components/Logo/Logo";
@@ -19,8 +18,9 @@ import SVG_Window from "./components/SVG_Window/SVG_Window";
 import TheTeam from "./components/TheTeam/TheTeam";
 import { backgroundColor } from "@/lib/colors";
 import Footer from "./components/Footer/Footer";
-import SectionBase_HeroText from "./components/SectionBase_HeroText";
+import SectionBase_HeroText from "./components/SectionBase_HeroText/SectionBase_HeroText";
 import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window";
+import Schedule from "./components/Schedule/Schedule";
 
 function App() {
   const { width, height } = useWindowSize();
@@ -119,13 +119,9 @@ function App() {
           {/* Schedule section */}
           <SectionBase height={"auto"} section_title="Schedule" bg_color={backgroundColor}>
             <SectionBase_HeroText text="Schedule" />
-
-            <p className="m-8 text-black text-2xl">
-              Come back to discover the schedule of our sponsored workshops, events, and the feeding schedule
-            </p>
-            {/* <div className="p-4">
+            <div className="p-4">
               <Schedule />
-            </div> */}
+            </div>
           </SectionBase>
 
 
