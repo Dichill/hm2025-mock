@@ -1,6 +1,6 @@
 "use client";
 
-import { mobile_size_reference, PRIMARY_COLORS, SECONDARY_COLORS } from "@/lib/colors"
+import { mobile_size_reference, PRIMARY_COLORS } from "@/lib/colors"
 
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer"
 import NavBar, { Render_MobileNav } from "./components/NavBar/NavBar"
@@ -21,7 +21,6 @@ import { backgroundColor } from "@/lib/colors";
 import Footer from "./components/Footer/Footer";
 import SectionBase_HeroText from "./components/SectionBase_HeroText";
 import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window";
-import { register } from "@/lib/link_base";
 
 function App() {
   const { width } = useWindowSize();
