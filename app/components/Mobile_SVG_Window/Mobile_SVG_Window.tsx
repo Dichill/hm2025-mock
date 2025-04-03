@@ -57,12 +57,12 @@ const Mobile_SVG_Window = ({ className = "" }: SVG_WindowProps) => {
                     <style>
                         {`
                             @keyframes floatLeft {
-                                0%, 100% { transform: translate(${dimensions.width - 350}px, 100px) scale(0.21, 0.21); }
-                                50% { transform: translate(${dimensions.width - 350}px, 100px) scale(0.22, 0.22); }
+                                0%, 100% { transform: translate(${dimensions.width - 200}px, 100px) scale(0.13, 0.13); }
+                                50% { transform: translate(${dimensions.width - 200}px, 100px) scale(0.14, 0.14); }
                             }
                             @keyframes floatRight {
-                                0%, 100% { transform: translate(0px, 200px) scale(0.3, 0.3); }
-                                50% { transform: translate(0px, 200px) scale(0.31, 0.32); }
+                                0%, 100% { transform: translate(0px, 200px) scale(0.14, 0.14); }
+                                50% { transform: translate(0px, 200px) scale(0.15, 0.15); }
                             }
                             .cloud-left {
                                 animation: floatLeft 8s ease-in-out infinite;
@@ -81,8 +81,8 @@ const Mobile_SVG_Window = ({ className = "" }: SVG_WindowProps) => {
                             }
 
                             @keyframes heroCloud {
-                                0%, 100% { transform: translate(0px, 300px) scale(1.4, 1.4); }
-                                30% { transform: translate(0px, 310px) scale(1.43, 1.44); }
+                                0%, 100% { transform: translate(0px, 300px) scale(.7, .7); }
+                                30% { transform: translate(0px, 310px) scale(.75, .75w); }
                             }
                             .hero_cloud-1, .hero_cloud-2, .hero_cloud-3 {
                                 animation: heroCloud 12s ease-in-out infinite;

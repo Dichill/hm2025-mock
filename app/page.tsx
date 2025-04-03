@@ -1,6 +1,6 @@
 "use client";
 
-import { mobile_size_reference, PRIMARY_COLORS } from "@/lib/colors"
+import { mobile_size_reference, PRIMARY_COLORS, SECONDARY_COLORS } from "@/lib/colors"
 
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer"
 import NavBar, { Render_MobileNav } from "./components/NavBar/NavBar"
@@ -21,6 +21,7 @@ import { backgroundColor } from "@/lib/colors";
 import Footer from "./components/Footer/Footer";
 import SectionBase_HeroText from "./components/SectionBase_HeroText";
 import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window";
+import { register } from "@/lib/link_base";
 
 function App() {
   const { width } = useWindowSize();
@@ -41,27 +42,25 @@ function App() {
           </div>}
 
 
-        {/* This is the jumbotron */}
-        {width > mobile_size_reference &&
-          <div id="header-container" className="z-10 absolute top-110 flex flex-col justify-center w-full">
-            <HeroHeader />
-          </div>}
-        {width <= mobile_size_reference &&
-          <div id="header-container" className="z-10 absolute top-130 flex flex-col justify-center w-full">
-            <HeroHeader />
-          </div>}
-
         {/* Contains the hero SVG component */}
         <div className="relative h-screen">
-
-
           {width > mobile_size_reference &&
             <SVG_Window />}
           {width <= mobile_size_reference &&
             <Mobile_SVG_Window />
           }
-
         </div>
+
+        {/* This is the jumbotron */}
+        {width > mobile_size_reference &&
+          <div id="header-container" className="z-10 absolute top-120 flex flex-col justify-center w-full">
+            <HeroHeader />
+          </div>}
+
+        {width <= mobile_size_reference &&
+          <div id="header-container" className="z-10 top-130 flex flex-col justify-center w-full">
+            <HeroHeader />
+            </div>}
 
         {/* This container will render either the NavBar or the mobile NavBar */}
         <div id="nav-bar__sticky-container"
@@ -71,7 +70,8 @@ function App() {
         </div>
 
         {/* This container renders everything below the hero area */}
-        <div className="absolute top-200 w-full" >
+
+        <div className={width > mobile_size_reference ? "absolute top-210 w-full" : "absolute top-270 w-full"} >
           <CountdownTimer />
 
           {width > mobile_size_reference &&
