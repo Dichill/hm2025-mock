@@ -3,23 +3,104 @@ import { backgroundColor, darkenColor } from "@/lib/colors";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
+
+//not to be passed an array of events greater than 5.
+//for the more detailed schedule, use detailed_events array.
+const events = [
+  {
+    title: "Event 1",
+    date: "May 9 at 4:00PM",
+    description: "The hacking will begin!",
+  },
+  {
+    title: "Event 2",
+    date: "May 9 at 5:00PM",
+    description: "A series of workshops, including those offered by our sponsors will kick off the night.",
+  },
+  {
+    title: "Event 3",
+    date: "May 9 at 7:00PM",
+    description: "You will be fed. You got that right! Snacks will also be happening throughout the night. Click below for the detailed schedule.",
+  },
+  {
+    title: "Event 4",
+    date: "May 9 at 8:00PM",
+    description: "Time to focus. All... night... long!!!",
+  },
+  {
+    title: "Event 5",
+    date: "May 10 at 11:00AM",
+    description: "The judges will deliberate, and awards will be given out!",
+  }
+]
+
+
+
+//will appear in modal with scroll bar
+const detailed_events = [
+  {
+    title: "Event 1",
+    date: "January 5, 2022",
+    description: "Get started with dozens of web components and interactive elements.",
+  },
+  {
+    title: "Event 2",
+    date: "January 5, 2022",
+    description: "Get started with dozens of web components and interactive elements.",
+  },
+  {
+    title: "Event 3",
+    date: "January 5, 2022",
+    description: "Get started with dozens of web components and interactive elements.",
+  },
+  {
+    title: "Event 4",
+    date: "January 5, 2022",
+    description: "Get started with dozens of web components and interactive elements.",
+  },
+  {
+    title: "Event 5",
+    date: "January 5, 2022",
+    description: "Get started with dozens of web components and interactive elements.",
+  }
+]
+
+
+
 const Schedule = () => {
+  //TODO: implement modal and pass detailed events
+  console.log(detailed_events)
+
+
   return (
     <>
       <ol className="items-center sm:flex">
-        <Schedule_List_Item />
-        <Divider />
-        <Schedule_List_Item />
-        <Divider />
-        <Schedule_List_Item />
-        <Divider />
-        <Schedule_List_Item />
-        <Divider />
-        <Schedule_List_Item />
+
+        {events.map((event, index) => {
+          console.log(index)
+          if (index == 0) {
+            return (
+              <>
+                <Schedule_List_Item key={`schedule_item_${event.title}`} title={event.title} description={event.description} date={event.date} />
+                <Divider />
+              </>);
+          } else if (index != events.length - 1) {
+            return (
+              <>
+                <Schedule_List_Item key={`schedule_item_${event.title}`} title={event.title} description={event.description} date={event.date} />
+                <Divider />
+              </>);
+          } else {
+            return (
+              <Schedule_List_Item key={`schedule_item_${event.title}`} title={event.title} description={event.description} date={event.date} />
+            );
+          }
+        })}
+
       </ol>
 
       <div className="mt-10 flex justify-center">
-      <DetailsButton />
+        <DetailsButton />
       </div>
 
     </>
@@ -63,25 +144,31 @@ const DetailsButton = () => {
   );
 }
 
+interface Schedule_List_Item__Props {
+  title: string;
+  date: string;
+  description: string;
+}
 
-const Schedule_List_Item = () => {
+
+const Schedule_List_Item = (props: Schedule_List_Item__Props) => {
   return (
     <li className="relative mb-6 sm:mb-0">
       <div className="flex items-center">
         <div className="z-10 flex items-center justify-center w-6 h-6 rounded-full ring-0 ring-white sm:ring-8 shrink-0">
-          <svg className="w-4.5 h-4.5 md:w-2.5 md:h-2.5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-          </svg>
+          <svg className="w-4.5 h-4.5 md:w-2.5 md:h-2.5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+            <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" /></svg>
         </div>
         <div className="hidden sm:flex w-full bg-white h-0.5"></div>
       </div>
       <div className="mt-3 sm:pe-8">
-        <h3 className="text-lg font-semibold text-white">Flowbite Library v1.0.0</h3>
-        <time className="block mb-2 text-sm font-normal leading-none text-white">Released on January 5, 2022</time>
-        <p className="text-white">Get started with dozens of web components and interactive elements.</p>
+        <h3 className="text-lg font-semibold text-white">{props.title}</h3>
+        <time className="block mb-2 text-sm font-normal leading-none text-white">{props.date}</time>
+        <p className="text-white">{props.description}</p>
       </div>
     </li>
   )
 }
+
 
 export default Schedule
