@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundColor } from '@/lib/colors';
+import { backgroundColor, PRIMARY_COLORS } from '@/lib/colors';
 import { useEffect, useRef, useState } from 'react';
 
 interface SVG_WindowProps {
@@ -70,10 +70,14 @@ const Mobile_SVG_Window = ({ className = "" }: SVG_WindowProps) => {
                                 fill: "#a289d7";
                             }
                             .wire_left {
-                                transform: scale(.5)
+                                transform: scale(.5);
+                                fill: ${PRIMARY_COLORS.GREY_432.hex};
+                                
                             }
                             .wire_right {
-                                transform: scale(1.1) translate(${(dimensions.width) - 220}px)
+                                transform: scale(1.1) translate(${(dimensions.width) - 220}px);
+                                fill: ${PRIMARY_COLORS.GREY_432.hex};
+
                             }
                             @keyframes heroCloud {
                                 0%, 100% { transform: translate(0px, 500px) scale(.7, .7); }
@@ -107,6 +111,7 @@ const Mobile_SVG_Window = ({ className = "" }: SVG_WindowProps) => {
                         <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
                         <feComposite in="SourceGraphic" in2="blur" operator="over" />
                     </filter>
+
                 </defs>
                 <rect className="cls-1" style={{ fill: "url(#linear-gradient)" }} x="16.98" width="105%" height="150%" />
 
@@ -144,7 +149,7 @@ const Mobile_SVG_Window = ({ className = "" }: SVG_WindowProps) => {
                 {/* This is a matte over the bottom of the SVG to prevent whitespace */}
                 <path
                     id="bottom_matte"
-                    transform='translate(-20, 800), scale(3, 2)'
+                    transform='translate(-40, 800), scale(5, 2)'
                     style={{ fill: backgroundColor }}
                     className="dark-frame" d="M10.26,15.78s102.44-41.46,158.54,12.2,187.8,4.88,187.8,4.88c0,0,143.9-21.95,102.44,134.15,0,0,19.51-117.07,187.8-109.76s160.98,182.93,160.98,182.93c0,0,87.8-251.22,273.17-168.29s182.93,285.37,182.93,285.37c0,0-21.95-265.85,217.07-287.8s219.51,158.54,219.51,158.54c0,0,24.39-234.15,260.98-226.83l4.88,1134.15L.5,1137.74,10.26,15.78Z" />
 

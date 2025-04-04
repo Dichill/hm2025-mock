@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundColor } from '@/lib/colors';
+import { backgroundColor, PRIMARY_COLORS } from '@/lib/colors';
 import { useEffect, useRef, useState } from 'react';
 
 interface SVG_WindowProps {
@@ -71,10 +71,12 @@ const SVG_Window = ({ className = "" }: SVG_WindowProps) => {
                                 fill: "#a289d7";
                             }
                             .wire_left {
-                                transform: scale(.7)
+                                transform: scale(.7);
+                                fill: ${PRIMARY_COLORS.GREY_432.hex}
                             }
                             .wire_right {
-                                transform: scale(.7) translate(${(dimensions.width * (10 / 7)) - 450}px)
+                                transform: scale(.7) translate(${(dimensions.width * (10 / 7)) - 450}px);
+                                fill: ${PRIMARY_COLORS.GREY_432.hex}
                             }
                             @keyframes heroCloud {
                                 0%, 100% { transform: translate(0px, 500px) scale(2, 2); }
