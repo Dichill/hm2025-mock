@@ -1,35 +1,70 @@
 
-
+import { backgroundColor, darkenColor } from "@/lib/colors";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 const Schedule = () => {
   return (
     <>
       <ol className="items-center sm:flex">
-        <ScheduleElement />
+        <Schedule_List_Item />
         <Divider />
-        <ScheduleElement />
+        <Schedule_List_Item />
         <Divider />
-        <ScheduleElement />
+        <Schedule_List_Item />
         <Divider />
-        <ScheduleElement />
+        <Schedule_List_Item />
         <Divider />
-        <ScheduleElement />
-      </ol></>
+        <Schedule_List_Item />
+      </ol>
+
+      <div className="mt-10 flex justify-center">
+      <DetailsButton />
+      </div>
+
+    </>
   )
 }
 
 const Divider = () => {
-
-
   return (
     <hr className="m-2 md:hidden" style={{ border: "1px solid white" }}></hr>
   )
 }
 
-export default Schedule
+
+const DetailsButton = () => {
+  const [isPressed, setIsPressed] = useState(false);
+  const [isHovering, setIsHovering] = useState(false)
+
+  return (
+    <>
+      <motion.button
+        key="web-nav__register"
+        initial={false}
+        className="m-4 border-2 p-3 font-bold border-solid text-white rounded-lg bg-gray-50 drop-shadow-lg transition-colors duration-150"
+        whileTap={{ scale: 0.95 }}
+        style={{ cursor: 'pointer' }}
+        animate={{ backgroundColor: !isHovering && !isPressed ? backgroundColor : isHovering && !isPressed ? darkenColor(backgroundColor, -40) : darkenColor(backgroundColor, 50) }} // Darkens when pressed
+        transition={{ duration: 0.05 }}
+        onHoverStart={() => setIsHovering(true)}
+        onHoverEnd={() => setIsHovering(false)}
+        onTouchStart={() => setIsPressed(true)}
+        onTouchEnd={() => setIsPressed(false)}
+        onMouseDown={() => setIsPressed(true)}
+        onMouseUp={() => setIsPressed(false)}
+      >
+
+        Detailed Schedule
+
+      </motion.button>
+
+    </>
+  );
+}
 
 
-const ScheduleElement = () => {
+const Schedule_List_Item = () => {
   return (
     <li className="relative mb-6 sm:mb-0">
       <div className="flex items-center">
@@ -48,3 +83,5 @@ const ScheduleElement = () => {
     </li>
   )
 }
+
+export default Schedule
