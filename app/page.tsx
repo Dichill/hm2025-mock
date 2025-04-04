@@ -70,8 +70,30 @@ function App() {
         {/* This container will render either the NavBar or the mobile NavBar */}
         <div id="nav-bar__sticky-container"
           className="fixed w-full top-0 z-100 h-[12vh]">
-          {width > mobile_size_reference && <nav><NavBar /></nav>}
-          {width <= mobile_size_reference && <nav><Render_MobileNav /></nav>}
+          {width > mobile_size_reference &&
+            <>
+              <nav>
+                <NavBar />
+              </nav>
+              <div id="filler_for_mlh_badge" className="z-1 bg-white h-50 w-25 inline-block absolute right-10 top-0">
+                <div className="absolute bottom-10 w-full">
+                  <p className="text-center">MLH</p>
+                </div>
+              </div>
+              </>
+          }
+          {width <= mobile_size_reference &&
+            <>
+              <nav><Render_MobileNav />
+              </nav>
+              <div id="filler_for_mlh_badge" className="z-1 bg-white h-50 w-25 inline-block absolute right-10 top-0">
+                <div className="absolute bottom-10 w-full">
+                  <p className="text-center">MLH</p>
+                </div>
+              </div>
+            </>
+
+          }
         </div>
 
         {/* This container renders everything below the hero area */}

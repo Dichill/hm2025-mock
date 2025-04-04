@@ -57,8 +57,8 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                         Register Now
                     </p>
                 </motion.button>
-
-            </div></>
+            </div>
+        </>
     );
 }
 
