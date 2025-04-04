@@ -27,7 +27,13 @@ function App() {
 
   return (
     <>
-      <div style={{backgroundColor: backgroundColor}} id="page-backdrop">
+      <html lang="en" />
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HackMESA 2025, Los Angeles Community College District Hackathon, May 9th and 10th 2025</title>
+      </head>
+      <div style={{ backgroundColor: backgroundColor }} id="page-backdrop">
 
         {/* This is the hero logo */}
         {width > mobile_size_reference &&
@@ -59,13 +65,13 @@ function App() {
         {width <= mobile_size_reference &&
           <div id="header-container" className=" z-10 top-130 flex flex-col justify-center w-full">
             <HeroHeader />
-            </div>}
+          </div>}
 
         {/* This container will render either the NavBar or the mobile NavBar */}
         <div id="nav-bar__sticky-container"
           className="fixed w-full top-0 z-100 h-[12vh]">
-          {width > mobile_size_reference && <NavBar />}
-          {width <= mobile_size_reference && <Render_MobileNav />}
+          {width > mobile_size_reference && <nav><NavBar /></nav>}
+          {width <= mobile_size_reference && <nav><Render_MobileNav /></nav>}
         </div>
 
         {/* This container renders everything below the hero area */}
