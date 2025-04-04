@@ -8,12 +8,12 @@ const FAQ_component = () => {
           <div className="w-full lg:w-1/2">
             <div className="lg:max-w-xl">
               <div className="accordion-group" data-accordion="default-accordion">
-                <FAQ_Question heading="Who is the Hackathon open to?" 
-                text="The 2025 Hackathon is open to all students, faculty, and staff in the
+                <FAQ_Question heading="Who is the Hackathon open to?"
+                  text="The 2025 Hackathon is open to all students, faculty, and staff in the
                 Los Angeles Community College District."/>
 
-                <FAQ_Question heading="How do I apply?" 
-                text="Stay tuned. Our application portal will be opening in the next few weeks."/>
+                <FAQ_Question heading="How do I apply?"
+                  text="Stay tuned. Our application portal will be opening in the next few weeks." />
 
               </div>
             </div>
@@ -45,22 +45,24 @@ const FAQ_Question = (props: FAQ_Question__Props) => {
 
   return (
     <div className="m-3 border-3 border-solid rounded-xl border-white overflow-hidden">
-      <button 
-        className="w-full" 
+      <button
+        aria-controls="faq-question-content"
+        className="w-full"
         onClick={() => setOpen(!open)}
       >
-        <div className="accordion p-8 active" id="basic-heading-one-with-arrow-always-open">
-          <FAQ_Question_Header open={open} text={props.heading}/>
+        <div className="accordion p-8 active">
+          <FAQ_Question_Header open={open} text={props.heading} />
         </div>
       </button>
-      <div 
+      <div
+        id="faq-question-content"
         className="transition-all duration-300 ease-in-out"
-        style={{ 
+        style={{
           maxHeight: open ? contentHeight : 0,
           opacity: open ? 1 : 0
         }}
       >
-        <div 
+        <div
           ref={contentRef}
           className="px-8 pb-8"
         >
@@ -81,21 +83,21 @@ interface FAQ_Question_Header__Props {
 
 const FAQ_Question_Header = (props: FAQ_Question_Header__Props) => {
   return (
-    <div className="accordion-toggle group inline-flex items-center justify-between text-2xl font-normal leading-8 text-white w-full" aria-controls="basic-collapse-one-with-arrow-always-open">
+    <div className="accordion-toggle group inline-flex items-center justify-between text-2xl font-normal leading-8 text-white w-full">
       <h5 className="text-white font-bold">{props.text}</h5>
-      <svg 
-        className={`text-white transition-transform duration-300 ${props.open ? 'rotate-180' : ''}`} 
-        width="22" 
-        height="22" 
-        viewBox="0 0 22 22" 
-        fill="none" 
+      <svg
+        className={`text-white transition-transform duration-300 ${props.open ? 'rotate-180' : ''}`}
+        width="22"
+        height="22"
+        viewBox="0 0 22 22"
+        fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path 
-          d="M16.5 8.25L12.4142 12.3358C11.7475 13.0025 11.4142 13.3358 11 13.3358C10.5858 13.3358 10.2525 13.0025 9.58579 12.3358L5.5 8.25" 
-          stroke="currentColor" 
-          strokeWidth="1.6" 
-          strokeLinecap="round" 
+        <path
+          d="M16.5 8.25L12.4142 12.3358C11.7475 13.0025 11.4142 13.3358 11 13.3358C10.5858 13.3358 10.2525 13.0025 9.58579 12.3358L5.5 8.25"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>
