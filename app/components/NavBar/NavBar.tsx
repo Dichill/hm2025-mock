@@ -200,7 +200,7 @@ const NavBar = () => {
                     initial={false}
 
                     className="float-right m-4 mt-3 border-2 border-solid text-white h-12 w-30 rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
-                    style={{ cursor: 'pointer', border: isHovering ? "2px solid white" : `2px solid ${darkenColor(PRIMARY_COLORS.WARM_RED.hex, 30)}` }}
+                    style={{ cursor: 'pointer', border: isHovering ? "2px solid white" : `3px solid ${darkenColor(PRIMARY_COLORS.WARM_RED.hex, 40)}` }}
                     whileTap={{ scale: 0.95 }}
                     animate={{ backgroundColor: !isHovering && !isPressed ? PRIMARY_COLORS.WARM_RED.hex : isHovering && !isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 20) : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) }} // Darkens when pressed
                     transition={{ duration: 0.05 }}
