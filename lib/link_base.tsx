@@ -9,3 +9,5 @@ export const lacc = "https://www.lacc.edu/";
 export const laccd = "https://www.laccd.edu/";
 
 export const register = "#";
+
+export const MESA = "https://mesa.ucop.edu/student/#community-college"

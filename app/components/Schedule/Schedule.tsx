@@ -74,22 +74,24 @@ const Schedule = () => {
 
   return (
     <>
-      <ol className="items-center sm:flex">
+      <ol aria-label="timeline of Hackathon" className="items-center sm:flex">
 
         {events.map((event, index) => {
           console.log(index)
           if (index == 0) {
             return (
-              <>
-                <Schedule_List_Item key={`schedule_item_${event.title}`} title={event.title} description={event.description} date={event.date} />
+              <span key={`schedule_item_${event.title}`}>
+                <Schedule_List_Item title={event.title} description={event.description} date={event.date} />
                 <Divider />
-              </>);
+              </span>
+            );
           } else if (index != events.length - 1) {
             return (
-              <>
-                <Schedule_List_Item key={`schedule_item_${event.title}`} title={event.title} description={event.description} date={event.date} />
+              <span key={`schedule_item_${event.title}`}>
+
+                <Schedule_List_Item title={event.title} description={event.description} date={event.date} />
                 <Divider />
-              </>);
+              </span>);
           } else {
             return (
               <Schedule_List_Item key={`schedule_item_${event.title}`} title={event.title} description={event.description} date={event.date} />

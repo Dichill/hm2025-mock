@@ -90,7 +90,7 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                     onMouseUp={() => setIsPressed(false)}
                 >
                     <div>
-                        <button onClick={() => props.set_mobile_nav_open(false)} >X</button>
+                        X
                     </div>
                 </motion.button>
 

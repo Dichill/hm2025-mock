@@ -1,6 +1,6 @@
 "use client";
 
-import { mobile_size_reference, PRIMARY_COLORS } from "@/lib/colors"
+import { mobile_size_reference, PRIMARY_COLORS, SECONDARY_COLORS } from "@/lib/colors"
 
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer"
 import NavBar, { Render_MobileNav } from "./components/NavBar/NavBar"
@@ -21,6 +21,9 @@ import Footer from "./components/Footer/Footer";
 import SectionBase_HeroText from "./components/SectionBase_HeroText/SectionBase_HeroText";
 import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window";
 import Schedule from "./components/Schedule/Schedule";
+
+import "./page_grid.css"
+import { MESA } from "@/lib/link_base";
 
 function App() {
   const { width, height } = useWindowSize();
@@ -80,7 +83,7 @@ function App() {
                   <p className="text-center">MLH</p>
                 </div>
               </div>
-              </>
+            </>
           }
           {width <= mobile_size_reference &&
             <>
@@ -110,35 +113,71 @@ function App() {
               <TrifectaGraphic width={40} />
             </div>}
 
-          {/* About section */}
-          <SectionBase height={"100vh"} section_title="About" bg_color={backgroundColor} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
+          {/* About section Desktop */}
+          <SectionBase height={"auto"} section_title="About" bg_color={backgroundColor} alt_text_color={PRIMARY_COLORS.GREY_432.hex}>
             {width > mobile_size_reference &&
               <>
-                <div className="w-full h-full relative">
-                  <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
-                    <MESA_Color_Graphic width={28} />
+                <SectionBase_HeroText text="About MESA" />
+
+                <div id="area-in-question" className="">
+                  <div id="about_image_elem">
+                    <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={100} float="right" display="inline" width="80%" height="90%" margin="2em" />
+
                   </div>
-                  <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={100} float="right" display="inline" width="40%" height="90vh" margin="2em" />
-                  <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
-                    <LACC_Color_Graphic width={22} />
-                  </div>
+
+                  <span id="about_mesa_gr_elem_1" className="flex justify-center items-center">
+                    <div className="bg-white inline-block p-5 rounded-xl shadow-xl">
+                      <MESA_Color_Graphic width={28} />
+                    </div>
+                  </span>
+
+                  <span id="about_mesa_gr_elem_4">
+                    <div className=" bg-white inline-block p-5 rounded-xl shadow-xl float-right">
+                      <LACC_Color_Graphic width={22} />
+                    </div>
+                  </span>
+
+                  <span id="about_mesa_gr_elem_3">
+                    <div className=" text-white p-4 m-2 text-xl">
+                      <AboutMesaText />
+                    </div>
+                  </span>
+                </div>
+                <SectionBase_HeroText text="About the Hackathon" />
+
+                <div className="border-solid border-2 text-white p-4 m-2 text-xl rounded-2xl">
+                  <AboutMesaText />
                 </div>
               </>
             }
 
+
+            {/* About section Mobile */}
+
             {width <= mobile_size_reference &&
               <>
+                <h2 style={{ fontSize: width > 500 ? 100 : 40, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-white">About MESA</h2>
+
                 <section className="relative">
                   <div className="z-10 bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
                     <MESA_Color_Graphic width={28} />
                   </div>
+
                   <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={70} float="none" display="block" width="90%" height="90vh" margin="5%" />
+
                   <section>
                     <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
                       <LACC_Color_Graphic width={22} />
                     </div>
                   </section>
                 </section>
+                <div className="border-solid border-2 text-white p-4 m-2 text-xl rounded-2xl">
+                  <AboutMesaText />
+                </div>
+                <h2 style={{ fontSize: width > 500 ? 100 : 40, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-white">About Our Hackathon</h2>
+                <div className="border-solid border-2 text-white p-4 m-2 text-xl rounded-2xl">
+                  <AboutMesaText />
+                </div>
               </>
             }
           </SectionBase>
@@ -196,3 +235,16 @@ function App() {
 
 export default App;
 
+
+const AboutMesaText = () => {
+  return (
+    <>
+      <p>
+        <a target="new" href={MESA} className="underline">MESA’s community college level program</a> produces a population of transfer-ready students to advance their STEM educational journeys in 4-year university programs. If you are student interested in participating in MESA, please contact the local center director to get enrolled.
+      </p>
+      <p className="mt-4 font-bold">
+        MESA serves about 5, 700 community college students in California.
+      </p>
+    </>
+  )
+}
