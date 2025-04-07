@@ -38,6 +38,8 @@ const teamMembers: TeamMember[] = [
   }
 ];
 
+//TODO: The Team section needs to change to grid-column-rows: 1fr 1fr at a screen width ~900 px before it changes to grid-column-rows: 1 for the mobile view;
+//this will prevent text overflow off of the "about me" section on the back of the card
 const TeamMemberCard = ({ member }: { member: TeamMember }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);

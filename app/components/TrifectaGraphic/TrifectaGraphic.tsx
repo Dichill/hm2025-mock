@@ -4,9 +4,6 @@ interface TrifectaGraphicProps {
   width: number
 }
 
-
-//TODO: add alt text to each logo
-//TODO: add scaling capacity to props passed to this component
 const TrifectaGraphic = (props: TrifectaGraphicProps) => {
   const logos = ["./LACC_BW_Logo.png", "LACCD_logo_lowRes.png", "MESA_logo.svg"];
   const alt_text = ["Los Angeles City College Logo","LACCD Logo","MESA Logo; Math, Science, Engineering Achievement"]

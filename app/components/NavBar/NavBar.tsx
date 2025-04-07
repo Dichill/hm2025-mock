@@ -175,6 +175,7 @@ const NavBarButton = (props: NavBarButtonProps) => {
     )
 }
 
+//TODO: reconfigure NavBar and Mobile Nav so that the MLH badge sits naturally and the Nav looks healthy
 const NavBar = () => {
 
     const [isPressed, setIsPressed] = useState(false);
