@@ -20,10 +20,9 @@ import { backgroundColor } from "@/lib/colors";
 import Footer from "./components/Footer/Footer";
 import SectionBase_HeroText from "./components/SectionBase_HeroText/SectionBase_HeroText";
 import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window";
-import Schedule from "./components/Schedule/Schedule";
 
 import "./page_grid.css"
-import { MESA } from "@/lib/link_base";
+import { lacc, MESA } from "@/lib/link_base";
 
 function App() {
   const { width, height } = useWindowSize();
@@ -126,15 +125,19 @@ function App() {
                   </div>
 
                   <span id="about_mesa_gr_elem_1" className="flex justify-center items-center">
-                    <div className="bg-white inline-block p-5 rounded-xl shadow-xl">
-                      <MESA_Color_Graphic width={28} />
-                    </div>
+                    <a href={MESA} target="new">
+                      <div className="bg-white inline-block p-5 rounded-xl shadow-xl">
+                        <MESA_Color_Graphic width={28} />
+                      </div>
+                    </a>
                   </span>
 
                   <span id="about_mesa_gr_elem_4">
-                    <div className=" bg-white inline-block p-5 rounded-xl shadow-xl float-right">
-                      <LACC_Color_Graphic width={22} />
-                    </div>
+                    <a href={lacc} target="new">
+                      <div className=" bg-white inline-block p-5 rounded-xl shadow-xl float-right">
+                        <LACC_Color_Graphic width={22} />
+                      </div>
+                    </a>
                   </span>
 
                   <span id="about_mesa_gr_elem_3">
@@ -159,16 +162,21 @@ function App() {
                 <h2 style={{ fontSize: width > 500 ? 100 : 40, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-white">About MESA</h2>
 
                 <section className="relative">
-                  <div className="z-10 bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
-                    <MESA_Color_Graphic width={28} />
-                  </div>
+
+                  <a href={MESA} target="new">
+                    <div className="z-10 bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
+                      <MESA_Color_Graphic width={28} />
+                    </div>
+                  </a>
 
                   <Image_Overlay source="./MESA_student_overlay1.jpg" opacity={70} float="none" display="block" width="90%" height="90vh" margin="5%" />
 
                   <section>
-                    <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
-                      <LACC_Color_Graphic width={22} />
-                    </div>
+                    <a href={lacc} target="new">
+                      <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
+                        <LACC_Color_Graphic width={22} />
+                      </div>
+                    </a>
                   </section>
                 </section>
                 <div className="border-solid border-2 text-white p-4 m-2 text-xl rounded-2xl">
@@ -186,8 +194,9 @@ function App() {
           {/* Schedule section */}
           <SectionBase height={"auto"} section_title="Schedule" bg_color={backgroundColor}>
             <SectionBase_HeroText text="Schedule" />
-            <div className="p-4">
-              <Schedule />
+            <div className="mb-30 mt-20 text-3xl text-center">
+              Schedule coming soon...
+              {/* <Schedule /> */}
             </div>
           </SectionBase>
 
@@ -243,7 +252,7 @@ const AboutMesaText = () => {
         <a target="new" href={MESA} className="underline">MESA’s community college level program</a> produces a population of transfer-ready students to advance their STEM educational journeys in 4-year university programs. If you are student interested in participating in MESA, please contact the local center director to get enrolled.
       </p>
       <p className="mt-4 font-bold">
-        MESA serves about 5, 700 community college students in California.
+        MESA serves about 5,700 community college students in California.
       </p>
     </>
   )
