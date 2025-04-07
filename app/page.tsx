@@ -35,6 +35,8 @@ function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>HackMESA 2025, Los Angeles Community College District Hackathon, May 9th and 10th 2025</title>
       </head>
+      <a id="mlh-trust-badge" style={{display: "block", maxWidth: "100px", minWidth:"60px", position:"fixed", right:"20px", top:"0", width:"10%", zIndex:"20"}} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{width: "100%"}}/></a>
+      <body>
       <div style={{ backgroundColor: backgroundColor }} id="page-backdrop">
 
         {/* This is the hero logo */}
@@ -71,28 +73,20 @@ function App() {
 
         {/* This container will render either the NavBar or the mobile NavBar */}
         <div id="nav-bar__sticky-container"
-          className="fixed w-full top-0 z-100 h-[12vh]">
+          className="fixed w-[85%] top-0 z-100 h-[12vh]">
           {width > mobile_size_reference &&
             <>
               <nav>
                 <NavBar />
               </nav>
-              <div id="filler_for_mlh_badge" className="z-1 bg-white h-50 w-25 inline-block absolute right-10 top-0">
-                <div className="absolute bottom-10 w-full">
-                  <p className="text-center">MLH</p>
-                </div>
-              </div>
+
             </>
           }
           {width <= mobile_size_reference &&
             <>
               <nav><Render_MobileNav />
               </nav>
-              <div id="filler_for_mlh_badge" className="z-1 bg-white h-50 w-25 inline-block absolute right-10 top-0">
-                <div className="absolute bottom-10 w-full">
-                  <p className="text-center">MLH</p>
-                </div>
-              </div>
+
             </>
 
           }
@@ -146,10 +140,11 @@ function App() {
                     </div>
                   </span>
                 </div>
+
                 <SectionBase_HeroText text="About the Hackathon" />
 
-                <div className="border-solid border-2 text-white p-4 m-2 text-xl rounded-2xl">
-                  <AboutMesaText />
+                <div className=" text-white p-4 m-2 text-xl">
+                  <AboutHackathonText />
                 </div>
               </>
             }
@@ -159,7 +154,7 @@ function App() {
 
             {width <= mobile_size_reference &&
               <>
-                <h2 style={{ fontSize: width > 500 ? 100 : 40, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-white">About MESA</h2>
+                <h2 style={{ fontSize: width > 500 ? 60 : 40, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-center">About MESA</h2>
 
                 <section className="relative">
 
@@ -182,9 +177,9 @@ function App() {
                 <div className="border-solid border-2 text-white p-4 m-2 text-xl rounded-2xl">
                   <AboutMesaText />
                 </div>
-                <h2 style={{ fontSize: width > 500 ? 100 : 40, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-white">About Our Hackathon</h2>
+                <h2 style={{ fontSize: width > 500 ? 60 : 40, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-center">About Our Hackathon</h2>
                 <div className="border-solid border-2 text-white p-4 m-2 text-xl rounded-2xl">
-                  <AboutMesaText />
+                  <AboutHackathonText />
                 </div>
               </>
             }
@@ -194,7 +189,7 @@ function App() {
           {/* Schedule section */}
           <SectionBase height={"auto"} section_title="Schedule" bg_color={backgroundColor}>
             <SectionBase_HeroText text="Schedule" />
-            <div className="mb-30 mt-20 text-3xl text-center">
+            <div className="mb-30 mt-20 text-2xl text-center">
               Schedule coming soon...
               {/* <Schedule /> */}
             </div>
@@ -204,7 +199,11 @@ function App() {
           {/* Location section */}
           <SectionBase height={"auto"} section_title="Location" bg_color={backgroundColor}>
             <SectionBase_HeroText text="Location" />
-            <LocationMap />
+            <p className="text-center text-2xl">The Los Angeles City College Student Services Building</p>
+            <p className="text-center text-2xl">855 N. Vermont Avenue, Los Angeles California 90029</p>
+            <div className="flex justify-center">
+              <LocationMap />
+            </div>
           </SectionBase>
 
           {/* Sponsors section */}
@@ -237,7 +236,7 @@ function App() {
         </div>
 
       </div>
-
+      </body>
     </>
   )
 }
@@ -248,12 +247,35 @@ export default App;
 const AboutMesaText = () => {
   return (
     <>
+        <div style={{lineHeight: "1.8"}}>
+
       <p>
         <a target="new" href={MESA} className="underline">MESA’s community college level program</a> produces a population of transfer-ready students to advance their STEM educational journeys in 4-year university programs. If you are student interested in participating in MESA, please contact the local center director to get enrolled.
       </p>
-      <p className="mt-4 font-bold">
+      <p className="mt-4 font-bold text-center">
         MESA serves about 5,700 community college students in California.
       </p>
+      </div>
     </>
+  )
+}
+
+
+const AboutHackathonText = () => {
+  return (
+    <div style={{lineHeight: "1.8"}}>
+      <p className="mt-4 font-bold text-center mb-5">
+        We are proud to present the very first Los Angeles City College & MESA HackMESA Hackathon! 🎉
+      </p>
+      <p>
+        Open to LACCD students, this event will be an unforgettable evening of workshops, programming, teamwork, food, and sidequests!
+      </p>
+      <p>
+        Our hackathon is hosted by <a target="new" href={MESA} className="underline">MESA</a>, in conjunction with LACC, the LACCD Chancellor&apos;s Office, and our generous sponsors in the community.
+      </p>
+      <p className="mt-4 font-bold text-center mb-5">
+        Teams will form, and this overnight event will culminate in hundreds of dollars in prizes!
+      </p>
+    </div>
   )
 }

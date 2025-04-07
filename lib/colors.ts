@@ -124,7 +124,9 @@ export const TAILWIND_COLORS = {
 
 export const HackMESA_casing = "HackMESA";
 export const mobile_size_reference = 800;
-export const backgroundColor = "#433966"
+export const backgroundColor = "#433966";
+export const sectionBase_side_padding_desktop = 10;
+export const sectionBase_side_padding_mobile = 2;
 
 export default MESA_COLORS;
 

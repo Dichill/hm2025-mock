@@ -11,7 +11,7 @@ const SectionBase_HeroText = (props: SectionBase_HeroText_Props) => {
 
 
   return (
-    <h2 style={{ fontSize: width > 500 ? 100 : 50, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="text-white text-center">{props.text}</h2>
+    <h2  style={{ fontSize: width > 500 ? 70 : 50, fontWeight: "800", color: SECONDARY_COLORS.YELLOW_107.hex, textShadow: "10px 10px 10px black" }} className="pb-6 text-center">{props.text}</h2>
   )
 }
 
