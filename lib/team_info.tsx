@@ -25,8 +25,8 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Evelyn Toledo",
     role: "Social Media Lead",
-    description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
-    image: "",
+    description: "Biology major active in MESA, supporting community and outreach through HackMESA’s marketing team and social media management",
+    image: "/evelyn_WR.jpg",
     school: "ELAC"
   },
   {
