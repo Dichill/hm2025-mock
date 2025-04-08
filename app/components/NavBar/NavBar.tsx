@@ -187,7 +187,7 @@ const NavBar = () => {
 
     //large screen
     return (
-        <div style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} className=" sticky shadow-lg rounded-lg top-2 z-100 w-full m-4 bg-white">
+        <div style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} className=" sticky shadow-lg rounded-lg top-2 z-100 w-full m-2">
 
             <div id="nav__container" className="h-full">
                 <div className="flex content-center items-center">
@@ -206,8 +206,8 @@ const NavBar = () => {
                     key="web-nav__register"
                     initial={false}
 
-                    className="float-right m-4 mt-3 border-2 border-solid text-white h-[80%] w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
-                    style={{ cursor: 'pointer', border: isHovering ? "2px solid white" : `3px solid ${darkenColor(PRIMARY_COLORS.WARM_RED.hex, 40)}` }}
+                    className={`float-right m-4 mt-3 border-solid text-white  w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150`}
+                    style={{ cursor: 'pointer', border: isHovering ? "0.5vh solid white" : `0.5vh solid ${darkenColor(PRIMARY_COLORS.WARM_RED.hex, 40)}` }}
                     whileTap={{ scale: 0.95 }}
                     animate={{ backgroundColor: !isHovering && !isPressed ? PRIMARY_COLORS.WARM_RED.hex : isHovering && !isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 20) : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) }} // Darkens when pressed
                     transition={{ duration: 0.05 }}
@@ -218,7 +218,7 @@ const NavBar = () => {
                     onMouseDown={() => setIsPressed(true)}
                     onMouseUp={() => setIsPressed(false)}
                 >
-                    <p style={{fontSize: DT_base_fontSize}} className="font-bold flex justify-center content-center">
+                    <p style={{fontSize: DT_base_fontSize, padding: "1vh"}} className="font-bold flex justify-center content-center">
                         Register
                     </p>
                 </motion.button>
