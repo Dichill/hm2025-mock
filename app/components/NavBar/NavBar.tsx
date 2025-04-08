@@ -63,7 +63,7 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
 }
 
 interface MobileNavOpen_Props {
-    set_mobile_nav_open: Dispatch<SetStateAction<boolean>>
+    close_nav: Dispatch<SetStateAction<boolean>>
 }
 
 const MobileNavOpen = (props: MobileNavOpen_Props) => {
@@ -83,7 +83,7 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                     animate={{ backgroundColor: isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) : PRIMARY_COLORS.WARM_RED.hex }} // Darkens when pressed
                     // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
                     transition={{ duration: 0.05 }}
-                    onClick={() => props.set_mobile_nav_open(false)}
+                    onClick={() => props.close_nav(false)}
                     onTouchStart={() => setIsPressed(true)}
                     onTouchEnd={() => setIsPressed(false)}
                     onMouseDown={() => setIsPressed(true)}
@@ -94,15 +94,15 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                     </div>
                 </motion.button>
 
-                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="About" />
+                <MobileNavOpen_Button close_nav={props.close_nav} text="About" />
                 <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="Schedule" />
+                <MobileNavOpen_Button close_nav={props.close_nav} text="Schedule" />
                 <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="Location" />
+                <MobileNavOpen_Button close_nav={props.close_nav} text="Location" />
                 <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="Sponsors" />
+                <MobileNavOpen_Button close_nav={props.close_nav} text="Sponsors" />
                 <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.set_mobile_nav_open} text="FAQ" />
+                <MobileNavOpen_Button close_nav={props.close_nav} text="FAQ" />
             </div></>
     )
 }
@@ -148,13 +148,13 @@ const MobileNavDivider = () => {
 export const Render_MobileNav = () => {
     const [mobileNav_open, set_mobile_nav_open] = useState(false);
     return (
-        <div className="sticky top-0 z-100">
+        <div className="sticky top-0 z-1000">
             {!mobileNav_open && <>
                 <MobileNavClosed open_nav={set_mobile_nav_open} />
             </>}
             {mobileNav_open &&
                 <>
-                    <MobileNavOpen set_mobile_nav_open={set_mobile_nav_open} />
+                    <MobileNavOpen close_nav={set_mobile_nav_open} />
                 </>}
         </div>
     )
@@ -163,7 +163,7 @@ export const Render_MobileNav = () => {
 
 // **  End MOBILE; start Desktop  **
 
-const DT_base_fontSize = "3vh";
+const DT_base_fontSize = "2vw";
 
 
 interface NavBarButtonProps {
@@ -178,7 +178,7 @@ const NavBarButton = (props: NavBarButtonProps) => {
     )
 }
 
-//TODO: reconfigure NavBar and Mobile Nav so that the MLH badge sits naturally and the Nav looks healthy
+//TODO: NavBar is not responsive in a way that looks healthy; fix
 const NavBar = () => {
 
 

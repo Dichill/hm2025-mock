@@ -37,7 +37,7 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
         <div className="w-full h-full backface-hidden bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col items-center pb-10">
             <img
-              className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
+              className="mt-3 w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
               src={member.image}
               alt={`portrait of ${member.name}`}
             />

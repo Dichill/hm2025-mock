@@ -30,9 +30,14 @@ function App() {
   return (
     <>
 
+      {/* MLH Badge */}
+      {width > mobile_size_reference && <a id="mlh-trust-badge" style={{ display: "block", maxWidth: "15%", minWidth: "60px", position: "fixed", right: "2%", top: "0", width: "10%", zIndex: "101" }} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{ width: "100%" }} /></a>
+      }
+      {width <= mobile_size_reference && <a id="mlh-trust-badge" style={{ display: "block", maxWidth: "20%", minWidth: "80px", position: "fixed", right: "3%", top: "0", width: "10%", zIndex: "101" }} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{ width: "100%" }} /></a>
+      }
 
-      <a id="mlh-trust-badge" style={{ display: "block", maxWidth: "100px", minWidth: "60px", position: "fixed", right: "50px", top: "0", width: "10%", zIndex: "1000" }} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{ width: "100%" }} /></a>
 
+      {/* The "Body" is below */}
       <div style={{ backgroundColor: backgroundColor }} id="page-backdrop">
 
         {/* This is the hero logo */}
@@ -69,7 +74,7 @@ function App() {
 
         {/* This container will render either the NavBar or the mobile NavBar */}
         <div id="nav-bar__sticky-container"
-          className="fixed w-[85%] top-0 z-100 h-[12%] min-h-30 flex">
+          className="fixed w-[85%] top-0 z-103 h-[12%] min-h-30 flex">
           {width > mobile_size_reference &&
             <NavBar />
 
