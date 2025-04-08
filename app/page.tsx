@@ -29,14 +29,10 @@ function App() {
 
   return (
     <>
-      <html lang="en" />
-      <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>HackMESA 2025, Los Angeles Community College District Hackathon, May 9th and 10th 2025</title>
-      </head>
-      <a id="mlh-trust-badge" style={{display: "block", maxWidth: "100px", minWidth:"60px", position:"fixed", right:"20px", top:"0", width:"10%", zIndex:"20"}} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{width: "100%"}}/></a>
-      <body>
+
+
+      <a id="mlh-trust-badge" style={{ display: "block", maxWidth: "100px", minWidth: "60px", position: "fixed", right: "20px", top: "0", width: "10%", zIndex: "20" }} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{ width: "100%" }} /></a>
+
       <div style={{ backgroundColor: backgroundColor }} id="page-backdrop">
 
         {/* This is the hero logo */}
@@ -236,7 +232,7 @@ function App() {
         </div>
 
       </div>
-      </body>
+
     </>
   )
 }
@@ -247,14 +243,14 @@ export default App;
 const AboutMesaText = () => {
   return (
     <>
-        <div style={{lineHeight: "1.8"}}>
+      <div style={{ lineHeight: "1.8" }}>
 
-      <p>
-        <a target="new" href={MESA} className="underline">MESA’s community college level program</a> produces a population of transfer-ready students to advance their STEM educational journeys in 4-year university programs. If you are student interested in participating in MESA, please contact the local center director to get enrolled.
-      </p>
-      <p className="mt-4 font-bold text-center">
-        MESA serves about 5,700 community college students in California.
-      </p>
+        <p>
+          <a target="new" href={MESA} className="underline">MESA’s community college level program</a> produces a population of transfer-ready students to advance their STEM educational journeys in 4-year university programs. If you are student interested in participating in MESA, please contact the local center director to get enrolled.
+        </p>
+        <p className="mt-4 font-bold text-center">
+          MESA serves about 5,700 community college students in California.
+        </p>
       </div>
     </>
   )
@@ -263,7 +259,7 @@ const AboutMesaText = () => {
 
 const AboutHackathonText = () => {
   return (
-    <div style={{lineHeight: "1.8"}}>
+    <div style={{ lineHeight: "1.8" }}>
       <p className="mt-4 font-bold text-center mb-5">
         We are proud to present the very first Los Angeles City College & MESA HackMESA Hackathon! 🎉
       </p>

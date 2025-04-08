@@ -3,48 +3,16 @@
 import useWindowSize from "@/lib/useWindowSize";
 import { mobile_size_reference } from "@/lib/colors";
 import { useState } from "react";
+import { TeamMember, teamMembers } from "@/lib/team_info";
 
-interface TeamMember {
-  name: string;
-  role: string;
-  image: string;
-  description: string;
-}
 
-const teamMembers: TeamMember[] = [
-  {
-    name: "SpongeBob SquarePants",
-    role: "Lead Jellyfisher",
-    image: "/sb.jpg",
-    description: "SpongeBob is a dedicated jellyfisher with over 10 years of experience in the field."
-  },
-  {
-    name: "Patrick Star",
-    role: "Jellyfish Expert",
-    image: "/patrick.jpg",
-    description: "Patrick brings his unique perspective to jellyfishing, specializing in rare jellyfish species."
-  },
-  {
-    name: "Squidward Tentacles",
-    role: "Technical Director",
-    image: "/squidward.jpg",
-    description: "Squidward oversees all technical aspects of our jellyfishing operations."
-  },
-  {
-    name: "Mr. Krabs",
-    role: "Project Manager",
-    image: "/krabs.jpg",
-    description: "Mr. Krabs manages our resources and ensures we stay on budget."
-  }
-];
 
-//TODO: The Team section needs to change to grid-column-rows: 1fr 1fr at a screen width ~900 px before it changes to grid-column-rows: 1 for the mobile view;
-//this will prevent text overflow off of the "about me" section on the back of the card
+
 const TeamMemberCard = ({ member }: { member: TeamMember }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const {width} = useWindowSize();
+  const { width } = useWindowSize();
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent event from bubbling up
@@ -52,7 +20,7 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
   };
 
   return (
-    <div 
+    <div
       className="w-full max-w-xs perspective-1000 p-4"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -60,18 +28,18 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
       onTouchEnd={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <div 
+      <div
         className={`relative w-full h-full transition-transform duration-200 transform-style-3d 
-          ${ (( ( width < mobile_size_reference  &&  isFlipped )) || isHovered  ) ? 'rotate-y-180' : ''}`}
+          ${(((width < mobile_size_reference && isFlipped)) || isHovered) ? 'rotate-y-180' : ''}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Front of card */}
         <div className="w-full h-full backface-hidden bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col items-center pb-10">
-            <img 
-              className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" 
-              src={member.image} 
-              alt={member.name} 
+            <img
+              className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
+              src={member.image}
+              alt={`portrait of ${member.name}`}
             />
             <h5 className="mb-1 text-xl text-center font-bold text-gray-900 dark:text-white">
               {member.name}
@@ -79,17 +47,20 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
             <span className="text-sm text-gray-500 dark:text-gray-400">
               {member.role}
             </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {member.school}
+            </span>
           </div>
         </div>
 
         {/* Back of card */}
-        <div 
+        <div
           className="absolute top-0 w-full h-full backface-hidden rotate-y-180 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6"
           style={{ backfaceVisibility: 'hidden' }}
         >
           <div className="flex flex-col h-full">
             <h5 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-              About {member.name}
+              {member.name}
             </h5>
             <p className="text-gray-600 dark:text-gray-300">
               {member.description}
@@ -101,12 +72,13 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
   );
 };
 
+
 const TheTeam = () => {
   const { width } = useWindowSize();
 
   return (
     <div className="w-full py-8">
-      <div className={`grid gap-6 ${width > mobile_size_reference ? 'grid-cols-4' : 'grid-cols-1'} justify-items-center`}>
+      <div className={`grid gap-6 ${width > 1500 ? 'grid-cols-4' : width > mobile_size_reference ? 'grid-cols-2' : 'grid-cols-1'} justify-items-center`}>
         {teamMembers.map((member, index) => (
           <TeamMemberCard key={index} member={member} />
         ))}
