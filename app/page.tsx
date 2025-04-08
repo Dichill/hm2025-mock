@@ -31,7 +31,7 @@ function App() {
     <>
 
 
-      <a id="mlh-trust-badge" style={{ display: "block", maxWidth: "100px", minWidth: "60px", position: "fixed", right: "20px", top: "0", width: "10%", zIndex: "20" }} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{ width: "100%" }} /></a>
+      <a id="mlh-trust-badge" style={{ display: "block", maxWidth: "100px", minWidth: "60px", position: "fixed", right: "50px", top: "0", width: "10%", zIndex: "1000" }} href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white" target="_blank"><img src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg" alt="Major League Hacking 2025 Hackathon Season" style={{ width: "100%" }} /></a>
 
       <div style={{ backgroundColor: backgroundColor }} id="page-backdrop">
 
@@ -69,22 +69,16 @@ function App() {
 
         {/* This container will render either the NavBar or the mobile NavBar */}
         <div id="nav-bar__sticky-container"
-          className="fixed w-[85%] top-0 z-100 h-[12vh]">
+          className="fixed w-[85%] top-0 z-100 h-[12%] min-h-30 flex">
           {width > mobile_size_reference &&
-            <>
-              <nav>
-                <NavBar />
-              </nav>
+            <NavBar />
 
-            </>
           }
           {width <= mobile_size_reference &&
             <>
               <nav><Render_MobileNav />
               </nav>
-
             </>
-
           }
         </div>
 

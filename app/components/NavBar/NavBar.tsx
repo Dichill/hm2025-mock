@@ -163,14 +163,17 @@ export const Render_MobileNav = () => {
 
 // **  End MOBILE; start Desktop  **
 
+const DT_base_fontSize = "3vh";
+
+
 interface NavBarButtonProps {
     text: string,
 }
 
 const NavBarButton = (props: NavBarButtonProps) => {
     return (
-        <a href={`#section-${props.text.toLowerCase()}`}>
-            <button className="h-[98%] w-[98%] font-bold cursor-pointer navBarButton">{props.text}</button>
+        <a className="" href={`#section-${props.text.toLowerCase()}`}>
+            <button style={{fontSize: DT_base_fontSize}} className="h-[98%] w-[98%] font-bold cursor-pointer navBarButton">{props.text}</button>
         </a>
     )
 }
@@ -178,15 +181,17 @@ const NavBarButton = (props: NavBarButtonProps) => {
 //TODO: reconfigure NavBar and Mobile Nav so that the MLH badge sits naturally and the Nav looks healthy
 const NavBar = () => {
 
+
     const [isPressed, setIsPressed] = useState(false);
     const [isHovering, setIsHovering] = useState(false)
 
     //large screen
     return (
-        <div className="sticky top-2 z-100">
-            <div id="nav__container" style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} className="sticky z-100 shadow-lg rounded-lg m-2">
+        <div style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} className=" sticky shadow-lg rounded-lg top-2 z-100 w-full m-4 bg-white">
+
+            <div id="nav__container" className="h-full">
                 <div className="flex content-center items-center">
-                    <h4 id="nav__logo" className="text-center color-black text-xl text-justify w-full">{HackMESA_casing}</h4>
+                    <h4 id="nav__logo" style={{fontSize: DT_base_fontSize}} className="color-black text-justify w-full">{HackMESA_casing}</h4>
                 </div>
                 <nav id="nav__routes" className="inline" >
                     <NavBarButton text="About" />
@@ -196,11 +201,12 @@ const NavBar = () => {
                     <NavBarButton text="FAQ" />
                 </nav>
 
+                <div id="nav__register" className="flex justify-center items-center">
                 <motion.button
                     key="web-nav__register"
                     initial={false}
 
-                    className="float-right m-4 mt-3 border-2 border-solid text-white h-12 w-30 rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
+                    className="float-right m-4 mt-3 border-2 border-solid text-white h-[80%] w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150"
                     style={{ cursor: 'pointer', border: isHovering ? "2px solid white" : `3px solid ${darkenColor(PRIMARY_COLORS.WARM_RED.hex, 40)}` }}
                     whileTap={{ scale: 0.95 }}
                     animate={{ backgroundColor: !isHovering && !isPressed ? PRIMARY_COLORS.WARM_RED.hex : isHovering && !isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 20) : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) }} // Darkens when pressed
@@ -212,10 +218,11 @@ const NavBar = () => {
                     onMouseDown={() => setIsPressed(true)}
                     onMouseUp={() => setIsPressed(false)}
                 >
-                    <p className="font-bold flex justify-center content-center">
-                        Register Now
+                    <p style={{fontSize: DT_base_fontSize}} className="font-bold flex justify-center content-center">
+                        Register
                     </p>
                 </motion.button>
+                </div>
             </div>
         </div>
     );
