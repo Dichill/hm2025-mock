@@ -74,9 +74,9 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Andrea Castillo",
     role: "Designer/Tech Team",
-    description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
+    description: "Computer Engineering student passionate about making higher education more accessible to all students. ",
     image: "",
-    school: "ELAC"
+    school: "CSULB"
   },
   {
     name: "Serena Kaldawi",
