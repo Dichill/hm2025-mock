@@ -18,6 +18,7 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
     const [isPressed2, setIsPressed2] = useState(false);
 
     return (
+        <>
             <div className="sticky top-0 z-100">
                 {/*Hamburger Menu Button*/}
                 <motion.button
@@ -60,6 +61,7 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                     </p>
                 </motion.button>
             </div>
+            </>
     );
 }
 
