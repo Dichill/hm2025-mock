@@ -24,7 +24,6 @@ const Logo = (props: LogoProps) => {
   // return (
     <div className="flex justify-center items-center -mb-30">
       <img style={{opacity: "70%"}} width={props.size} src="./sunset_sketch1.tiff" alt="HackMESA 2025 Logo; the logo has a cityscape, circuit designs, and it says 'Los Angeles Community College District, 2025 HackMESA.'" />
-
     </div>
   )
 }
