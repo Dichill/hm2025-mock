@@ -1,15 +1,15 @@
 import {
     darkenColor,
     HackMESA_casing,
-    PRIMARY_COLORS,
+    SECONDARY_COLORS,
     TERTIARY_COLORS,
 } from "@/lib/colors";
 
 import "./NavBar.css";
-// import useWindowSize from "@/lib/useWindowSize";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import useWindowSize from "@/lib/useWindowSize";
 
 //Components and Interfaces prefixed with Mobile- are mobile only;
 //Components and Interfaces without prefix Mobile- are web only
@@ -20,63 +20,59 @@ interface MobileNavClosed_Props {
 
 const MobileNavClosed = (props: MobileNavClosed_Props) => {
     const [isPressed, setIsPressed] = useState(false);
-    const [isPressed2, setIsPressed2] = useState(false);
+    const [isRegisterPressed, setIsRegisterPressed] = useState(false);
 
     return (
-        <>
-            <div className="sticky top-0 z-100">
-                {/*Hamburger Menu Button*/}
+        <div className="fixed top-4 left-4 right-[200px] z-[150] flex justify-between items-center p-3 bg-white/90 backdrop-blur-sm shadow-md rounded-xl">
+            <div className="flex items-center">
                 <motion.button
                     key="mob-nav__menu"
                     initial={false}
-                    className="m-4 border-2 border-solid border-white h-15 w-15 rounded-full bg-gray-50 text-black drop-shadow-lg transition-colors duration-150 hover:bg-gray-200"
+                    className="flex items-center justify-center w-10 h-10 rounded-md bg-purple-100 shadow-sm"
                     whileTap={{ scale: 0.95 }}
                     animate={{
-                        backgroundColor: isPressed ? "#fffff" : `${"#a289d7"}`,
-                    }} // Darkens when pressed
-                    transition={{ duration: 0.05 }}
+                        backgroundColor: isPressed
+                            ? darkenColor(TERTIARY_COLORS.PURPLE_2655.hex, 20)
+                            : TERTIARY_COLORS.PURPLE_2655.hex,
+                    }}
+                    transition={{ duration: 0.1 }}
                     onClick={() => props.open_nav(true)}
                     onTouchStart={() => setIsPressed(true)}
                     onTouchEnd={() => setIsPressed(false)}
                     onMouseDown={() => setIsPressed(true)}
                     onMouseUp={() => setIsPressed(false)}
                 >
-                    <div className="flex justify-center content-center ">
-                        {/*This hamburger icon is generously provided by Font Awesome*/}
-                        <Image
-                            className="invert"
-                            src="./menu_hamburger.svg"
-                            alt="menu button"
-                            width={30}
-                            height={30}
-                        />
-                    </div>
+                    <Image
+                        src="/menu_hamburger.svg"
+                        alt="Menu"
+                        width={24}
+                        height={24}
+                        className="invert"
+                    />
                 </motion.button>
-
-                {/*Register Now Button */}
-                <motion.button
-                    key="mob-nav__register"
-                    initial={false}
-                    className="float-right m-4 mt-5 border-2 border-solid text-white h-12 w-30 rounded-md bg-gray-50  drop-shadow-lg transition-colors duration-150 hover:bg-gray-200"
-                    style={{ border: "2px solid white" }}
-                    whileTap={{ scale: 0.95 }}
-                    animate={{
-                        backgroundColor: isPressed2
-                            ? darkenColor("#ffb607", 50)
-                            : `${"#ff893e"}`,
-                    }} // Darkens when pressed
-                    transition={{ duration: 0.05 }}
-                    onTouchStart={() => setIsPressed2(true)}
-                    onTouchEnd={() => setIsPressed2(false)}
-                    onMouseDown={() => setIsPressed2(true)}
-                    onMouseUp={() => setIsPressed2(false)}
-                >
-                    <p className="font-bold flex justify-center content-center">
-                        Register Now
-                    </p>
-                </motion.button>
+                <h1 className="ml-3 font-bold text-xl">{HackMESA_casing}</h1>
             </div>
-        </>
+
+            <motion.button
+                key="mob-nav__register"
+                initial={false}
+                className="px-5 py-2 rounded-md font-medium text-white shadow-sm"
+                whileTap={{ scale: 0.95 }}
+                animate={{
+                    backgroundColor: isRegisterPressed
+                        ? darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 20)
+                        : SECONDARY_COLORS.ORANGE_151.hex,
+                }}
+                transition={{ duration: 0.1 }}
+                onClick={() => (window.location.href = "/register")}
+                onTouchStart={() => setIsRegisterPressed(true)}
+                onTouchEnd={() => setIsRegisterPressed(false)}
+                onMouseDown={() => setIsRegisterPressed(true)}
+                onMouseUp={() => setIsRegisterPressed(false)}
+            >
+                Register Now
+            </motion.button>
+        </div>
     );
 };
 
@@ -84,127 +80,132 @@ interface MobileNavOpen_Props {
     close_nav: Dispatch<SetStateAction<boolean>>;
 }
 
-//Mobile Navigation when
 const MobileNavOpen = (props: MobileNavOpen_Props) => {
     const [isPressed, setIsPressed] = useState(false);
 
     return (
         <>
-            <div className="h-23">
-                {/* This is here just so that there is no sudden empty space behind the menu when the mobile nav is opened */}
+            <div className="h-[60px]">
+                {/* Spacer to prevent content jump */}
             </div>
-            <div
-                style={{ backgroundColor: "#a289d7" }}
-                className="fixed top-0 z-1000 w-full"
-            >
-                <motion.button
-                    key="mob-nav__menu"
-                    initial={false}
-                    style={{
-                        borderColor: isPressed
-                            ? "white"
-                            : darkenColor("purple", 50),
-                        color: isPressed
-                            ? "white"
-                            : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50),
-                    }}
-                    className="m-4 h-13 w-13 border-solid font-black border-4 text-2xl float-right transition-colors duration-150"
-                    animate={{
-                        backgroundColor: isPressed
-                            ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50)
-                            : PRIMARY_COLORS.WARM_RED.hex,
-                    }} // Darkens when pressed
-                    // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
-                    transition={{ duration: 0.05 }}
-                    onClick={() => props.close_nav(false)}
-                    onTouchStart={() => setIsPressed(true)}
-                    onTouchEnd={() => setIsPressed(false)}
-                    onMouseDown={() => setIsPressed(true)}
-                    onMouseUp={() => setIsPressed(false)}
-                >
-                    <div>X</div>
-                </motion.button>
+            <div className="fixed top-0 left-0 z-[150] w-full h-screen bg-gradient-to-b from-purple-600 to-purple-800">
+                <div className="flex justify-between items-center p-4">
+                    <h1 className="font-bold text-xl text-white">
+                        {HackMESA_casing}
+                    </h1>
+                    <motion.button
+                        key="mob-nav__close"
+                        initial={false}
+                        className="flex items-center justify-center w-10 h-10 rounded-md bg-white/20 text-white"
+                        whileTap={{ scale: 0.95 }}
+                        animate={{
+                            backgroundColor: isPressed
+                                ? "rgba(255, 255, 255, 0.3)"
+                                : "rgba(255, 255, 255, 0.2)",
+                        }}
+                        transition={{ duration: 0.1 }}
+                        onClick={() => props.close_nav(false)}
+                        onTouchStart={() => setIsPressed(true)}
+                        onTouchEnd={() => setIsPressed(false)}
+                        onMouseDown={() => setIsPressed(true)}
+                        onMouseUp={() => setIsPressed(false)}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </motion.button>
+                </div>
 
-                <MobileNavOpen_Button
-                    close_nav={props.close_nav}
-                    text="About"
-                />
-                <MobileNavDivider />
-                <MobileNavOpen_Button
-                    close_nav={props.close_nav}
-                    text="Schedule"
-                />
-                <MobileNavDivider />
-                <MobileNavOpen_Button
-                    close_nav={props.close_nav}
-                    text="Location"
-                />
-                <MobileNavDivider />
-                <MobileNavOpen_Button
-                    close_nav={props.close_nav}
-                    text="Sponsors"
-                />
-                <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.close_nav} text="FAQ" />
+                <nav className="mt-8">
+                    <MobileNavItem close_nav={props.close_nav} text="About" />
+                    <MobileNavItem
+                        close_nav={props.close_nav}
+                        text="Schedule"
+                    />
+                    <MobileNavItem
+                        close_nav={props.close_nav}
+                        text="Location"
+                    />
+                    <MobileNavItem
+                        close_nav={props.close_nav}
+                        text="Sponsors"
+                    />
+                    <MobileNavItem close_nav={props.close_nav} text="FAQ" />
+                </nav>
             </div>
         </>
     );
 };
 
-interface MobileNavOpen_Button_Props {
+interface MobileNavItemProps {
     text: string;
     close_nav: Dispatch<SetStateAction<boolean>>;
 }
 
-const MobileNavOpen_Button = (props: MobileNavOpen_Button_Props) => {
+const MobileNavItem = (props: MobileNavItemProps) => {
     const [isPressed, setIsPressed] = useState(false);
 
     return (
-        <a href={`#section-${props.text.toLowerCase()}`}>
-            <motion.button
+        <a
+            href={`#section-${props.text.toLowerCase()}`}
+            className="block"
+            onClick={() => props.close_nav(false)}
+        >
+            <motion.div
                 key={`mob-nav_item__${props.text}`}
                 initial={false}
-                className="w-full p-6 transition-colors text-2xl font-medium duration-150 active:text-white"
+                className="py-4 px-8 text-white text-lg font-medium border-b border-white/10"
                 animate={{
                     backgroundColor: isPressed
-                        ? darkenColor("purple", 50)
-                        : "#e94d97",
-                }} // Darkens when pressed
-                // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
-                transition={{ duration: 0.05 }}
-                onClick={() => props.close_nav(false)}
+                        ? "rgba(255, 255, 255, 0.1)"
+                        : "transparent",
+                }}
+                transition={{ duration: 0.1 }}
                 onTouchStart={() => setIsPressed(true)}
                 onTouchEnd={() => setIsPressed(false)}
                 onMouseDown={() => setIsPressed(true)}
                 onMouseUp={() => setIsPressed(false)}
             >
-                <div>
-                    {/*This hamburger icon is generously provided by Font Awesome*/}
-                    {props.text}
-                </div>
-            </motion.button>
+                {props.text}
+            </motion.div>
         </a>
     );
 };
 
-//Hamburger Nav Divider
-const MobileNavDivider = () => {
-    return <div className="h-1" style={{ backgroundColor: "white" }}></div>;
-};
-
 export const Render_MobileNav = () => {
     const [mobileNav_open, set_mobile_nav_open] = useState(false);
+
+    // Prevent body scroll when mobile nav is open
+    useEffect(() => {
+        if (mobileNav_open) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [mobileNav_open]);
+
     return (
-        <div className="sticky top-0 z-1000">
+        <div className="z-[150]">
             {!mobileNav_open && (
-                <>
-                    <MobileNavClosed open_nav={set_mobile_nav_open} />
-                </>
+                <MobileNavClosed open_nav={set_mobile_nav_open} />
             )}
             {mobileNav_open && (
-                <>
-                    <MobileNavOpen close_nav={set_mobile_nav_open} />
-                </>
+                <MobileNavOpen close_nav={set_mobile_nav_open} />
             )}
         </div>
     );
@@ -212,84 +213,123 @@ export const Render_MobileNav = () => {
 
 // **  End MOBILE; start Desktop  **
 
-const DT_base_fontSize = "2vw";
-
+// Desktop Navigation Components
 interface NavBarButtonProps {
     text: string;
+    isActive?: boolean;
 }
 
 const NavBarButton = (props: NavBarButtonProps) => {
+    const [isHovering, setIsHovering] = useState(false);
+
     return (
-        <a className="" href={`#section-${props.text.toLowerCase()}`}>
-            <button
-                style={{ fontSize: DT_base_fontSize }}
-                className="h-[98%] w-[98%] font-bold cursor-pointer navBarButton"
+        <a href={`#section-${props.text.toLowerCase()}`} className="px-2">
+            <motion.div
+                className={`py-2 px-4 text-base font-medium rounded-md transition-all duration-150 ${
+                    props.isActive
+                        ? "text-white bg-purple-600"
+                        : "text-gray-700 hover:text-purple-800"
+                }`}
+                onHoverStart={() => setIsHovering(true)}
+                onHoverEnd={() => setIsHovering(false)}
+                animate={{
+                    backgroundColor: props.isActive
+                        ? TERTIARY_COLORS.PURPLE_2655.hex
+                        : isHovering
+                        ? "rgba(162, 137, 215, 0.1)"
+                        : "transparent",
+                }}
             >
                 {props.text}
-            </button>
+            </motion.div>
         </a>
     );
 };
 
-//TODO: NavBar is not responsive in a way that looks healthy; fix
-const NavBar = () => {
+const DesktopNavBar = () => {
     const [isPressed, setIsPressed] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
+    const [activeSection, setActiveSection] = useState("");
 
-    //large screen
+    // Track active section based on scroll position
+    useEffect(() => {
+        const sections = ["about", "schedule", "location", "sponsors", "faq"];
+
+        const handleScroll = () => {
+            const currentPos = window.scrollY + 100;
+
+            for (const section of sections) {
+                const element = document.getElementById(`section-${section}`);
+                if (element) {
+                    const { offsetTop, offsetHeight } = element;
+                    if (
+                        currentPos >= offsetTop &&
+                        currentPos < offsetTop + offsetHeight
+                    ) {
+                        setActiveSection(section);
+                        break;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     return (
-        <div
-            style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }}
-            className=" sticky shadow-lg rounded-lg top-2 z-100 w-full m-2"
-        >
-            <div id="nav__container" className="h-full">
-                <div className="flex content-center items-center">
-                    <h4
-                        id="nav__logo"
-                        style={{ fontSize: DT_base_fontSize }}
-                        className="color-black text-justify w-full"
-                    >
-                        {HackMESA_casing}
-                    </h4>
-                </div>
-                <nav id="nav__routes" className="inline">
-                    <NavBarButton text="About" />
-                    <NavBarButton text="Schedule" />
-                    <NavBarButton text="Location" />
-                    <NavBarButton text="Sponsors" />
-                    <NavBarButton text="FAQ" />
-                </nav>
+        <div className="fixed top-4 left-4 right-[200px] z-[150] bg-white/90 backdrop-blur-sm shadow-md rounded-xl mx-auto">
+            <div className="max-w-7xl mx-auto px-4">
+                <div className="flex justify-between items-center h-14">
+                    <div className="flex items-center">
+                        <h1 className="text-xl font-bold text-gray-900">
+                            {HackMESA_casing}
+                        </h1>
+                    </div>
 
-                <div
-                    id="nav__register"
-                    className="flex justify-center items-center"
-                >
+                    <nav className="hidden md:flex space-x-1">
+                        <NavBarButton
+                            text="About"
+                            isActive={activeSection === "about"}
+                        />
+                        <NavBarButton
+                            text="Schedule"
+                            isActive={activeSection === "schedule"}
+                        />
+                        <NavBarButton
+                            text="Location"
+                            isActive={activeSection === "location"}
+                        />
+                        <NavBarButton
+                            text="Sponsors"
+                            isActive={activeSection === "sponsors"}
+                        />
+                        <NavBarButton
+                            text="FAQ"
+                            isActive={activeSection === "faq"}
+                        />
+                    </nav>
+
                     <motion.button
-                        key="web-nav__register"
+                        key="desktop-nav__register"
                         initial={false}
-                        className={`float-right m-4 mt-3 border-solid text-white  w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150`}
-                        style={{
-                            cursor: "pointer",
-                            border: isHovering
-                                ? "0.5vh solid white"
-                                : `0.5vh solid ${darkenColor("white", 40)}`,
-                        }}
+                        className="px-5 py-2 rounded-md font-medium text-white shadow-sm"
                         whileTap={{ scale: 0.95 }}
                         animate={{
-                            backgroundColor:
-                                !isHovering && !isPressed
-                                    ? "#ff893e"
-                                    : isHovering && !isPressed
-                                    ? darkenColor(
-                                          PRIMARY_COLORS.WARM_RED.hex,
-                                          20
-                                      )
-                                    : darkenColor(
-                                          PRIMARY_COLORS.WARM_RED.hex,
-                                          50
-                                      ),
-                        }} // Darkens when pressed
-                        transition={{ duration: 0.05 }}
+                            backgroundColor: isPressed
+                                ? darkenColor(
+                                      SECONDARY_COLORS.ORANGE_151.hex,
+                                      30
+                                  )
+                                : isHovering
+                                ? darkenColor(
+                                      SECONDARY_COLORS.ORANGE_151.hex,
+                                      10
+                                  )
+                                : SECONDARY_COLORS.ORANGE_151.hex,
+                        }}
+                        transition={{ duration: 0.1 }}
+                        onClick={() => (window.location.href = "/register")}
                         onHoverStart={() => setIsHovering(true)}
                         onHoverEnd={() => setIsHovering(false)}
                         onTouchStart={() => setIsPressed(true)}
@@ -297,20 +337,19 @@ const NavBar = () => {
                         onMouseDown={() => setIsPressed(true)}
                         onMouseUp={() => setIsPressed(false)}
                     >
-                        <p
-                            style={{
-                                fontSize: DT_base_fontSize,
-                                padding: "1vh",
-                            }}
-                            className="font-bold flex justify-center content-center"
-                        >
-                            Register
-                        </p>
+                        Register
                     </motion.button>
                 </div>
             </div>
         </div>
     );
+};
+
+const NavBar = () => {
+    const { width } = useWindowSize();
+    const isMobile = width < 768; // Standard md breakpoint
+
+    return isMobile ? <Render_MobileNav /> : <DesktopNavBar />;
 };
 
 export default NavBar;

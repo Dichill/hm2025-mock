@@ -6,6 +6,8 @@ import { useState } from "react";
 import { TeamMember, teamMembers } from "@/lib/team_info";
 import Image from "next/image";
 
+const PLACEHOLDER_IMAGE = "/Logo_filler.svg";
+
 const TeamMemberCard = ({ member }: { member: TeamMember }) => {
     const [isFlipped, setIsFlipped] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -40,7 +42,7 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
                     <div className="flex flex-col items-center pb-10">
                         <Image
                             className="mt-3 w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
-                            src={member.image}
+                            src={member.image || PLACEHOLDER_IMAGE}
                             width={96}
                             height={96}
                             alt={`portrait of ${member.name}`}

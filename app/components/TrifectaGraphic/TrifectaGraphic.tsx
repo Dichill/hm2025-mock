@@ -7,14 +7,24 @@ interface TrifectaGraphicProps {
 
 const TrifectaGraphic = (props: TrifectaGraphicProps) => {
     const logos = [
-        "./LACC_BW_Logo.png",
-        "LACCD_logo_lowRes.png",
-        "MESA_logo.svg",
-    ];
-    const alt_text = [
-        "Los Angeles City College Logo",
-        "LACCD Logo",
-        "MESA Logo; Math, Science, Engineering Achievement",
+        {
+            src: "/LACC_BW_Logo.png",
+            alt: "Los Angeles City College Logo",
+            width: 200,
+            height: 200,
+        },
+        {
+            src: "/LACCD_logo_lowRes.png",
+            alt: "Los Angeles Community College District Logo",
+            width: 200,
+            height: 200,
+        },
+        {
+            src: "/MESA_logo.svg",
+            alt: "MESA Logo; Math, Science, Engineering Achievement",
+            width: 200,
+            height: 200,
+        },
     ];
 
     return (
@@ -28,11 +38,12 @@ const TrifectaGraphic = (props: TrifectaGraphicProps) => {
                             className="flex justify-center items-center flex-1"
                         >
                             <Image
-                                src={logo}
-                                alt={`${alt_text[index]}`}
-                                width={200}
-                                height={200}
+                                src={logo.src}
+                                alt={logo.alt}
+                                width={logo.width}
+                                height={logo.height}
                                 className="max-w-full max-h-full object-contain"
+                                priority
                             />
                         </div>
                     ))}
