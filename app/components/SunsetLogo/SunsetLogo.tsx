@@ -1,4 +1,4 @@
-
+import Image from "next/image";
 
 // const UnderConstruction = () => {
 //   return (
@@ -6,26 +6,31 @@
 //   )
 // }
 
-
 interface LogoProps {
-  size: number
+    size: number;
 }
 
 const Logo = (props: LogoProps) => {
-  return (
-  //   <div className="flex justify-center items-center mt-15 -mb-10">
-  //     <UnderConstruction/>
-  //     Currently Under Construction
-  //     {/* <Image height={props.size} width={props.size} src="./Logo_filler.svg" alt="filler logo while under production" /> */}
+    return (
+        //   <div className="flex justify-center items-center mt-15 -mb-10">
+        //     <UnderConstruction/>
+        //     Currently Under Construction
+        //     {/* <Image height={props.size} width={props.size} src="./Logo_filler.svg" alt="filler logo while under production" /> */}
 
-  //   </div>
-  // )
+        //   </div>
+        // )
 
-  // return (
-    <div className="flex justify-center items-center -mb-30">
-      <img style={{opacity: "70%"}} width={props.size} src="./sunset_sketch1.tiff" alt="HackMESA 2025 Logo; the logo has a cityscape, circuit designs, and it says 'Los Angeles Community College District, 2025 HackMESA.'" />
-    </div>
-  )
-}
+        // return (
+        <div className="flex justify-center items-center -mb-30">
+            <Image
+                src="/sunset_sketch1.tiff"
+                width={props.size}
+                height={props.size}
+                style={{ opacity: "70%" }}
+                alt="HackMESA 2025 Logo; the logo has a cityscape, circuit designs, and it says 'Los Angeles Community College District, 2025 HackMESA.'"
+            />
+        </div>
+    );
+};
 
-export default Logo
+export default Logo;

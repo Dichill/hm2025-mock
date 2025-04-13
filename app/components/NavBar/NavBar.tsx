@@ -1,6 +1,11 @@
-import { darkenColor, HackMESA_casing, PRIMARY_COLORS, SECONDARY_COLORS, TERTIARY_COLORS } from "@/lib/colors";
+import {
+    darkenColor,
+    HackMESA_casing,
+    PRIMARY_COLORS,
+    TERTIARY_COLORS,
+} from "@/lib/colors";
 
-import "./NavBar.css"
+import "./NavBar.css";
 // import useWindowSize from "@/lib/useWindowSize";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -10,7 +15,7 @@ import { motion } from "framer-motion";
 //Components and Interfaces without prefix Mobile- are web only
 
 interface MobileNavClosed_Props {
-    open_nav: Dispatch<SetStateAction<boolean>>
+    open_nav: Dispatch<SetStateAction<boolean>>;
 }
 
 const MobileNavClosed = (props: MobileNavClosed_Props) => {
@@ -24,11 +29,11 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                 <motion.button
                     key="mob-nav__menu"
                     initial={false}
-
                     className="m-4 border-2 border-solid border-white h-15 w-15 rounded-full bg-gray-50 text-black drop-shadow-lg transition-colors duration-150 hover:bg-gray-200"
-
                     whileTap={{ scale: 0.95 }}
-                    animate={{ backgroundColor: isPressed ? "#fffff" : `${"#a289d7"}` }} // Darkens when pressed
+                    animate={{
+                        backgroundColor: isPressed ? "#fffff" : `${"#a289d7"}`,
+                    }} // Darkens when pressed
                     transition={{ duration: 0.05 }}
                     onClick={() => props.open_nav(true)}
                     onTouchStart={() => setIsPressed(true)}
@@ -38,10 +43,16 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                 >
                     <div className="flex justify-center content-center ">
                         {/*This hamburger icon is generously provided by Font Awesome*/}
-                        <Image className="invert" src="./menu_hamburger.svg" alt="menu button" width={30} height={30} />
+                        <Image
+                            className="invert"
+                            src="./menu_hamburger.svg"
+                            alt="menu button"
+                            width={30}
+                            height={30}
+                        />
                     </div>
                 </motion.button>
-                
+
                 {/*Register Now Button */}
                 <motion.button
                     key="mob-nav__register"
@@ -49,7 +60,11 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                     className="float-right m-4 mt-5 border-2 border-solid text-white h-12 w-30 rounded-md bg-gray-50  drop-shadow-lg transition-colors duration-150 hover:bg-gray-200"
                     style={{ border: "2px solid white" }}
                     whileTap={{ scale: 0.95 }}
-                    animate={{ backgroundColor: isPressed2 ? darkenColor("#ffb607", 50) : `${"#ff893e"}` }} // Darkens when pressed
+                    animate={{
+                        backgroundColor: isPressed2
+                            ? darkenColor("#ffb607", 50)
+                            : `${"#ff893e"}`,
+                    }} // Darkens when pressed
                     transition={{ duration: 0.05 }}
                     onTouchStart={() => setIsPressed2(true)}
                     onTouchEnd={() => setIsPressed2(false)}
@@ -61,12 +76,12 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                     </p>
                 </motion.button>
             </div>
-            </>
+        </>
     );
-}
+};
 
 interface MobileNavOpen_Props {
-    close_nav: Dispatch<SetStateAction<boolean>>
+    close_nav: Dispatch<SetStateAction<boolean>>;
 }
 
 //Mobile Navigation when
@@ -78,13 +93,27 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
             <div className="h-23">
                 {/* This is here just so that there is no sudden empty space behind the menu when the mobile nav is opened */}
             </div>
-            <div style={{ backgroundColor: "#a289d7" }} className="fixed top-0 z-1000 w-full">
+            <div
+                style={{ backgroundColor: "#a289d7" }}
+                className="fixed top-0 z-1000 w-full"
+            >
                 <motion.button
                     key="mob-nav__menu"
                     initial={false}
-                    style={{ borderColor: isPressed ? "white" : darkenColor("purple", 50), color: isPressed ? "white" : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) }}
+                    style={{
+                        borderColor: isPressed
+                            ? "white"
+                            : darkenColor("purple", 50),
+                        color: isPressed
+                            ? "white"
+                            : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50),
+                    }}
                     className="m-4 h-13 w-13 border-solid font-black border-4 text-2xl float-right transition-colors duration-150"
-                    animate={{ backgroundColor: isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) : PRIMARY_COLORS.WARM_RED.hex }} // Darkens when pressed
+                    animate={{
+                        backgroundColor: isPressed
+                            ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50)
+                            : PRIMARY_COLORS.WARM_RED.hex,
+                    }} // Darkens when pressed
                     // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
                     transition={{ duration: 0.05 }}
                     onClick={() => props.close_nav(false)}
@@ -93,27 +122,38 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                     onMouseDown={() => setIsPressed(true)}
                     onMouseUp={() => setIsPressed(false)}
                 >
-                    <div>
-                        X
-                    </div>
+                    <div>X</div>
                 </motion.button>
 
-                <MobileNavOpen_Button close_nav={props.close_nav} text="About" />
+                <MobileNavOpen_Button
+                    close_nav={props.close_nav}
+                    text="About"
+                />
                 <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.close_nav} text="Schedule" />
+                <MobileNavOpen_Button
+                    close_nav={props.close_nav}
+                    text="Schedule"
+                />
                 <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.close_nav} text="Location" />
+                <MobileNavOpen_Button
+                    close_nav={props.close_nav}
+                    text="Location"
+                />
                 <MobileNavDivider />
-                <MobileNavOpen_Button close_nav={props.close_nav} text="Sponsors" />
+                <MobileNavOpen_Button
+                    close_nav={props.close_nav}
+                    text="Sponsors"
+                />
                 <MobileNavDivider />
                 <MobileNavOpen_Button close_nav={props.close_nav} text="FAQ" />
-            </div></>
-    )
-}
+            </div>
+        </>
+    );
+};
 
 interface MobileNavOpen_Button_Props {
-    text: string,
-    close_nav: Dispatch<SetStateAction<boolean>>
+    text: string;
+    close_nav: Dispatch<SetStateAction<boolean>>;
 }
 
 const MobileNavOpen_Button = (props: MobileNavOpen_Button_Props) => {
@@ -125,7 +165,11 @@ const MobileNavOpen_Button = (props: MobileNavOpen_Button_Props) => {
                 key={`mob-nav_item__${props.text}`}
                 initial={false}
                 className="w-full p-6 transition-colors text-2xl font-medium duration-150 active:text-white"
-                animate={{ backgroundColor: isPressed ? darkenColor("purple", 50) : "#e94d97" }} // Darkens when pressed
+                animate={{
+                    backgroundColor: isPressed
+                        ? darkenColor("purple", 50)
+                        : "#e94d97",
+                }} // Darkens when pressed
                 // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
                 transition={{ duration: 0.05 }}
                 onClick={() => props.close_nav(false)}
@@ -145,60 +189,70 @@ const MobileNavOpen_Button = (props: MobileNavOpen_Button_Props) => {
 
 //Hamburger Nav Divider
 const MobileNavDivider = () => {
-    return (
-        <div className="h-1" style={{ backgroundColor: "white" }}></div>
-    )
-}
+    return <div className="h-1" style={{ backgroundColor: "white" }}></div>;
+};
 
 export const Render_MobileNav = () => {
     const [mobileNav_open, set_mobile_nav_open] = useState(false);
     return (
         <div className="sticky top-0 z-1000">
-            {!mobileNav_open && <>
-                <MobileNavClosed open_nav={set_mobile_nav_open} />
-            </>}
-            {mobileNav_open &&
+            {!mobileNav_open && (
+                <>
+                    <MobileNavClosed open_nav={set_mobile_nav_open} />
+                </>
+            )}
+            {mobileNav_open && (
                 <>
                     <MobileNavOpen close_nav={set_mobile_nav_open} />
-                </>}
+                </>
+            )}
         </div>
-    )
-}
-
+    );
+};
 
 // **  End MOBILE; start Desktop  **
 
 const DT_base_fontSize = "2vw";
 
-
 interface NavBarButtonProps {
-    text: string,
+    text: string;
 }
 
 const NavBarButton = (props: NavBarButtonProps) => {
     return (
         <a className="" href={`#section-${props.text.toLowerCase()}`}>
-            <button style={{fontSize: DT_base_fontSize}} className="h-[98%] w-[98%] font-bold cursor-pointer navBarButton">{props.text}</button>
+            <button
+                style={{ fontSize: DT_base_fontSize }}
+                className="h-[98%] w-[98%] font-bold cursor-pointer navBarButton"
+            >
+                {props.text}
+            </button>
         </a>
-    )
-}
+    );
+};
 
 //TODO: NavBar is not responsive in a way that looks healthy; fix
 const NavBar = () => {
-
-
     const [isPressed, setIsPressed] = useState(false);
-    const [isHovering, setIsHovering] = useState(false)
+    const [isHovering, setIsHovering] = useState(false);
 
     //large screen
     return (
-        <div style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }} className=" sticky shadow-lg rounded-lg top-2 z-100 w-full m-2">
-
+        <div
+            style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }}
+            className=" sticky shadow-lg rounded-lg top-2 z-100 w-full m-2"
+        >
             <div id="nav__container" className="h-full">
                 <div className="flex content-center items-center">
-                    <h4 id="nav__logo" style={{fontSize: DT_base_fontSize}} className="color-black text-justify w-full">{HackMESA_casing}</h4>
+                    <h4
+                        id="nav__logo"
+                        style={{ fontSize: DT_base_fontSize }}
+                        className="color-black text-justify w-full"
+                    >
+                        {HackMESA_casing}
+                    </h4>
                 </div>
-                <nav id="nav__routes" className="inline" >
+                <nav id="nav__routes" className="inline">
                     <NavBarButton text="About" />
                     <NavBarButton text="Schedule" />
                     <NavBarButton text="Location" />
@@ -206,35 +260,57 @@ const NavBar = () => {
                     <NavBarButton text="FAQ" />
                 </nav>
 
-                <div id="nav__register" className="flex justify-center items-center">
-                <motion.button
-                    key="web-nav__register"
-                    initial={false}
-
-                    className={`float-right m-4 mt-3 border-solid text-white  w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150`}
-                    style={{ cursor: 'pointer', border: isHovering ? "0.5vh solid white" : `0.5vh solid ${darkenColor("white", 40)}` }}
-                    whileTap={{ scale: 0.95 }}
-                    animate={{ backgroundColor: !isHovering && !isPressed ? "#ff893e" : isHovering && !isPressed ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 20) : darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50) }} // Darkens when pressed
-                    transition={{ duration: 0.05 }}
-                    onHoverStart={() => setIsHovering(true)}
-                    onHoverEnd={() => setIsHovering(false)}
-                    onTouchStart={() => setIsPressed(true)}
-                    onTouchEnd={() => setIsPressed(false)}
-                    onMouseDown={() => setIsPressed(true)}
-                    onMouseUp={() => setIsPressed(false)}
+                <div
+                    id="nav__register"
+                    className="flex justify-center items-center"
                 >
-                    <p style={{fontSize: DT_base_fontSize, padding: "1vh"}} className="font-bold flex justify-center content-center">
-                        Register
-                    </p>
-                </motion.button>
+                    <motion.button
+                        key="web-nav__register"
+                        initial={false}
+                        className={`float-right m-4 mt-3 border-solid text-white  w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150`}
+                        style={{
+                            cursor: "pointer",
+                            border: isHovering
+                                ? "0.5vh solid white"
+                                : `0.5vh solid ${darkenColor("white", 40)}`,
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{
+                            backgroundColor:
+                                !isHovering && !isPressed
+                                    ? "#ff893e"
+                                    : isHovering && !isPressed
+                                    ? darkenColor(
+                                          PRIMARY_COLORS.WARM_RED.hex,
+                                          20
+                                      )
+                                    : darkenColor(
+                                          PRIMARY_COLORS.WARM_RED.hex,
+                                          50
+                                      ),
+                        }} // Darkens when pressed
+                        transition={{ duration: 0.05 }}
+                        onHoverStart={() => setIsHovering(true)}
+                        onHoverEnd={() => setIsHovering(false)}
+                        onTouchStart={() => setIsPressed(true)}
+                        onTouchEnd={() => setIsPressed(false)}
+                        onMouseDown={() => setIsPressed(true)}
+                        onMouseUp={() => setIsPressed(false)}
+                    >
+                        <p
+                            style={{
+                                fontSize: DT_base_fontSize,
+                                padding: "1vh",
+                            }}
+                            className="font-bold flex justify-center content-center"
+                        >
+                            Register
+                        </p>
+                    </motion.button>
                 </div>
             </div>
         </div>
     );
-
-}
-
-
-
+};
 
 export default NavBar;
