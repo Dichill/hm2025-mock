@@ -8,7 +8,8 @@ if (!process.env.NEXT_PUBLIC_USER_SERVICE_URL) {
 }
 
 export const userClient = axios.create({
-    baseURL: "http://localhost:4000",
+    baseURL:
+        process.env.NEXT_PUBLIC_USER_SERVICE_URL! ?? "http://localhost:4000",
     headers: {
         "Content-Type": "application/json",
     },
