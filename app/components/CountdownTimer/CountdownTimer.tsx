@@ -65,7 +65,7 @@ function CountdownTimer(): JSX.Element {
                             <div className="text-3xl md:text-4xl font-bold rounded-xl p-4 w-full md:min-w-[100px]">
                                 {value.toString().padStart(2, "0")}
                             </div>
-                            <div className="text-xl mt-2 font-bold capitalize text-white">
+                            <div className="text-xl mt-2 text-muted-foreground capitalize text-white">
                                 {key}
                             </div>
                         </div>
@@ -94,7 +94,7 @@ function CountdownTimer(): JSX.Element {
                             <div className="text-3xl md:text-4xl font-bold rounded-xl p-4 w-full md:min-w-[100px]">
                                 {value.toString().padStart(2, "0")}
                             </div>
-                            <div className="text-xl -mt-3 font-bold text-white">
+                            <div className="text-xl -mt-3 text-muted-foreground text-white">
                                 {key}
                             </div>
                         </div>
