@@ -12,15 +12,15 @@ export const teamMembers: TeamMember[] = [
         role: "Tech Lead",
         image: "",
         description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
+            "About info coming soon!",
         school: "LACC",
     },
     {
         name: "Fahat Yousuf",
         role: "Logistics Lead",
-        description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
-        image: "",
+        description: 
+            "Computer science and Aerospace Major",
+        image: "/fajat_WR.jpg",
         school: "LACC",
     },
     {
@@ -35,7 +35,7 @@ export const teamMembers: TeamMember[] = [
         name: "Cash Webb",
         role: "Tech Team",
         description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
+            "About info coming soon!",
         image: "",
         school: "LAVC",
     },
@@ -43,7 +43,7 @@ export const teamMembers: TeamMember[] = [
         name: "Justin Dela Cruz",
         role: "Tech Team",
         description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
+            "About info coming soon!",
         image: "",
         school: "CSULB",
     },
@@ -59,7 +59,7 @@ export const teamMembers: TeamMember[] = [
         name: "Mayra Saballos",
         role: "Tech/Logistics Teams",
         description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
+            "About info coming soon!",
         image: "",
         school: "ELAC",
     },
@@ -67,7 +67,7 @@ export const teamMembers: TeamMember[] = [
         name: "Bendiel Passos",
         role: "Logistics/Social Media Teams",
         description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat deleniti",
+            "About info coming soon!",
         image: "",
         school: "LACC",
     },

@@ -42,7 +42,7 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
                     <div className="flex flex-col items-center pb-10">
                         <Image
                             className="mt-3 w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
-                            src={member.image || PLACEHOLDER_IMAGE}
+                            src={member.image == "" ?  PLACEHOLDER_IMAGE : member.image}
                             width={96}
                             height={96}
                             alt={`portrait of ${member.name}`}
