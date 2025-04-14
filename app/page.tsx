@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
     mobile_size_reference,
@@ -173,7 +173,9 @@ function App() {
                 {/* This container will render either the NavBar or the mobile NavBar */}
                 <div
                     id="nav-bar__sticky-container"
+
                     className="fixed w-[85%] top-0 z-103 h-[16%] min-h-24 flex"
+
                 >
                     {width > mobile_size_reference && <NavBar />}
                     {width <= mobile_size_reference && (
@@ -655,3 +657,4 @@ const AboutHackathonText = () => {
         </div>
     );
 };
+
