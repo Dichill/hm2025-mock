@@ -219,7 +219,9 @@ function App() {
                                 <div
                                     id="area-in-question"
                                     className="transition-all hover:scale-[1.01] duration-300 hover-glow"
-                                >
+                                > 
+     
+                                
                                     <div id="about_image_elem">
                                         <Image_Overlay
                                             source="/MESA_student_overlay1.jpg"
@@ -239,8 +241,14 @@ function App() {
                                         <a
                                             href={MESA}
                                             target="new"
-                                            className="transition-transform hover:scale-105 duration-200"
+                                            // className="transition-transform hover:scale-105 duration-200"
                                         >
+                                    {/* ANIMATION NOTES:
+                                    This element creates significant choppiness on hover for narrow screens. 
+                                    We can solve it
+                                    */}
+
+                                            
                                             <div className="bg-white inline-block p-5 rounded-xl shadow-xl hover:shadow-2xl">
                                                 <MESA_Color_Graphic
                                                     width={28}

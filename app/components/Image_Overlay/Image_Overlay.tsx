@@ -24,6 +24,7 @@ const Image_Overlay = (props: Image_OverlayProps) => {
                 width: props.width,
                 height: props.height,
                 display: props.display,
+                zIndex: 0
             }}
             className="object-cover"
         />
