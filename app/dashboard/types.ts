@@ -44,3 +44,35 @@ export interface UserProfile {
  * Status of the dashboard verification
  */
 export type DashboardStatus = "loading" | "authenticated" | "unauthenticated";
+
+/**
+ * Application status types for hackathon participants
+ */
+export type ApplicationStatus =
+    | "not_applied"
+    | "pending"
+    | "accepted"
+    | "rejected"
+    | "waitlisted";
+
+/**
+ * Interface for application data
+ */
+export interface Application {
+    id: string;
+    user_id: string;
+    status: ApplicationStatus;
+    applied_at: string;
+    updated_at: string;
+    decision_at?: string;
+    application_data?: {
+        resume_url?: string;
+        github_url?: string;
+        linkedin_url?: string;
+        project_idea?: string;
+        experience_level?: string;
+        team_preference?: string;
+        why_participate?: string;
+        [key: string]: unknown;
+    };
+}
