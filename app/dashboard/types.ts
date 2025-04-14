@@ -50,6 +50,7 @@ export type DashboardStatus = "loading" | "authenticated" | "unauthenticated";
  */
 export type ApplicationStatus =
     | "not_applied"
+    | "saved"
     | "pending"
     | "accepted"
     | "rejected"
@@ -62,8 +63,9 @@ export interface Application {
     id: string;
     user_id: string;
     status: ApplicationStatus;
-    applied_at: string;
+    created_at: string;
     updated_at: string;
+    applied_at?: string;
     decision_at?: string;
     application_data?: {
         resume_url?: string;

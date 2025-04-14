@@ -63,21 +63,11 @@ export default function DashboardPage() {
                         const { data: applicationData } = await supabase
                             .from("applications")
                             .select("*")
-                            .eq("user_id", userData.user.id)
+                            .eq("userId", userData.user.id)
                             .single();
 
                         if (applicationData) {
                             setApplication(applicationData as Application);
-                        } else {
-                            // No application found - user has not applied
-                            // Set a default "not_applied" state with the user ID
-                            setApplication({
-                                id: "mock-app-id",
-                                user_id: userData.user.id,
-                                status: "accepted",
-                                applied_at: new Date().toISOString(),
-                                updated_at: new Date().toISOString(),
-                            });
                         }
                     } catch (error) {
                         console.error(

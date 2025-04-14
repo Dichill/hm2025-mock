@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, ReactNode } from "react";
-import { motion } from "framer-motion";
+import { motion, Variant } from "framer-motion";
 
 type FormCheckboxProps = {
     id: string;
@@ -10,7 +10,9 @@ type FormCheckboxProps = {
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     label: ReactNode;
     error?: string;
-    variants?: any;
+    variants?: {
+        [key: string]: Variant;
+    };
 };
 
 export function FormCheckbox({

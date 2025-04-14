@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent } from "react";
-import { motion } from "framer-motion";
+import { motion, Variant } from "framer-motion";
 
 type Option = {
     value: string;
@@ -19,7 +19,9 @@ type FormSelectProps = {
     required?: boolean;
     helperText?: string;
     selectClassName?: string;
-    variants?: any;
+    variants?: {
+        [key: string]: Variant;
+    };
 };
 
 export function FormSelect({

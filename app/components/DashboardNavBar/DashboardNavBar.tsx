@@ -1,15 +1,8 @@
-/**
- * Dashboard Navigation Bar Component
- *
- * A specialized navigation bar for the dashboard area with user-specific controls
- * and dashboard navigation options.
- */
-
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { User, UserProfile } from "@/app/dashboard/types";
+import { useState } from "react";
 
 interface DashboardNavBarProps {
     user: User | null;

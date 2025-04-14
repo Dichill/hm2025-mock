@@ -51,6 +51,31 @@ export default function ApplicationStatusCard({
                 "bg-[rgb(var(--mesa-orange))]/10 text-[rgb(var(--mesa-orange))]",
             action: onApplyNow,
         },
+        saved: {
+            title: "Application Saved",
+            description:
+                "You've started an application but haven't submitted it yet. Continue where you left off.",
+            icon: (
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-blue-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                    />
+                </svg>
+            ),
+            bgColor: "bg-blue-100",
+            buttonText: "Continue Application",
+            buttonColor: "bg-blue-50 text-blue-500",
+            action: onApplyNow,
+        },
         pending: {
             title: "Application In Review",
             description:
@@ -167,6 +192,8 @@ export default function ApplicationStatusCard({
             boxShadow:
                 status === "not_applied"
                     ? "0 10px 25px rgba(255, 137, 62, 0.2)"
+                    : status === "saved"
+                    ? "0 10px 25px rgba(59, 130, 246, 0.2)"
                     : status === "pending"
                     ? "0 10px 25px rgba(246, 190, 0, 0.2)"
                     : status === "accepted"
@@ -198,7 +225,10 @@ export default function ApplicationStatusCard({
 
         return (
             <p className="text-xs text-gray-500 mt-2">
+                {status === "saved" &&
+                    `Last saved on: ${formatDate(application.updated_at)}`}
                 {status === "pending" &&
+                    application.applied_at &&
                     `Applied on: ${formatDate(application.applied_at)}`}
                 {status === "accepted" &&
                     `Accepted on: ${formatDate(

@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent } from "react";
-import { motion } from "framer-motion";
+import { motion, Variant } from "framer-motion";
 
 type FormInputProps = {
     id: string;
@@ -15,7 +15,9 @@ type FormInputProps = {
     required?: boolean;
     helperText?: string;
     inputClassName?: string;
-    variants?: any;
+    variants?: {
+        [key: string]: Variant;
+    };
 };
 
 export function FormInput({

@@ -12,6 +12,7 @@ type FormData = {
     email: string;
     phoneNumber: string;
     age: string;
+    studentNumber: string;
 
     // Education
     school: string;
@@ -19,15 +20,21 @@ type FormData = {
     country: string;
     linkedInUrl: string;
     whyAttend: string;
+    firstTime: string;
+    skillLevel: string;
+    primarySkills: string[];
+    otherSkill: string;
+    resumeFile: File | null;
 
     // MLH Specific
     mlhCodeOfConduct: boolean;
     mlhPrivacyPolicy: boolean;
     mlhEmailSubscription: boolean;
+    mesaSubscription: boolean;
 
     // Optional Demographics
     dietaryRestrictions: string[];
-    underrepresentedGroup: string;
+    isMesaStudent: string;
     gender: string;
     tShirtSize: string;
 
@@ -44,13 +51,14 @@ export function ApplicationForm() {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState<FormData>({
-        // Initialize with empty values
         firstName: "",
         lastName: "",
         email: "",
         phoneNumber: "",
         age: "",
+        studentNumber: "",
         school: "",
         levelOfStudy: "",
         country: "",
@@ -58,12 +66,18 @@ export function ApplicationForm() {
         mlhCodeOfConduct: false,
         mlhPrivacyPolicy: false,
         mlhEmailSubscription: false,
+        mesaSubscription: false,
         dietaryRestrictions: [],
-        underrepresentedGroup: "",
+        isMesaStudent: "",
         gender: "",
         tShirtSize: "",
         fieldOfStudy: "",
         whyAttend: "",
+        firstTime: "",
+        skillLevel: "",
+        primarySkills: [],
+        otherSkill: "",
+        resumeFile: null,
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
@@ -191,6 +205,11 @@ export function ApplicationForm() {
                 newErrors.age = "Age is required";
                 isValid = false;
             }
+
+            if (!formData.studentNumber.trim()) {
+                newErrors.studentNumber = "Student number is required";
+                isValid = false;
+            }
         } else if (step === 2) {
             // Education validation
             if (!formData.school.trim()) {
@@ -205,6 +224,17 @@ export function ApplicationForm() {
 
             if (!formData.country.trim()) {
                 newErrors.country = "Country is required";
+                isValid = false;
+            }
+
+            if (!formData.firstTime) {
+                newErrors.firstTime =
+                    "Please indicate if this is your first hackathon";
+                isValid = false;
+            }
+
+            if (!formData.skillLevel) {
+                newErrors.skillLevel = "Skill level is required";
                 isValid = false;
             }
 
@@ -258,6 +288,65 @@ export function ApplicationForm() {
         setCurrentStep(currentStep - 1);
     };
 
+    // Save the form data for later
+    const handleSaveForLater = async () => {
+        setIsSaving(true);
+
+        try {
+            // Create a form data object for file upload
+            const formDataObj = new FormData();
+
+            // Add all form fields to FormData
+            Object.entries(formData).forEach(([key, value]) => {
+                if (key === "resumeFile" && value instanceof File) {
+                    // Add the file
+                    formDataObj.append("resumeFile", value);
+                } else if (
+                    key === "primarySkills" ||
+                    key === "dietaryRestrictions"
+                ) {
+                    // Handle arrays by converting to JSON string
+                    if (Array.isArray(value)) {
+                        formDataObj.append(key, JSON.stringify(value));
+                    }
+                } else if (typeof value === "boolean") {
+                    // Convert booleans to strings
+                    formDataObj.append(key, value.toString());
+                } else if (typeof value === "string") {
+                    // Add string values
+                    formDataObj.append(key, value);
+                }
+            });
+
+            // Add the saved status
+            formDataObj.append("status", "saved");
+
+            // Submit to your API or database
+            // const response = await fetch("/api/application/save", {
+            //     method: "POST",
+            //     body: formDataObj,
+            // });
+
+            // if (!response.ok) {
+            //     throw new Error("Failed to save application");
+            // }
+
+            // Simulate successful save
+            setTimeout(() => {
+                console.log("Application saved:", formData);
+                router.push("/dashboard?application=saved");
+            }, 1500);
+        } catch (error) {
+            console.error("Error saving application:", error);
+            setErrors({
+                ...errors,
+                general: "Failed to save application. Please try again.",
+            });
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     // Submit the form
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -269,13 +358,35 @@ export function ApplicationForm() {
         setIsSubmitting(true);
 
         try {
+            // Create a form data object for file upload
+            const formDataObj = new FormData();
+
+            // Add all form fields to FormData
+            Object.entries(formData).forEach(([key, value]) => {
+                if (key === "resumeFile" && value instanceof File) {
+                    // Add the file
+                    formDataObj.append("resumeFile", value);
+                } else if (
+                    key === "primarySkills" ||
+                    key === "dietaryRestrictions"
+                ) {
+                    // Handle arrays by converting to JSON string
+                    if (Array.isArray(value)) {
+                        formDataObj.append(key, JSON.stringify(value));
+                    }
+                } else if (typeof value === "boolean") {
+                    // Convert booleans to strings
+                    formDataObj.append(key, value.toString());
+                } else if (typeof value === "string") {
+                    // Add string values
+                    formDataObj.append(key, value);
+                }
+            });
+
             // Submit to your API or database
             // const response = await fetch("/api/application", {
             //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify(formData),
+            //     body: formDataObj, // Use FormData instead of JSON
             // });
 
             // if (!response.ok) {
@@ -366,6 +477,38 @@ export function ApplicationForm() {
                         <h2 className="text-2xl font-semibold text-[rgb(var(--mesa-warm-red))]">
                             Personal Information
                         </h2>
+
+                        {/* Student Number */}
+                        <motion.div
+                            className="space-y-1"
+                            variants={formItemVariants}
+                        >
+                            <label
+                                htmlFor="studentNumber"
+                                className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
+                            >
+                                Student Number
+                            </label>
+                            <motion.input
+                                id="studentNumber"
+                                name="studentNumber"
+                                type="text"
+                                value={formData.studentNumber}
+                                onChange={handleChange}
+                                placeholder="Enter your student ID number"
+                                className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200 ${
+                                    errors.studentNumber
+                                        ? "border-[rgb(var(--mesa-warm-red))] ring-[rgb(var(--mesa-warm-red))]/20"
+                                        : "border-gray-300 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                }`}
+                                whileFocus={{ scale: 1.01 }}
+                            />
+                            {errors.studentNumber && (
+                                <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">
+                                    {errors.studentNumber}
+                                </p>
+                            )}
+                        </motion.div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* First Name */}
@@ -518,7 +661,7 @@ export function ApplicationForm() {
                                 <option value="">Select your age</option>
                                 {Array.from(
                                     { length: 83 },
-                                    (_, i) => i + 13
+                                    (_, i) => i + 18
                                 ).map((age) => (
                                     <option key={age} value={age.toString()}>
                                         {age}
@@ -755,6 +898,200 @@ export function ApplicationForm() {
                             </motion.p>
                         </motion.div>
 
+                        {/* Resume File */}
+                        <motion.div
+                            className="space-y-1"
+                            variants={formItemVariants}
+                        >
+                            <label
+                                htmlFor="resumeFile"
+                                className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
+                            >
+                                Resume File
+                            </label>
+                            <motion.input
+                                id="resumeFile"
+                                name="resumeFile"
+                                type="file"
+                                accept=".pdf"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            resumeFile: file,
+                                        }));
+                                    }
+                                }}
+                                className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200"
+                            />
+                            {errors.resumeFile && (
+                                <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">
+                                    {errors.resumeFile}
+                                </p>
+                            )}
+                            <motion.p
+                                className="text-xs text-[rgb(var(--mesa-grey))] mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 0.8 }}
+                                transition={{ delay: 0.5, duration: 0.5 }}
+                            >
+                                Upload your resume (PDF format)
+                            </motion.p>
+                        </motion.div>
+
+                        {/* First Time */}
+                        <motion.div
+                            className="space-y-1"
+                            variants={formItemVariants}
+                        >
+                            <label
+                                htmlFor="firstTime"
+                                className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
+                            >
+                                Is this your first hackathon?
+                            </label>
+                            <motion.select
+                                id="firstTime"
+                                name="firstTime"
+                                value={formData.firstTime}
+                                onChange={handleChange}
+                                className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200 ${
+                                    errors.firstTime
+                                        ? "border-[rgb(var(--mesa-warm-red))] ring-[rgb(var(--mesa-warm-red))]/20"
+                                        : "border-gray-300 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                }`}
+                            >
+                                <option value="">Select an option</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </motion.select>
+                            {errors.firstTime && (
+                                <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">
+                                    {errors.firstTime}
+                                </p>
+                            )}
+                        </motion.div>
+
+                        {/* Skill Level */}
+                        <motion.div
+                            className="space-y-1"
+                            variants={formItemVariants}
+                        >
+                            <label
+                                htmlFor="skillLevel"
+                                className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
+                            >
+                                Programming Skill Level
+                            </label>
+                            <motion.select
+                                id="skillLevel"
+                                name="skillLevel"
+                                value={formData.skillLevel}
+                                onChange={handleChange}
+                                className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200 ${
+                                    errors.skillLevel
+                                        ? "border-[rgb(var(--mesa-warm-red))] ring-[rgb(var(--mesa-warm-red))]/20"
+                                        : "border-gray-300 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                }`}
+                            >
+                                <option value="">
+                                    Select your skill level
+                                </option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">
+                                    Intermediate
+                                </option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Expert">Expert</option>
+                            </motion.select>
+                            {errors.skillLevel && (
+                                <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">
+                                    {errors.skillLevel}
+                                </p>
+                            )}
+                        </motion.div>
+
+                        {/* Primary Skills */}
+                        <motion.div
+                            className="space-y-3"
+                            variants={formItemVariants}
+                        >
+                            <label className="block text-sm font-medium text-[rgb(var(--mesa-grey))]">
+                                Primary Skills/Interests (select all that apply)
+                            </label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {[
+                                    "Mathematics",
+                                    "Physics",
+                                    "Chemistry",
+                                    "Biology",
+                                    "Environmental Science",
+                                    "Civil Engineering",
+                                    "Mechanical Engineering",
+                                    "Electrical Engineering",
+                                    "Aerospace Engineering",
+                                    "Computer Engineering",
+                                    "Computer Science",
+                                    "Biomedical Engineering",
+                                    "Data Science",
+                                    "Robotics",
+                                    "Renewable Energy",
+                                    "Materials Science",
+                                    "Industrial Engineering",
+                                    "Other",
+                                ].map((skill) => (
+                                    <div
+                                        key={skill}
+                                        className="flex items-center"
+                                    >
+                                        <input
+                                            id={`skill-${skill}`}
+                                            type="checkbox"
+                                            checked={formData.primarySkills.includes(
+                                                skill
+                                            )}
+                                            onChange={(e) =>
+                                                handleCheckboxGroupChange(
+                                                    "primarySkills",
+                                                    skill,
+                                                    e.target.checked
+                                                )
+                                            }
+                                            className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[rgb(var(--mesa-orange))]/50"
+                                        />
+                                        <label
+                                            htmlFor={`skill-${skill}`}
+                                            className="ml-2 text-sm text-gray-600"
+                                        >
+                                            {skill}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                            {formData.primarySkills.includes("Other") && (
+                                <motion.div
+                                    className="mt-3"
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                >
+                                    <input
+                                        type="text"
+                                        name="otherSkill"
+                                        placeholder="Please specify other skills/interests"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                        onChange={(e) => {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                otherSkill: e.target.value,
+                                            }));
+                                        }}
+                                    />
+                                </motion.div>
+                            )}
+                        </motion.div>
+
                         {/* Why do you want to attend? (Essay) */}
                         <motion.div
                             className="space-y-1"
@@ -776,11 +1113,41 @@ export function ApplicationForm() {
                                 className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))] min-h-[120px]"
                                 whileFocus={{ scale: 1.01 }}
                             />
-                            {errors.whyAttend && (
-                                <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">
-                                    {errors.whyAttend}
-                                </p>
-                            )}
+                            <div className="flex justify-between items-center mt-1">
+                                <div>
+                                    {errors.whyAttend && (
+                                        <p className="text-[rgb(var(--mesa-warm-red))] text-xs">
+                                            {errors.whyAttend}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                    {
+                                        formData.whyAttend
+                                            .trim()
+                                            .split(/\s+/)
+                                            .filter(Boolean).length
+                                    }
+                                    /
+                                    <span
+                                        className={`${
+                                            formData.whyAttend
+                                                .trim()
+                                                .split(/\s+/)
+                                                .filter(Boolean).length < 100 ||
+                                            formData.whyAttend
+                                                .trim()
+                                                .split(/\s+/)
+                                                .filter(Boolean).length > 300
+                                                ? "text-[rgb(var(--mesa-warm-red))]"
+                                                : "text-green-600"
+                                        }`}
+                                    >
+                                        100-300
+                                    </span>{" "}
+                                    words
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
                 )}
@@ -809,15 +1176,15 @@ export function ApplicationForm() {
                             variants={formItemVariants}
                         >
                             <label
-                                htmlFor="underrepresentedGroup"
+                                htmlFor="isMesaStudent"
                                 className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
                             >
                                 Are you part of the MESA program?
                             </label>
                             <motion.select
-                                id="underrepresentedGroup"
-                                name="underrepresentedGroup"
-                                value={formData.underrepresentedGroup}
+                                id="isMesaStudent"
+                                name="isMesaStudent"
+                                value={formData.isMesaStudent}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >
@@ -825,9 +1192,6 @@ export function ApplicationForm() {
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                                 <option value="Not sure">Not sure</option>
-                                <option value="Prefer not to answer">
-                                    Prefer not to answer
-                                </option>
                             </motion.select>
                         </motion.div>
 
@@ -1165,6 +1529,33 @@ export function ApplicationForm() {
                                 </label>
                             </div>
                         </motion.div>
+
+                        {/* MESA Subscription */}
+                        <motion.div
+                            className="space-y-2"
+                            variants={formItemVariants}
+                        >
+                            <div className="flex items-start">
+                                <div className="flex items-center h-5">
+                                    <input
+                                        id="mesaSubscription"
+                                        name="mesaSubscription"
+                                        type="checkbox"
+                                        checked={formData.mesaSubscription}
+                                        onChange={(e) => handleChange(e)}
+                                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[rgb(var(--mesa-orange))]/50"
+                                    />
+                                </div>
+                                <label
+                                    htmlFor="mesaSubscription"
+                                    className="ml-2 text-sm font-medium text-[rgb(var(--mesa-grey))]"
+                                >
+                                    I authorize the MESA department to contact
+                                    me about future opportunities, events, and
+                                    program information.
+                                </label>
+                            </div>
+                        </motion.div>
                     </div>
                 )}
 
@@ -1183,39 +1574,51 @@ export function ApplicationForm() {
                         </motion.button>
                     )}
 
-                    {currentStep < 4 ? (
+                    <div className="flex gap-2 ml-auto">
                         <motion.button
                             type="button"
-                            onClick={handleNextStep}
-                            className={`${
-                                currentStep > 1 ? "" : "ml-auto"
-                            } py-2.5 px-6 bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-orange))]/90 text-white rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-orange))]/50 shadow-md hover:shadow-lg transition-all duration-200`}
-                            variants={buttonVariants}
-                            whileHover="hover"
-                            whileTap="tap"
-                        >
-                            Next
-                        </motion.button>
-                    ) : (
-                        <motion.button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={`${
-                                currentStep > 1 ? "" : "ml-auto"
-                            } py-2.5 px-6 bg-[rgb(var(--mesa-warm-red))] hover:bg-[rgb(var(--mesa-warm-red))]/90 text-white rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-warm-red))]/50 shadow-md hover:shadow-lg transition-all duration-200 ${
-                                isSubmitting
-                                    ? "opacity-70 cursor-not-allowed"
-                                    : ""
+                            onClick={handleSaveForLater}
+                            disabled={isSaving}
+                            className={`py-2.5 px-4 bg-white border border-[rgb(var(--mesa-orange))] text-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-orange))]/5 rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-orange))]/50 shadow-sm hover:shadow-md transition-all duration-200 ${
+                                isSaving ? "opacity-70 cursor-not-allowed" : ""
                             }`}
                             variants={buttonVariants}
-                            whileHover={!isSubmitting ? "hover" : undefined}
-                            whileTap={!isSubmitting ? "tap" : undefined}
+                            whileHover={!isSaving ? "hover" : undefined}
+                            whileTap={!isSaving ? "tap" : undefined}
                         >
-                            {isSubmitting
-                                ? "Submitting..."
-                                : "Submit Application"}
+                            {isSaving ? "Saving..." : "Save"}
                         </motion.button>
-                    )}
+
+                        {currentStep < 4 ? (
+                            <motion.button
+                                type="button"
+                                onClick={handleNextStep}
+                                className="py-2.5 px-6 bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-orange))]/90 text-white rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-orange))]/50 shadow-md hover:shadow-lg transition-all duration-200"
+                                variants={buttonVariants}
+                                whileHover="hover"
+                                whileTap="tap"
+                            >
+                                Next
+                            </motion.button>
+                        ) : (
+                            <motion.button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className={`py-2.5 px-6 bg-[rgb(var(--mesa-warm-red))] hover:bg-[rgb(var(--mesa-warm-red))]/90 text-white rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-warm-red))]/50 shadow-md hover:shadow-lg transition-all duration-200 ${
+                                    isSubmitting
+                                        ? "opacity-70 cursor-not-allowed"
+                                        : ""
+                                }`}
+                                variants={buttonVariants}
+                                whileHover={!isSubmitting ? "hover" : undefined}
+                                whileTap={!isSubmitting ? "tap" : undefined}
+                            >
+                                {isSubmitting
+                                    ? "Submitting..."
+                                    : "Submit Application"}
+                            </motion.button>
+                        )}
+                    </div>
                 </div>
 
                 {errors.general && (
