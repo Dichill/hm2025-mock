@@ -1,14 +1,21 @@
+import Image from "next/image";
+
 interface MESA_GraphicProps {
-  width: string | number;
+    width: string | number;
 }
 
 const MESA_Graphic = (props: MESA_GraphicProps) => {
-  //pass the size in px through props.width
+    //pass the size in px through props.width
+    return (
+        <Image
+            src="/MESA_logo.svg"
+            width={500}
+            height={500}
+            className="inline-block bg-blue-500"
+            style={{ width: `${props.width}%`, backgroundColor: "white" }}
+            alt="MESA Logo"
+        />
+    );
+};
 
-  return (
-    <div style={{width: `${props.width}px`, display: "inline-block"}}>
-    <img src="../MESA_logo.svg" alt="Logo graphic for MESA; An organization whose aim is to increase the number and percentage of underrepresented and/or low-income students attaining degrees and certificates in STEM"/>
-    </div>
-  )
-}
 export default MESA_Graphic;

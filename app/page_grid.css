@@ -1,0 +1,24 @@
+#area-in-question {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+#about_image_elem {
+  grid-area: 1 / 2 / 3 / 3;
+}
+
+#about_mesa_gr_elem_1 {
+  grid-area: 1 / 1 / 2 / 2;
+}
+#about_mesa_gr_elem_2 {
+  grid-area: 1 / 2 / 2 / 3;
+}
+#about_mesa_gr_elem_3 {
+  grid-area: 2 / 1 / 3 / 2;
+}
+#about_mesa_gr_elem_4 {
+  grid-area: 2 / 2 / 3 / 3;
+}
