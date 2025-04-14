@@ -2,7 +2,9 @@ import {
     darkenColor,
     HackMESA_casing,
     PRIMARY_COLORS,
+
     SECONDARY_COLORS,
+
     TERTIARY_COLORS,
 } from "@/lib/colors";
 
@@ -35,7 +37,9 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                     className="m-4 border-2 border-solid border-white h-15 w-15 rounded-full bg-gray-50 text-black drop-shadow-lg transition-colors duration-150 hover:bg-gray-200"
                     whileTap={{ scale: 0.95 }}
                     animate={{
+
                         backgroundColor: isPressed ? darkenColor(TERTIARY_COLORS.PURPLE_2655.hex, 50) : `${TERTIARY_COLORS.PURPLE_2655.hex}`,
+
                     }} // Darkens when pressed
                     transition={{ duration: 0.05 }}
                     onClick={() => props.open_nav(true)}
@@ -65,8 +69,10 @@ const MobileNavClosed = (props: MobileNavClosed_Props) => {
                     whileTap={{ scale: 0.95 }}
                     animate={{
                         backgroundColor: isPressed2
+
                             ? darkenColor(PRIMARY_COLORS.WARM_RED.hex, 50)
                             : PRIMARY_COLORS.WARM_RED.hex,
+
                     }} // Darkens when pressed
                     transition={{ duration: 0.05 }}
                     onTouchStart={() => setIsPressed2(true)}
@@ -98,7 +104,9 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                 {/* This is here just so that there is no sudden empty space behind the menu when the mobile nav is opened */}
             </div>
             <div
+
                 style={{ backgroundColor: SECONDARY_COLORS.RHODAMINE_RED.hex }}
+
                 className="fixed top-0 z-1000 w-full"
             >
                 <motion.button
@@ -110,13 +118,17 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                             : darkenColor("purple", 50),
                         color: isPressed
                             ? "white"
+
                             : darkenColor(SECONDARY_COLORS.RHODAMINE_RED.hex, 50),
+
                     }}
                     className="m-4 h-13 w-13 border-solid font-black border-4 text-2xl float-right transition-colors duration-150"
                     animate={{
                         backgroundColor: isPressed
+
                             ? darkenColor(SECONDARY_COLORS.RHODAMINE_RED.hex, 50)
                             : SECONDARY_COLORS.RHODAMINE_RED.hex,
+
                     }} // Darkens when pressed
                     // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
                     transition={{ duration: 0.05 }}
@@ -126,7 +138,9 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                     onMouseDown={() => setIsPressed(true)}
                     onMouseUp={() => setIsPressed(false)}
                 >
+
                     <div className="text-white">X</div>
+
                 </motion.button>
 
                 <MobileNavOpen_Button
@@ -171,8 +185,10 @@ const MobileNavOpen_Button = (props: MobileNavOpen_Button_Props) => {
                 className="w-full p-6 transition-colors text-2xl font-medium duration-150 active:text-white"
                 animate={{
                     backgroundColor: isPressed
+
                         ? darkenColor(SECONDARY_COLORS.RHODAMINE_RED.hex, 50)
                         : SECONDARY_COLORS.RHODAMINE_RED.hex,
+
                 }} // Darkens when pressed
                 // "#336600" : `${TERTIARY_COLORS.GREEN_367.hex}` ternary If you want to do green
                 transition={{ duration: 0.05 }}
@@ -272,6 +288,7 @@ const NavBar = () => {
                     <motion.button
                         key="web-nav__register"
                         initial={false}
+
                         className={`float-right m-4 mt-3 border-solid border-[0.5vh] text-white w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150`}
                         style={{
                             cursor: "pointer",
@@ -283,6 +300,7 @@ const NavBar = () => {
                         animate={{
                             backgroundColor:
                                 !isHovering && !isPressed
+
                                     ? PRIMARY_COLORS.WARM_RED.hex
                                     : isHovering && !isPressed
                                         ? darkenColor(
@@ -293,6 +311,7 @@ const NavBar = () => {
                                             PRIMARY_COLORS.WARM_RED.hex,
                                             50
                                         ),
+
                         }} // Darkens when pressed
                         transition={{ duration: 0.05 }}
                         onHoverStart={() => setIsHovering(true)}
