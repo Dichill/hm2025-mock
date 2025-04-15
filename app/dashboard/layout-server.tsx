@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import ClientLayout from "./layout-client";
+import ClientLayout from "@/app/dashboard/layout-client";
 
 export const metadata: Metadata = {
     title: "Dashboard | HackMESA",

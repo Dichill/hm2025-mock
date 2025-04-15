@@ -10,7 +10,8 @@ export interface User {
         [key: string]: unknown;
     };
     user_metadata: {
-        full_name?: string;
+        first_name?: string;
+        last_name?: string;
         avatar_url?: string;
         [key: string]: unknown;
     };
@@ -24,23 +25,6 @@ export interface User {
 }
 
 /**
- * Interface for user profile data stored in the profiles table
- */
-export interface UserProfile {
-    id: string;
-    user_id: string;
-    full_name?: string;
-    avatar_url?: string;
-    school?: string;
-    major?: string;
-    year?: string;
-    dietary_restrictions?: string;
-    t_shirt_size?: string;
-    created_at: string;
-    updated_at: string;
-}
-
-/**
  * Status of the dashboard verification
  */
 export type DashboardStatus = "loading" | "authenticated" | "unauthenticated";
@@ -49,13 +33,12 @@ export type DashboardStatus = "loading" | "authenticated" | "unauthenticated";
  * Application status types for hackathon participants
  */
 export type ApplicationStatus =
-    | "not_applied"
-    | "saved"
-    | "pending"
-    | "accepted"
-    | "rejected"
-    | "waitlisted";
-
+    | "NOT_APPLIED"
+    | "SAVED"
+    | "PENDING"
+    | "APPROVED"
+    | "REJECTED"
+    | "WAITLISTED";
 /**
  * Interface for application data
  */

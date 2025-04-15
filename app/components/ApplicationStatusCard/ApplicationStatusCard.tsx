@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Application, ApplicationStatus } from "@/app/dashboard/types";
+import { Application } from "@/app/dashboard/types";
+import { ApplicationStatus } from "@/core/apply/types/apply.dto";
 
 interface ApplicationStatusCardProps {
     application: Application | null;
@@ -10,7 +11,6 @@ export default function ApplicationStatusCard({
     application,
     onApplyNow,
 }: ApplicationStatusCardProps) {
-    // Animation variants for the card
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -20,12 +20,27 @@ export default function ApplicationStatusCard({
         },
     };
 
-    // Determine status if application exists
-    const status: ApplicationStatus = application?.status || "not_applied";
+    const status = application?.status || "NOT_APPLIED";
 
-    // Status-specific configurations
+    const mappedStatus =
+        typeof status === "string"
+            ? status === "NOT_APPLIED"
+                ? "NOT_APPLIED"
+                : status === "SAVED"
+                ? ApplicationStatus.SAVED
+                : status === "PENDING"
+                ? ApplicationStatus.PENDING
+                : status === "APPROVED"
+                ? ApplicationStatus.APPROVED
+                : status === "REJECTED"
+                ? ApplicationStatus.REJECTED
+                : status === "WAITLISTED"
+                ? ApplicationStatus.WAITLISTED
+                : "NOT_APPLIED"
+            : "NOT_APPLIED";
+
     const statusConfig = {
-        not_applied: {
+        NOT_APPLIED: {
             title: "Apply for HackMESA",
             description:
                 "Submit your application to participate in the upcoming HackMESA event.",
@@ -51,7 +66,7 @@ export default function ApplicationStatusCard({
                 "bg-[rgb(var(--mesa-orange))]/10 text-[rgb(var(--mesa-orange))]",
             action: onApplyNow,
         },
-        saved: {
+        [ApplicationStatus.SAVED]: {
             title: "Application Saved",
             description:
                 "You've started an application but haven't submitted it yet. Continue where you left off.",
@@ -76,7 +91,7 @@ export default function ApplicationStatusCard({
             buttonColor: "bg-blue-50 text-blue-500",
             action: onApplyNow,
         },
-        pending: {
+        [ApplicationStatus.PENDING]: {
             title: "Application In Review",
             description:
                 "Your application has been submitted and is currently being reviewed by our team.",
@@ -100,9 +115,10 @@ export default function ApplicationStatusCard({
             buttonText: "View Application",
             buttonColor:
                 "bg-[rgb(var(--mesa-yellow-116))]/10 text-[rgb(var(--mesa-yellow-116))]",
-            action: () => (window.location.href = "/dashboard/application"),
+            action: () =>
+                (window.location.href = "/dashboard/application/view"),
         },
-        accepted: {
+        [ApplicationStatus.APPROVED]: {
             title: "Application Accepted!",
             description:
                 "Congratulations! Your application has been accepted. We're excited to see you on May 9th!",
@@ -128,7 +144,7 @@ export default function ApplicationStatusCard({
                 "bg-[rgb(var(--mesa-green))]/10 text-[rgb(var(--mesa-green))]",
             action: () => (window.location.href = "/dashboard/confirm"),
         },
-        rejected: {
+        [ApplicationStatus.REJECTED]: {
             title: "Application Status",
             description:
                 "Thank you for your interest in HackMESA. Unfortunately, we cannot accommodate all applicants at this time.",
@@ -154,14 +170,14 @@ export default function ApplicationStatusCard({
                 "bg-[rgb(var(--mesa-grey))]/10 text-[rgb(var(--mesa-grey))]",
             action: () => (window.location.href = "/events"),
         },
-        waitlisted: {
+        [ApplicationStatus.WAITLISTED]: {
             title: "You're on the Waitlist",
             description:
-                "You've been placed on our waitlist. We'll notify you if a spot becomes available.",
+                "Your application has been waitlisted. We'll notify you if a spot becomes available.",
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-[rgb(var(--mesa-purple))]"
+                    className="h-6 w-6 text-[rgb(var(--mesa-yellow-116))]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -170,37 +186,36 @@ export default function ApplicationStatusCard({
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                 </svg>
             ),
-            bgColor: "bg-[rgb(var(--mesa-purple))]/20",
-            buttonText: "Check Status",
-            buttonColor:
-                "bg-[rgb(var(--mesa-purple))]/10 text-[rgb(var(--mesa-purple))]",
-            action: () => (window.location.href = "/dashboard/waitlist"),
+            bgColor: "bg-[rgb(var(--mesa-yellow-116))]/20",
+            buttonText: "",
+            buttonColor: "",
+            action: () => {},
         },
     };
 
-    // Get configuration based on status
-    const config = statusConfig[status];
+    const config = statusConfig[mappedStatus as keyof typeof statusConfig];
 
-    // Create dynamic button variants based on status
     const buttonVariants = {
         hover: {
             scale: 1.03,
             boxShadow:
-                status === "not_applied"
+                mappedStatus === "NOT_APPLIED"
                     ? "0 10px 25px rgba(255, 137, 62, 0.2)"
-                    : status === "saved"
+                    : mappedStatus === ApplicationStatus.SAVED
                     ? "0 10px 25px rgba(59, 130, 246, 0.2)"
-                    : status === "pending"
+                    : mappedStatus === ApplicationStatus.PENDING
                     ? "0 10px 25px rgba(246, 190, 0, 0.2)"
-                    : status === "accepted"
+                    : mappedStatus === ApplicationStatus.APPROVED
                     ? "0 10px 25px rgba(76, 175, 80, 0.2)"
-                    : status === "rejected"
+                    : mappedStatus === ApplicationStatus.REJECTED
                     ? "0 10px 25px rgba(128, 128, 128, 0.2)"
-                    : "0 10px 25px rgba(156, 39, 176, 0.2)", // waitlisted
+                    : mappedStatus === ApplicationStatus.WAITLISTED
+                    ? "0 10px 25px rgba(246, 190, 0, 0.2)"
+                    : "0 10px 25px rgba(128, 128, 128, 0.2)",
             transition: {
                 type: "spring",
                 stiffness: 400,
@@ -210,35 +225,46 @@ export default function ApplicationStatusCard({
         tap: { scale: 0.97 },
     };
 
-    // Render application date if available
     const renderApplicationDate = () => {
         if (!application) return null;
 
         const formatDate = (dateString: string) => {
+            if (!dateString) {
+                return "N/A";
+            }
+
             const date = new Date(dateString);
+
+            if (isNaN(date.getTime())) {
+                return "Invalid date";
+            }
+
             return new Intl.DateTimeFormat("en-US", {
                 month: "short",
                 day: "numeric",
                 year: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
             }).format(date);
         };
 
         return (
             <p className="text-xs text-gray-500 mt-2">
-                {status === "saved" &&
+                {status === "SAVED" &&
                     `Last saved on: ${formatDate(application.updated_at)}`}
-                {status === "pending" &&
+                {status === "PENDING" &&
                     application.applied_at &&
                     `Applied on: ${formatDate(application.applied_at)}`}
-                {status === "accepted" &&
+                {status === "APPROVED" &&
                     `Accepted on: ${formatDate(
                         application.decision_at || application.updated_at
                     )}`}
-                {status === "rejected" &&
+                {status === "REJECTED" &&
                     `Updated on: ${formatDate(
                         application.decision_at || application.updated_at
                     )}`}
-                {status === "waitlisted" &&
+                {status === "WAITLISTED" &&
                     `Waitlisted on: ${formatDate(
                         application.decision_at || application.updated_at
                     )}`}
@@ -263,15 +289,17 @@ export default function ApplicationStatusCard({
                 <p>{config.description}</p>
                 {renderApplicationDate()}
             </div>
-            <motion.button
-                whileHover="hover"
-                whileTap="tap"
-                variants={buttonVariants}
-                onClick={config.action}
-                className={`w-full py-2 ${config.buttonColor} rounded-md font-medium mt-2`}
-            >
-                {config.buttonText}
-            </motion.button>
+            {config.buttonText && (
+                <motion.button
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={buttonVariants}
+                    onClick={config.action}
+                    className={`w-full py-2 ${config.buttonColor} rounded-md font-medium mt-2`}
+                >
+                    {config.buttonText}
+                </motion.button>
+            )}
         </motion.div>
     );
 }
