@@ -390,7 +390,7 @@ const NavBarButton_O = (props: NavBarButtonProps_O) => {
                         ? TERTIARY_COLORS.PURPLE_2655.hex
                         : isHovering
                             ? "rgba(162, 137, 215, 0.1)"
-                            : "transparent",
+                            : "rgba(255, 255, 255, 0)",
                 }}
             >
                 <div
