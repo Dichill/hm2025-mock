@@ -540,10 +540,7 @@ function VerificationContent() {
                             whileHover="hover"
                             whileTap="tap"
                             className="mt-4 px-6 py-2.5 bg-[rgb(var(--mesa-orange))] text-white rounded-md font-medium shadow-md"
-                            onClick={() => {
-                                setVerificationStatus("loading");
-                                router.refresh();
-                            }}
+                            onClick={() => window.location.reload()}
                         >
                             Try Again
                         </motion.button>

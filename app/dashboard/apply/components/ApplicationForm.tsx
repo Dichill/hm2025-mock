@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
     ApplicationDto,
@@ -28,6 +28,8 @@ type FormErrors = Partial<Record<keyof FormData, string>> & {
 
 type FormData = ApplicationDto & {
     resumeFile: File | null;
+    resumeUrl?: string;
+    resumeFileName?: string;
 };
 
 export function ApplicationForm() {
@@ -36,6 +38,11 @@ export function ApplicationForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [showSaveModal, setShowSaveModal] = useState(false);
+    const [saveModalMessage, setSaveModalMessage] = useState("");
+    const [saveModalType, setSaveModalType] = useState<"success" | "error">(
+        "success"
+    );
     const [formData, setFormData] = useState<FormData>({
         firstName: "",
         lastName: "",
@@ -61,6 +68,8 @@ export function ApplicationForm() {
         primarySkills: [],
         otherSkill: [],
         resumeFile: null,
+        resumeUrl: "",
+        resumeFileName: "",
         levelOfStudy: "",
     });
 
@@ -74,6 +83,8 @@ export function ApplicationForm() {
             try {
                 setIsLoading(true);
                 const savedApp = await getCurrentApplication();
+
+                console.log("savedApp", savedApp);
 
                 if (savedApp) {
                     if (
@@ -95,6 +106,21 @@ export function ApplicationForm() {
 
                         if (savedApp) {
                             const appData = savedApp as unknown as FormData;
+
+                            // Parse JSONB fields if they are strings
+                            const dietaryRestrictions =
+                                typeof appData.dietaryRestrictions === "string"
+                                    ? JSON.parse(
+                                          appData.dietaryRestrictions as unknown as string
+                                      )
+                                    : appData.dietaryRestrictions || [];
+
+                            const primarySkills =
+                                typeof appData.primarySkills === "string"
+                                    ? JSON.parse(
+                                          appData.primarySkills as unknown as string
+                                      )
+                                    : appData.primarySkills || [];
 
                             setFormData((prevData) => ({
                                 ...prevData,
@@ -124,9 +150,7 @@ export function ApplicationForm() {
                                 mesaSubscription:
                                     appData.mesaSubscription ||
                                     prevData.mesaSubscription,
-                                dietaryRestrictions:
-                                    appData.dietaryRestrictions ||
-                                    prevData.dietaryRestrictions,
+                                dietaryRestrictions,
                                 isMesaStudent:
                                     appData.isMesaStudent ||
                                     prevData.isMesaStudent,
@@ -142,15 +166,15 @@ export function ApplicationForm() {
                                     appData.firstTime || prevData.firstTime,
                                 skillLevel:
                                     appData.skillLevel || prevData.skillLevel,
-                                primarySkills:
-                                    appData.primarySkills ||
-                                    prevData.primarySkills,
+                                primarySkills,
                                 otherSkill:
                                     appData.otherSkill || prevData.otherSkill,
                                 levelOfStudy:
                                     appData.levelOfStudy ||
                                     prevData.levelOfStudy,
                                 resumeFile: null,
+                                resumeUrl: appData.resumeUrl || "",
+                                resumeFileName: appData.resumeFileName || "",
                             }));
                         }
                     }
@@ -245,6 +269,7 @@ export function ApplicationForm() {
                 };
             }
 
+            // Handle JSONB fields (primarySkills and dietaryRestrictions)
             const currentValues = prev[name] as string[];
             if (checked) {
                 return { ...prev, [name]: [...currentValues, value] };
@@ -370,6 +395,47 @@ export function ApplicationForm() {
         setCurrentStep(currentStep - 1);
     };
 
+    const validateFileSize = (file: File | null): boolean => {
+        if (!file) return true;
+
+        // 5MB limit for PDFs and images
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+        if (file.size > MAX_FILE_SIZE) {
+            setErrors((prev) => ({
+                ...prev,
+                resumeFile: `File size exceeds the 5MB limit. Your file is ${(
+                    file.size /
+                    (1024 * 1024)
+                ).toFixed(2)}MB.`,
+            }));
+            return false;
+        }
+
+        return true;
+    };
+
+    const validateFileType = (file: File | null): boolean => {
+        if (!file) return true;
+
+        const acceptedTypes = [
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+        ];
+
+        if (!acceptedTypes.includes(file.type)) {
+            setErrors((prev) => ({
+                ...prev,
+                resumeFile: "Only PDF, JPEG, and PNG files are allowed.",
+            }));
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSaveForLater = async () => {
         setIsSaving(true);
 
@@ -417,15 +483,60 @@ export function ApplicationForm() {
                 setSavedApplicationId(response.id);
             }
 
+            // Set resumeUrl from the response if available
+            if (
+                response &&
+                typeof response === "object" &&
+                "resumeUrl" in response &&
+                response.resumeUrl
+            ) {
+                setFormData((prev) => ({
+                    ...prev,
+                    resumeUrl: response.resumeUrl as string,
+                    resumeFileName:
+                        formData.resumeFileName ||
+                        formData.resumeFile?.name ||
+                        getFileNameFromUrl(response.resumeUrl as string),
+                }));
+            }
+
             console.log("Application saved:", response);
+
+            // Show success modal
+            setSaveModalType("success");
+            setSaveModalMessage(
+                "Your application has been saved successfully!"
+            );
+            setShowSaveModal(true);
         } catch (error) {
             console.error("Error saving application:", error);
             setErrors({
                 ...errors,
                 general: "Failed to save application. Please try again.",
             });
+
+            // Show error modal
+            setSaveModalType("error");
+            setSaveModalMessage(
+                "Failed to save your application. Please try again."
+            );
+            setShowSaveModal(true);
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    // Extract filename from URL
+    const getFileNameFromUrl = (url: string): string => {
+        try {
+            const urlParts = url.split("/");
+            const fileName = urlParts[urlParts.length - 1];
+            // Remove the random numbers prefix and underscore if present (e.g., 1744689292271_)
+            return fileName.includes("_")
+                ? fileName.split("_").slice(1).join("_")
+                : fileName;
+        } catch {
+            return "Uploaded resume";
         }
     };
 
@@ -458,9 +569,7 @@ export function ApplicationForm() {
                 primarySkills: formData.primarySkills,
                 whyAttend: formData.whyAttend || "",
                 otherSkill: formData.otherSkill,
-                dietaryRestrictions: Array.isArray(formData.dietaryRestrictions)
-                    ? formData.dietaryRestrictions
-                    : [],
+                dietaryRestrictions: formData.dietaryRestrictions,
                 mlhCodeOfConduct: formData.mlhCodeOfConduct,
                 mlhPrivacyPolicy: formData.mlhPrivacyPolicy,
                 mlhEmailSubscription: formData.mlhEmailSubscription,
@@ -541,6 +650,109 @@ export function ApplicationForm() {
         }
     };
 
+    // Modal component for save notifications
+    const SaveAlertModal = () => {
+        return (
+            <AnimatePresence>
+                {showSaveModal && (
+                    <motion.div
+                        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowSaveModal(false)}
+                    >
+                        <motion.div
+                            className={`relative bg-white rounded-lg p-6 shadow-xl max-w-md mx-4 ${
+                                saveModalType === "success"
+                                    ? "border-l-4 border-green-500"
+                                    : "border-l-4 border-[rgb(var(--mesa-warm-red))]"
+                            }`}
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                            transition={{
+                                type: "spring",
+                                damping: 25,
+                                stiffness: 300,
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="flex items-start mb-4">
+                                {saveModalType === "success" ? (
+                                    <div className="flex-shrink-0 mr-3">
+                                        <svg
+                                            className="h-6 w-6 text-green-500"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M5 13l4 4L19 7"
+                                            />
+                                        </svg>
+                                    </div>
+                                ) : (
+                                    <div className="flex-shrink-0 mr-3">
+                                        <svg
+                                            className="h-6 w-6 text-[rgb(var(--mesa-warm-red))]"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            />
+                                        </svg>
+                                    </div>
+                                )}
+                                <div className="flex-1">
+                                    <h3
+                                        className={`text-lg font-medium ${
+                                            saveModalType === "success"
+                                                ? "text-green-700"
+                                                : "text-[rgb(var(--mesa-warm-red))]"
+                                        }`}
+                                    >
+                                        {saveModalType === "success"
+                                            ? "Saved Successfully"
+                                            : "Error"}
+                                    </h3>
+                                    <p className="mt-1 text-sm text-gray-600">
+                                        {saveModalMessage}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex justify-end">
+                                <button
+                                    type="button"
+                                    className={`px-4 py-2 rounded-md text-sm font-medium text-white ${
+                                        saveModalType === "success"
+                                            ? "bg-green-500 hover:bg-green-600"
+                                            : "bg-[rgb(var(--mesa-warm-red))] hover:bg-[rgb(var(--mesa-warm-red))]/90"
+                                    } focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                                        saveModalType === "success"
+                                            ? "focus:ring-green-500"
+                                            : "focus:ring-[rgb(var(--mesa-warm-red))]"
+                                    }`}
+                                    onClick={() => setShowSaveModal(false)}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        );
+    };
+
     if (isLoading) {
         return (
             <div className="bg-white shadow-xl rounded-lg overflow-hidden p-8 flex items-center justify-center min-h-[400px]">
@@ -575,6 +787,9 @@ export function ApplicationForm() {
 
     return (
         <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+            {/* Save Alert Modal */}
+            <SaveAlertModal />
+
             {/* Editing Saved Application Badge */}
             {savedApplicationId && (
                 <div className="bg-blue-100 text-blue-800 text-sm font-medium px-4 py-2 text-center">
@@ -1080,22 +1295,92 @@ export function ApplicationForm() {
                             >
                                 Resume File
                             </label>
-                            <motion.input
-                                id="resumeFile"
-                                name="resumeFile"
-                                type="file"
-                                accept=".pdf"
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            resumeFile: file,
-                                        }));
-                                    }
-                                }}
-                                className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200"
-                            />
+                            <div className="flex flex-col">
+                                {formData.resumeUrl ? (
+                                    <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded-md flex items-center justify-between">
+                                        <div className="flex items-center">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5 mr-2 text-gray-500"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                />
+                                            </svg>
+                                            <span className="text-sm text-gray-600 truncate max-w-xs">
+                                                {formData.resumeFileName ||
+                                                    getFileNameFromUrl(
+                                                        formData.resumeUrl
+                                                    )}
+                                            </span>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    resumeFile: null,
+                                                    resumeUrl: "",
+                                                    resumeFileName: "",
+                                                }))
+                                            }
+                                            className="text-gray-400 hover:text-gray-500 p-1"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M6 18L18 6M6 6l12 12"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <motion.input
+                                        id="resumeFile"
+                                        name="resumeFile"
+                                        type="file"
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                // Clear previous errors
+                                                setErrors((prev) => ({
+                                                    ...prev,
+                                                    resumeFile: "",
+                                                }));
+
+                                                // Validate file size and type
+                                                if (
+                                                    validateFileSize(file) &&
+                                                    validateFileType(file)
+                                                ) {
+                                                    setFormData((prev) => ({
+                                                        ...prev,
+                                                        resumeFile: file,
+                                                        resumeFileName:
+                                                            file.name,
+                                                    }));
+                                                }
+                                            }
+                                        }}
+                                        className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200"
+                                    />
+                                )}
+                            </div>
                             {errors.resumeFile && (
                                 <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">
                                     {errors.resumeFile}
@@ -1107,7 +1392,8 @@ export function ApplicationForm() {
                                 animate={{ opacity: 0.8 }}
                                 transition={{ delay: 0.5, duration: 0.5 }}
                             >
-                                Upload your resume (PDF format)
+                                Upload your resume (PDF, JPG, or PNG format, max
+                                5MB)
                             </motion.p>
                         </motion.div>
 
@@ -1219,9 +1505,14 @@ export function ApplicationForm() {
                                         <input
                                             id={`skill-${skill}`}
                                             type="checkbox"
-                                            checked={formData.primarySkills.includes(
-                                                skill
-                                            )}
+                                            checked={
+                                                Array.isArray(
+                                                    formData.primarySkills
+                                                ) &&
+                                                formData.primarySkills.includes(
+                                                    skill
+                                                )
+                                            }
                                             onChange={(e) =>
                                                 handleCheckboxGroupChange(
                                                     "primarySkills",
@@ -1357,7 +1648,7 @@ export function ApplicationForm() {
                                 name="isMesaStudent"
                                 value={formData.isMesaStudent ? "Yes" : "No"}
                                 onChange={handleSelect}
-                                className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >
                                 <option value="">Select an option</option>
                                 <option value="Yes">Yes</option>
@@ -1395,9 +1686,12 @@ export function ApplicationForm() {
                                             id={`dietary-${option}`}
                                             type="checkbox"
                                             checked={
-                                                formData.dietaryRestrictions?.includes(
+                                                Array.isArray(
+                                                    formData.dietaryRestrictions
+                                                ) &&
+                                                formData.dietaryRestrictions.includes(
                                                     option
-                                                ) || false
+                                                )
                                             }
                                             onChange={(e) =>
                                                 handleCheckboxGroupChange(
@@ -1435,7 +1729,7 @@ export function ApplicationForm() {
                                 name="gender"
                                 value={formData.gender}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >
                                 <option value="">Select an option</option>
                                 <option value="Man">Man</option>
@@ -1466,7 +1760,7 @@ export function ApplicationForm() {
                                 name="tShirtSize"
                                 value={formData.tShirtSize}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >
                                 <option value="">Select a size</option>
                                 <option value="XS">XS</option>
@@ -1497,7 +1791,7 @@ export function ApplicationForm() {
                                 name="fieldOfStudy"
                                 value={formData.fieldOfStudy}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >
                                 <option value="">Select an option</option>
                                 <option value="Computer science, computer engineering, or software engineering">

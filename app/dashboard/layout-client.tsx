@@ -32,7 +32,27 @@ export default function ClientLayout({
                     return;
                 }
 
-                const { data: userData } = await supabase.auth.getUser();
+                const { data: userData, error } = await supabase.auth.getUser();
+
+                if (error) {
+                    console.error("Authentication error:", error);
+
+                    // Handle "user_not_found" error specifically
+                    if (
+                        error.message?.includes("user_not_found") ||
+                        error.code === "user_not_found"
+                    ) {
+                        console.log(
+                            "User from JWT not found in database. Signing out..."
+                        );
+                        await supabase.auth.signOut();
+                    }
+
+                    setDashboardStatus("unauthenticated");
+                    router.push("/login");
+                    return;
+                }
+
                 if (userData.user) {
                     setUser(userData.user as User);
                     setDashboardStatus("authenticated");
@@ -42,6 +62,17 @@ export default function ClientLayout({
                 }
             } catch (error) {
                 console.error("Authentication error:", error);
+
+                // Also attempt to sign out in case of any other errors
+                try {
+                    await supabase.auth.signOut();
+                } catch (signOutError) {
+                    console.error(
+                        "Error during forced sign out:",
+                        signOutError
+                    );
+                }
+
                 setDashboardStatus("unauthenticated");
                 router.push("/login");
             } finally {

@@ -96,6 +96,8 @@ export interface ApplicationResponseDto {
     created_at: string;
     updated_at: string;
     status: ApplicationStatus;
+    resumeUrl?: string;
+    resumeFileName?: string;
 }
 
 /**
