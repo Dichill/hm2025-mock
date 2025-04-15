@@ -97,7 +97,11 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                         {/* Admin info and sign out button */}
                         <div className="flex items-center ml-6 pl-6 border-l border-gray-200">
                             <div className="text-right mr-4">
-                                <p className="text-sm text-gray-500">Admin</p>
+                                <p className="text-sm text-gray-500">
+                                    {user?.user_metadata?.first_name
+                                        ? user?.user_metadata?.first_name
+                                        : user?.email?.split("@")[0]}
+                                </p>
                                 <p className="font-medium">
                                     {user?.user_metadata?.first_name}
                                 </p>
