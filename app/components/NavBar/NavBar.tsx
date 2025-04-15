@@ -232,7 +232,7 @@ export const Render_MobileNav = () => {
 
 // **  End MOBILE; start Desktop  **
 
-const DT_base_fontSize = "2vw";
+const DT_base_fontSize = "1.6vw";
 
 interface NavBarButtonProps {
     text: string;
@@ -243,9 +243,11 @@ const NavBarButton = (props: NavBarButtonProps) => {
         <a className="" href={`#section-${props.text.toLowerCase()}`}>
             <button
                 style={{ fontSize: DT_base_fontSize }}
-                className="h-[98%] w-[98%] font-bold cursor-pointer navBarButton"
-            >
-                {props.text}
+                className="flex justify-center items-center h-[98%] w-[98%] font-bold cursor-pointer navBarButton">
+                <div className="h-[70%] w-[70%] flex justify-center items-center"
+                style={{borderRadius: "1vw", }}>
+                    <span>{props.text}</span>
+                </div>
             </button>
         </a>
     );
@@ -260,10 +262,11 @@ const NavBar = () => {
     //large screen
     return (
         <div
-            style={{ backgroundColor: TERTIARY_COLORS.PURPLE_2655.hex }}
-            className=" sticky shadow-lg rounded-lg top-2 z-100 w-full m-2"
+            className="absolute shadow-lg rounded-lg top-[3%] left-[.5%] z-100 w-full"
         >
-            <div id="nav__container" className="h-full">
+            <div id="nav__container" className="h-full rounded-lg"
+                style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+            >
                 <div className="flex content-center items-center">
                     <h4
                         id="nav__logo"
