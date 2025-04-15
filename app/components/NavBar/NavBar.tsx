@@ -11,7 +11,7 @@ import {
 import "./NavBar.css";
 // import useWindowSize from "@/lib/useWindowSize";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -234,30 +234,38 @@ export const Render_MobileNav = () => {
 
 const DT_base_fontSize = "1.6vw";
 
-interface NavBarButtonProps {
-    text: string;
-}
-
-const NavBarButton = (props: NavBarButtonProps) => {
-    return (
-        <a className="" href={`#section-${props.text.toLowerCase()}`}>
-            <button
-                style={{ fontSize: DT_base_fontSize }}
-                className="flex justify-center items-center h-[98%] w-[98%] font-bold cursor-pointer navBarButton">
-                <div className="h-[70%] w-[70%] flex justify-center items-center"
-                style={{borderRadius: "1vw", }}>
-                    <span>{props.text}</span>
-                </div>
-            </button>
-        </a>
-    );
-};
-
 //TODO: NavBar is not responsive in a way that looks healthy; fix
 const NavBar = () => {
     const [isPressed, setIsPressed] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
     const router = useRouter();
+    const [activeSection, setActiveSection] = useState("");
+
+    // Track active section based on scroll position
+    useEffect(() => {
+        const sections = ["about", "schedule", "location", "sponsors", "faq"];
+
+        const handleScroll = () => {
+            const currentPos = window.scrollY + 100;
+
+            for (const section of sections) {
+                const element = document.getElementById(`section-${section}`);
+                if (element) {
+                    const { offsetTop, offsetHeight } = element;
+                    if (
+                        currentPos >= offsetTop &&
+                        currentPos < offsetTop + offsetHeight
+                    ) {
+                        setActiveSection(section);
+                        break;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     //large screen
     return (
@@ -277,11 +285,26 @@ const NavBar = () => {
                     </h4>
                 </div>
                 <nav id="nav__routes" className="inline">
-                    <NavBarButton text="About" />
-                    <NavBarButton text="Schedule" />
-                    <NavBarButton text="Location" />
-                    <NavBarButton text="Sponsors" />
-                    <NavBarButton text="FAQ" />
+                    <NavBarButton_O
+                        text="About"
+                        isActive={activeSection === "about"}
+                    />
+                    <NavBarButton_O
+                        text="Schedule"
+                        isActive={activeSection === "schedule"}
+                    />
+                    <NavBarButton_O
+                        text="Location"
+                        isActive={activeSection === "location"}
+                    />
+                    <NavBarButton_O
+                        text="Sponsors"
+                        isActive={activeSection === "sponsors"}
+                    />
+                    <NavBarButton_O
+                        text="FAQ"
+                        isActive={activeSection === "faq"}
+                    />
                 </nav>
 
                 <div
@@ -342,3 +365,144 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+
+
+interface NavBarButtonProps_O {
+    text: string;
+    isActive?: boolean;
+}
+
+const NavBarButton_O = (props: NavBarButtonProps_O) => {
+    const [isHovering, setIsHovering] = useState(false);
+
+    return (
+        <a href={`#section-${props.text.toLowerCase()}`} className="px-2">
+            <motion.div
+                className={`py-2 px-4 rounded-md transition-all duration-150 ${props.isActive
+                    ? "text-white bg-purple-600"
+                    : "text-gray-700 hover:text-purple-800"
+                    }`}
+                onHoverStart={() => setIsHovering(true)}
+                onHoverEnd={() => setIsHovering(false)}
+                animate={{
+                    backgroundColor: props.isActive
+                        ? TERTIARY_COLORS.PURPLE_2655.hex
+                        : isHovering
+                            ? "rgba(162, 137, 215, 0.1)"
+                            : "transparent",
+                }}
+            >
+                <div
+                    style={{ fontSize: DT_base_fontSize }}
+                    className="flex justify-center items-center h-[98%] w-[98%] font-bold cursor-pointer navBarButton">
+                    <div className="h-[70%] w-[70%] flex justify-center items-center">
+                        <span>{props.text}</span>
+                    </div>
+                </div>
+
+            </motion.div>
+        </a>
+    );
+};
+
+
+
+// const DesktopNavBar_O = () => {
+//     const [isPressed, setIsPressed] = useState(false);
+//     const [isHovering, setIsHovering] = useState(false);
+//     const [activeSection, setActiveSection] = useState("");
+
+//     // Track active section based on scroll position
+//     useEffect(() => {
+//         const sections = ["about", "schedule", "location", "sponsors", "faq"];
+
+//         const handleScroll = () => {
+//             const currentPos = window.scrollY + 100;
+
+//             for (const section of sections) {
+//                 const element = document.getElementById(`section-${section}`);
+//                 if (element) {
+//                     const { offsetTop, offsetHeight } = element;
+//                     if (
+//                         currentPos >= offsetTop &&
+//                         currentPos < offsetTop + offsetHeight
+//                     ) {
+//                         setActiveSection(section);
+//                         break;
+//                     }
+//                 }
+//             }
+//         };
+
+//         window.addEventListener("scroll", handleScroll);
+//         return () => window.removeEventListener("scroll", handleScroll);
+//     }, []);
+
+//     return (
+//         <div className="fixed top-4 left-4 right-[200px] z-[150] bg-white/90 backdrop-blur-sm shadow-md rounded-xl mx-auto">
+//             <div className="max-w-7xl mx-auto px-4">
+//                 <div className="flex justify-between items-center h-14">
+//                     <div className="flex items-center">
+//                         <h1 className="text-xl font-bold text-gray-900">
+//                             {HackMESA_casing}
+//                         </h1>
+//                     </div>
+
+//                     <nav className="hidden md:flex space-x-1">
+//                         <NavBarButton_O
+//                             text="About"
+//                             isActive={activeSection === "about"}
+//                         />
+//                         <NavBarButton_O
+//                             text="Schedule"
+//                             isActive={activeSection === "schedule"}
+//                         />
+//                         <NavBarButton_O
+//                             text="Location"
+//                             isActive={activeSection === "location"}
+//                         />
+//                         <NavBarButton_O
+//                             text="Sponsors"
+//                             isActive={activeSection === "sponsors"}
+//                         />
+//                         <NavBarButton_O
+//                             text="FAQ"
+//                             isActive={activeSection === "faq"}
+//                         />
+//                     </nav>
+
+//                     <motion.button
+//                         key="desktop-nav__register"
+//                         initial={false}
+//                         className="px-5 py-2 rounded-md font-medium text-white shadow-sm"
+//                         whileTap={{ scale: 0.95 }}
+//                         animate={{
+//                             backgroundColor: isPressed
+//                                 ? darkenColor(
+//                                     SECONDARY_COLORS.ORANGE_151.hex,
+//                                     30
+//                                 )
+//                                 : isHovering
+//                                     ? darkenColor(
+//                                         SECONDARY_COLORS.ORANGE_151.hex,
+//                                         10
+//                                     )
+//                                     : SECONDARY_COLORS.ORANGE_151.hex,
+//                         }}
+//                         transition={{ duration: 0.1 }}
+//                         onClick={() => (window.location.href = "/register")}
+//                         onHoverStart={() => setIsHovering(true)}
+//                         onHoverEnd={() => setIsHovering(false)}
+//                         onTouchStart={() => setIsPressed(true)}
+//                         onTouchEnd={() => setIsPressed(false)}
+//                         onMouseDown={() => setIsPressed(true)}
+//                         onMouseUp={() => setIsPressed(false)}
+//                     >
+//                         Register
+//                     </motion.button>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
