@@ -56,7 +56,7 @@ export function ApplicationForm() {
         mlhCodeOfConduct: false,
         mlhPrivacyPolicy: false,
         mlhEmailSubscription: false,
-        mesaSubscription: false,
+        mesaSubscription: true,
         dietaryRestrictions: [],
         isMesaStudent: false,
         gender: Gender.PREFER_NOT_TO_SAY,
@@ -139,21 +139,26 @@ export function ApplicationForm() {
                                 linkedInUrl:
                                     appData.linkedInUrl || prevData.linkedInUrl,
                                 mlhCodeOfConduct:
-                                    appData.mlhCodeOfConduct ||
-                                    prevData.mlhCodeOfConduct,
+                                    appData.mlhCodeOfConduct !== undefined
+                                        ? appData.mlhCodeOfConduct
+                                        : prevData.mlhCodeOfConduct,
                                 mlhPrivacyPolicy:
-                                    appData.mlhPrivacyPolicy ||
-                                    prevData.mlhPrivacyPolicy,
+                                    appData.mlhPrivacyPolicy !== undefined
+                                        ? appData.mlhPrivacyPolicy
+                                        : prevData.mlhPrivacyPolicy,
                                 mlhEmailSubscription:
-                                    appData.mlhEmailSubscription ||
-                                    prevData.mlhEmailSubscription,
+                                    appData.mlhEmailSubscription !== undefined
+                                        ? appData.mlhEmailSubscription
+                                        : prevData.mlhEmailSubscription,
                                 mesaSubscription:
-                                    appData.mesaSubscription ||
-                                    prevData.mesaSubscription,
+                                    appData.mesaSubscription !== undefined
+                                        ? appData.mesaSubscription
+                                        : prevData.mesaSubscription,
                                 dietaryRestrictions,
                                 isMesaStudent:
-                                    appData.isMesaStudent ||
-                                    prevData.isMesaStudent,
+                                    appData.isMesaStudent !== undefined
+                                        ? appData.isMesaStudent
+                                        : prevData.isMesaStudent,
                                 gender: appData.gender || prevData.gender,
                                 tShirtSize:
                                     appData.tShirtSize || prevData.tShirtSize,
@@ -163,7 +168,9 @@ export function ApplicationForm() {
                                 whyAttend:
                                     appData.whyAttend || prevData.whyAttend,
                                 firstTime:
-                                    appData.firstTime || prevData.firstTime,
+                                    appData.firstTime !== undefined
+                                        ? appData.firstTime
+                                        : prevData.firstTime,
                                 skillLevel:
                                     appData.skillLevel || prevData.skillLevel,
                                 primarySkills,

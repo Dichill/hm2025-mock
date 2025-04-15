@@ -167,8 +167,26 @@ export default function ViewApplicationPage() {
                     className="text-center mb-6 sm:mb-8"
                     variants={itemVariants}
                 >
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[rgb(var(--mesa-warm-red))]">
-                        Application Status: Under Review
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
+                        <span className="inline-flex items-center">
+                            <span className="text-gray-600">
+                                Application Status:
+                            </span>
+                            <span className="ml-2 relative">
+                                <span className="text-gray-700">
+                                    Under Review
+                                </span>
+                                <motion.span
+                                    className="absolute bottom-0 left-0 h-[2px] bg-gray-400"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: "100%" }}
+                                    transition={{
+                                        duration: 0.6,
+                                        ease: "easeOut",
+                                    }}
+                                />
+                            </span>
+                        </span>
                     </h1>
                     <div className="mt-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[rgb(var(--mesa-yellow-116))]/20 text-[rgb(var(--mesa-yellow-116))]">
                         <svg
