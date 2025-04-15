@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import DashboardNavBar from "@/app/components/DashboardNavBar/DashboardNavBar";
 import supabase from "@/lib/supabase/supabase-client";
 import { User, DashboardStatus } from "./types";
+import { getUserData } from "@/core/user/api/user";
 
 export default function ClientLayout({
     children,
@@ -56,6 +57,22 @@ export default function ClientLayout({
                 if (userData.user) {
                     setUser(userData.user as User);
                     setDashboardStatus("authenticated");
+
+                    // Check user roles and redirect if needed
+                    try {
+                        const userRoleData = await getUserData();
+                        const adminRoles = ["SPONSORS", "ORGANIZER"];
+
+                        if (
+                            userRoleData.roles.some((role) =>
+                                adminRoles.includes(role)
+                            )
+                        ) {
+                            router.push("/admin");
+                        }
+                    } catch (roleError) {
+                        console.error("Error fetching user roles:", roleError);
+                    }
                 } else {
                     setDashboardStatus("unauthenticated");
                     router.push("/login");

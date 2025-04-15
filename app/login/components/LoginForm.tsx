@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import supabase from "@/lib/supabase/supabase-client";
 import { useRouter } from "next/navigation";
+import { getUserData } from "@/core/user/api/user";
 
 export function LoginForm() {
     const [email, setEmail] = useState<string>("");
@@ -18,7 +19,23 @@ export function LoginForm() {
                 const { data } = await supabase.auth.getSession();
 
                 if (data.session) {
-                    router.push("/dashboard");
+                    try {
+                        const userData = await getUserData();
+                        const adminRoles = ["SPONSORS", "ORGANIZER"];
+
+                        if (
+                            userData.roles.some((role) =>
+                                adminRoles.includes(role)
+                            )
+                        ) {
+                            router.push("/admin");
+                        } else {
+                            router.push("/dashboard");
+                        }
+                    } catch (error) {
+                        console.error("Error getting user data:", error);
+                        router.push("/dashboard");
+                    }
                 }
             } catch (error) {
                 console.error("Error checking session in form:", error);
@@ -34,7 +51,7 @@ export function LoginForm() {
         setError(null);
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const { error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             });
@@ -43,12 +60,21 @@ export function LoginForm() {
                 throw error;
             }
 
-            console.log(
-                "Authentication successful. Session token:",
-                data.session?.access_token
-            );
+            try {
+                const userData = await getUserData();
+                const adminRoles = ["SPONSORS", "ORGANIZER"];
 
-            router.push("/dashboard");
+                console.log(userData.roles);
+
+                if (userData.roles.some((role) => adminRoles.includes(role))) {
+                    router.push("/admin");
+                } else {
+                    router.push("/dashboard");
+                }
+            } catch (userDataError) {
+                console.error("Error getting user data:", userDataError);
+                router.push("/dashboard");
+            }
         } catch (err) {
             setError(
                 err instanceof Error
