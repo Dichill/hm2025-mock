@@ -10,16 +10,15 @@ export const teamMembers: TeamMember[] = [
     {
         name: "Dichill Tomarong",
         role: "Tech Lead",
-        image: "",
+        image: "/dichill_WR.jpg",
         description:
-            "About info coming soon!",
+            "Software Engineer and aspiring entrepreneur. CEO of DashTech. Created Dash Software for LACC MESA's student sign-in system.",
         school: "LACC",
     },
     {
         name: "Fahat Yousuf",
         role: "Logistics Lead",
-        description: 
-            "Computer science and Aerospace Major",
+        description: "Computer science and Aerospace Major",
         image: "/fajat_WR.jpg",
         school: "LACC",
     },
@@ -34,16 +33,14 @@ export const teamMembers: TeamMember[] = [
     {
         name: "Cash Webb",
         role: "Tech Team",
-        description:
-            "About info coming soon!",
+        description: "About info coming soon!",
         image: "",
         school: "LAVC",
     },
     {
         name: "Justin Dela Cruz",
         role: "Tech Team",
-        description:
-            "About info coming soon!",
+        description: "About info coming soon!",
         image: "",
         school: "CSULB",
     },
@@ -58,16 +55,14 @@ export const teamMembers: TeamMember[] = [
     {
         name: "Mayra Saballos",
         role: "Tech/Logistics Teams",
-        description:
-            "About info coming soon!",
+        description: "About info coming soon!",
         image: "",
         school: "ELAC",
     },
     {
         name: "Bendiel Passos",
         role: "Logistics/Social Media Teams",
-        description:
-            "About info coming soon!",
+        description: "About info coming soon!",
         image: "",
         school: "LACC",
     },

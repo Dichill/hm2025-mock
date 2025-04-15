@@ -94,7 +94,9 @@ export default function DashboardNavBar({
                             <div className="text-right mr-4">
                                 <p className="text-sm text-gray-500">Welcome</p>
                                 <p className="font-medium">
-                                    {user?.user_metadata?.first_name}
+                                    {user?.user_metadata?.first_name
+                                        ? user?.user_metadata?.first_name
+                                        : user?.email?.split("@")[0]}
                                 </p>
                             </div>
                             <motion.button
