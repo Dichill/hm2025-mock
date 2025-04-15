@@ -447,47 +447,109 @@ export function ApplicationForm() {
         setIsSaving(true);
 
         try {
+            // Initialize with all required fields with non-null values
             const partialApplicationData: Partial<ApplicationDto> = {
-                firstName: formData.firstName || undefined,
-                lastName: formData.lastName || undefined,
-                email: formData.email || undefined,
-                phoneNumber: formData.phoneNumber || undefined,
-                age: formData.age || undefined,
-                studentNumber: formData.studentNumber || undefined,
-                school: formData.school || undefined,
-                country: formData.country || undefined,
-                linkedInUrl: formData.linkedInUrl || undefined,
-                mlhCodeOfConduct: formData.mlhCodeOfConduct,
-                mlhPrivacyPolicy: formData.mlhPrivacyPolicy,
-                mlhEmailSubscription: formData.mlhEmailSubscription,
-                mesaSubscription: formData.mesaSubscription,
-                dietaryRestrictions: formData.dietaryRestrictions,
-                isMesaStudent: formData.isMesaStudent,
-                gender: formData.gender || undefined,
-                tShirtSize: formData.tShirtSize || undefined,
-                fieldOfStudy: formData.fieldOfStudy || undefined,
-                whyAttend: formData.whyAttend || undefined,
-                firstTime: formData.firstTime,
-                skillLevel: formData.skillLevel || undefined,
-                primarySkills: formData.primarySkills,
-                otherSkill: formData.otherSkill,
-                levelOfStudy: formData.levelOfStudy || undefined,
+                firstName: formData.firstName || "",
+                lastName: formData.lastName || "",
+                email: formData.email || "",
+                phoneNumber: formData.phoneNumber || "",
+                age: formData.age || "",
+                studentNumber: formData.studentNumber || "",
+                school: formData.school || "",
+                country: formData.country || "",
+                linkedInUrl: formData.linkedInUrl || "",
+                mlhCodeOfConduct: Boolean(formData.mlhCodeOfConduct),
+                mlhPrivacyPolicy: Boolean(formData.mlhPrivacyPolicy),
+                mlhEmailSubscription: Boolean(formData.mlhEmailSubscription),
+                mesaSubscription: Boolean(formData.mesaSubscription),
+                dietaryRestrictions: Array.isArray(formData.dietaryRestrictions)
+                    ? formData.dietaryRestrictions
+                    : [],
+                isMesaStudent: Boolean(formData.isMesaStudent),
+                gender: formData.gender || "",
+                tShirtSize: formData.tShirtSize || "",
+                fieldOfStudy: formData.fieldOfStudy || "",
+                whyAttend: formData.whyAttend || "",
+                firstTime: Boolean(formData.firstTime),
+                skillLevel: formData.skillLevel || "",
+                primarySkills: Array.isArray(formData.primarySkills)
+                    ? formData.primarySkills
+                    : [],
+                otherSkill: Array.isArray(formData.otherSkill)
+                    ? formData.otherSkill
+                    : [],
+                levelOfStudy: formData.levelOfStudy || "",
                 updated_at: new Date().toISOString(),
             };
 
+            // Log the data being sent to help debug
+            console.log(
+                "Saving application data:",
+                JSON.stringify(partialApplicationData)
+            );
+
+            // Explicitly ensure we have values for fields with known constraint issues
+            // For array fields, ensure they have at least one element
+            if (
+                !partialApplicationData.primarySkills ||
+                !partialApplicationData.primarySkills.length
+            ) {
+                partialApplicationData.primarySkills = ["None"];
+            }
+
+            if (
+                !partialApplicationData.dietaryRestrictions ||
+                !partialApplicationData.dietaryRestrictions.length
+            ) {
+                partialApplicationData.dietaryRestrictions = ["None"];
+            }
+
+            if (
+                !partialApplicationData.otherSkill ||
+                !partialApplicationData.otherSkill.length
+            ) {
+                partialApplicationData.otherSkill = ["None"];
+            }
+
+            // Ensure string fields are non-empty
+            if (!partialApplicationData.levelOfStudy) {
+                partialApplicationData.levelOfStudy = "Not specified";
+            }
+
+            if (!partialApplicationData.firstName) {
+                partialApplicationData.firstName = "Not specified";
+            }
+
+            if (!partialApplicationData.lastName) {
+                partialApplicationData.lastName = "Not specified";
+            }
+
             let response;
             if (savedApplicationId) {
+                console.log(
+                    "Updating application with ID:",
+                    savedApplicationId
+                );
                 response = await updateApplication(
                     savedApplicationId,
                     partialApplicationData as ApplicationDto,
                     formData.resumeFile || undefined
                 );
             } else {
+                console.log("Creating new saved application");
                 response = await saveApplication(
                     partialApplicationData,
                     formData.resumeFile || undefined
                 );
-                setSavedApplicationId(response.id);
+                if (response && response.id) {
+                    console.log("Setting saved application ID:", response.id);
+                    setSavedApplicationId(response.id);
+                } else {
+                    console.error(
+                        "No application ID returned from save operation",
+                        response
+                    );
+                }
             }
 
             // Set resumeUrl from the response if available
@@ -558,74 +620,107 @@ export function ApplicationForm() {
 
         try {
             const applicationData: ApplicationDto = {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email,
+                firstName: formData.firstName || "Not specified",
+                lastName: formData.lastName || "Not specified",
+                email: formData.email || "",
                 phoneNumber: formData.phoneNumber || "",
-                age: formData.age,
-                studentNumber: formData.studentNumber,
-                school: formData.school,
-                isMesaStudent: formData.isMesaStudent,
-                country: formData.country,
-                linkedInUrl: formData.linkedInUrl,
-                gender: formData.gender,
-                tShirtSize: formData.tShirtSize,
-                fieldOfStudy: formData.fieldOfStudy,
-                firstTime: formData.firstTime,
-                skillLevel: formData.skillLevel,
-                primarySkills: formData.primarySkills,
+                age: formData.age || "",
+                studentNumber: formData.studentNumber || "",
+                school: formData.school || "",
+                isMesaStudent: Boolean(formData.isMesaStudent),
+                country: formData.country || "",
+                linkedInUrl: formData.linkedInUrl || "",
+                gender: formData.gender || "",
+                tShirtSize: formData.tShirtSize || "",
+                fieldOfStudy: formData.fieldOfStudy || "",
+                firstTime: Boolean(formData.firstTime),
+                skillLevel: formData.skillLevel || "",
+                primarySkills: Array.isArray(formData.primarySkills)
+                    ? formData.primarySkills
+                    : ["None"],
                 whyAttend: formData.whyAttend || "",
-                otherSkill: formData.otherSkill,
-                dietaryRestrictions: formData.dietaryRestrictions,
-                mlhCodeOfConduct: formData.mlhCodeOfConduct,
-                mlhPrivacyPolicy: formData.mlhPrivacyPolicy,
-                mlhEmailSubscription: formData.mlhEmailSubscription,
-                mesaSubscription: formData.mesaSubscription,
-                levelOfStudy: formData.levelOfStudy,
+                otherSkill: Array.isArray(formData.otherSkill)
+                    ? formData.otherSkill
+                    : ["None"],
+                dietaryRestrictions: Array.isArray(formData.dietaryRestrictions)
+                    ? formData.dietaryRestrictions
+                    : ["None"],
+                mlhCodeOfConduct: Boolean(formData.mlhCodeOfConduct),
+                mlhPrivacyPolicy: Boolean(formData.mlhPrivacyPolicy),
+                mlhEmailSubscription: Boolean(formData.mlhEmailSubscription),
+                mesaSubscription: Boolean(formData.mesaSubscription),
+                levelOfStudy: formData.levelOfStudy || "Not specified",
             };
 
+            // Log the data being submitted
+            console.log(
+                "Submitting application data:",
+                JSON.stringify(applicationData)
+            );
+
             const profileData: Partial<UserProfileDto> = {
-                full_name: `${formData.firstName} ${formData.lastName}`,
-                school: formData.school,
-                major: formData.fieldOfStudy,
-                year: formData.levelOfStudy,
+                full_name:
+                    `${formData.firstName || ""} ${
+                        formData.lastName || ""
+                    }`.trim() || "Not specified",
+                school: formData.school || "",
+                major: formData.fieldOfStudy || "",
+                year: formData.levelOfStudy || "",
                 dietary_restrictions: Array.isArray(
                     formData.dietaryRestrictions
                 )
                     ? formData.dietaryRestrictions.join(", ")
                     : "",
-                t_shirt_size: formData.tShirtSize,
+                t_shirt_size: formData.tShirtSize || "",
             };
 
             let applicationResponse;
-            if (savedApplicationId) {
-                applicationResponse = await updateApplication(
-                    savedApplicationId,
-                    applicationData,
-                    formData.resumeFile || undefined
-                );
-            } else {
+            let appId = savedApplicationId;
+
+            // Create new application if no saved ID exists
+            if (!appId) {
+                console.log("Creating new application");
                 applicationResponse = await createApplication(
                     applicationData,
                     formData.resumeFile || undefined
                 );
-            }
-
-            const appId = applicationResponse.id || savedApplicationId;
-            if (appId) {
-                const statusFormData = new FormData();
-                statusFormData.append("status", ApplicationStatus.PENDING);
-
-                await applicationClient.patch(
-                    `/applications/${appId}`,
-                    statusFormData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    }
+                if (applicationResponse && applicationResponse.id) {
+                    appId = applicationResponse.id;
+                    console.log("New application created with ID:", appId);
+                }
+            } else {
+                // Update existing application
+                console.log("Updating existing application with ID:", appId);
+                applicationResponse = await updateApplication(
+                    appId,
+                    applicationData,
+                    formData.resumeFile || undefined
                 );
             }
+
+            // Verify we have a valid application ID before proceeding
+            if (!appId) {
+                console.error("No valid application ID after save/create");
+                throw new Error("Failed to get valid application ID");
+            }
+
+            // Update application status to PENDING
+            console.log(
+                "Updating application status to PENDING for ID:",
+                appId
+            );
+            const statusFormData = new FormData();
+            statusFormData.append("status", ApplicationStatus.PENDING);
+
+            await applicationClient.patch(
+                `/applications/${appId}`,
+                statusFormData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
 
             const profileResponse = await updateProfile(profileData);
 
@@ -800,7 +895,7 @@ export function ApplicationForm() {
             {/* Editing Saved Application Badge */}
             {savedApplicationId && (
                 <div className="bg-blue-100 text-blue-800 text-sm font-medium px-4 py-2 text-center">
-                    Editing saved application
+                    You Are Editing Your Saved Application
                 </div>
             )}
 
@@ -1169,12 +1264,6 @@ export function ApplicationForm() {
                                 <option value="">
                                     Select your level of study
                                 </option>
-                                <option value="Less than Secondary / High School">
-                                    Less than Secondary / High School
-                                </option>
-                                <option value="Secondary / High School">
-                                    Secondary / High School
-                                </option>
                                 <option value="Undergraduate University (2 year - community college or similar)">
                                     Undergraduate University (2 year - community
                                     college or similar)
@@ -1234,14 +1323,844 @@ export function ApplicationForm() {
                                 }`}
                             >
                                 <option value="">Select your country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="MX">Mexico</option>
-                                <option value="GB">United Kingdom</option>
-                                <option value="AF">Afghanistan</option>
-                                <option value="AX">Aland Islands</option>
-                                <option value="AL">Albania</option>
-                                {/* Add more countries as needed */}
+                                <option value="Afghanistan" data-code="AF">
+                                    Afghanistan
+                                </option>{" "}
+                                <option value="Åland Islands" data-code="AX">
+                                    Åland Islands
+                                </option>{" "}
+                                <option value="Albania" data-code="AL">
+                                    Albania
+                                </option>{" "}
+                                <option value="Algeria" data-code="DZ">
+                                    Algeria
+                                </option>{" "}
+                                <option value="American Samoa" data-code="AS">
+                                    American Samoa
+                                </option>{" "}
+                                <option value="Andorra" data-code="AD">
+                                    Andorra
+                                </option>{" "}
+                                <option value="Angola" data-code="AO">
+                                    Angola
+                                </option>{" "}
+                                <option value="Anguilla" data-code="AI">
+                                    Anguilla
+                                </option>{" "}
+                                <option value="Antarctica" data-code="AQ">
+                                    Antarctica
+                                </option>{" "}
+                                <option
+                                    value="Antigua and Barbuda"
+                                    data-code="AG"
+                                >
+                                    Antigua and Barbuda
+                                </option>{" "}
+                                <option value="Argentina" data-code="AR">
+                                    Argentina
+                                </option>{" "}
+                                <option value="Armenia" data-code="AM">
+                                    Armenia
+                                </option>{" "}
+                                <option value="Aruba" data-code="AW">
+                                    Aruba
+                                </option>{" "}
+                                <option value="Australia" data-code="AU">
+                                    Australia
+                                </option>{" "}
+                                <option value="Austria" data-code="AT">
+                                    Austria
+                                </option>{" "}
+                                <option value="Azerbaijan" data-code="AZ">
+                                    Azerbaijan
+                                </option>{" "}
+                                <option value="Bahamas" data-code="BS">
+                                    Bahamas
+                                </option>{" "}
+                                <option value="Bahrain" data-code="BH">
+                                    Bahrain
+                                </option>{" "}
+                                <option value="Bangladesh" data-code="BD">
+                                    Bangladesh
+                                </option>{" "}
+                                <option value="Barbados" data-code="BB">
+                                    Barbados
+                                </option>{" "}
+                                <option value="Belarus" data-code="BY">
+                                    Belarus
+                                </option>{" "}
+                                <option value="Belgium" data-code="BE">
+                                    Belgium
+                                </option>{" "}
+                                <option value="Belize" data-code="BZ">
+                                    Belize
+                                </option>{" "}
+                                <option value="Benin" data-code="BJ">
+                                    Benin
+                                </option>{" "}
+                                <option value="Bermuda" data-code="BM">
+                                    Bermuda
+                                </option>{" "}
+                                <option value="Bhutan" data-code="BT">
+                                    Bhutan
+                                </option>{" "}
+                                <option value="Bolivia" data-code="BO">
+                                    Bolivia
+                                </option>{" "}
+                                <option
+                                    value="Bonaire, Sint Eustatius and Saba"
+                                    data-code="BQ"
+                                >
+                                    Bonaire, Sint Eustatius and Saba
+                                </option>{" "}
+                                <option
+                                    value="Bosnia and Herzegovina"
+                                    data-code="BA"
+                                >
+                                    Bosnia and Herzegovina
+                                </option>{" "}
+                                <option value="Botswana" data-code="BW">
+                                    Botswana
+                                </option>{" "}
+                                <option value="Bouvet Island" data-code="BV">
+                                    Bouvet Island
+                                </option>{" "}
+                                <option value="Brazil" data-code="BR">
+                                    Brazil
+                                </option>{" "}
+                                <option
+                                    value="British Indian Ocean Territory"
+                                    data-code="IO"
+                                >
+                                    British Indian Ocean Territory
+                                </option>{" "}
+                                <option
+                                    value="Brunei Darussalam"
+                                    data-code="BN"
+                                >
+                                    Brunei Darussalam
+                                </option>{" "}
+                                <option value="Bulgaria" data-code="BG">
+                                    Bulgaria
+                                </option>{" "}
+                                <option value="Burkina Faso" data-code="BF">
+                                    Burkina Faso
+                                </option>{" "}
+                                <option value="Burundi" data-code="BI">
+                                    Burundi
+                                </option>{" "}
+                                <option value="Cambodia" data-code="KH">
+                                    Cambodia
+                                </option>{" "}
+                                <option value="Cameroon" data-code="CM">
+                                    Cameroon
+                                </option>{" "}
+                                <option value="Canada" data-code="CA">
+                                    Canada
+                                </option>{" "}
+                                <option value="Cape Verde" data-code="CV">
+                                    Cape Verde
+                                </option>{" "}
+                                <option value="Cayman Islands" data-code="KY">
+                                    Cayman Islands
+                                </option>{" "}
+                                <option
+                                    value="Central African Republic"
+                                    data-code="CF"
+                                >
+                                    Central African Republic
+                                </option>{" "}
+                                <option value="Chad" data-code="TD">
+                                    Chad
+                                </option>{" "}
+                                <option value="Chile" data-code="CL">
+                                    Chile
+                                </option>{" "}
+                                <option value="China" data-code="CN">
+                                    China
+                                </option>{" "}
+                                <option value="Christmas Island" data-code="CX">
+                                    Christmas Island
+                                </option>{" "}
+                                <option
+                                    value="Cocos (Keeling) Islands"
+                                    data-code="CC"
+                                >
+                                    Cocos (Keeling) Islands
+                                </option>{" "}
+                                <option value="Colombia" data-code="CO">
+                                    Colombia
+                                </option>{" "}
+                                <option value="Comoros" data-code="KM">
+                                    Comoros
+                                </option>{" "}
+                                <option value="Congo" data-code="CG">
+                                    Congo
+                                </option>{" "}
+                                <option
+                                    value="Congo, Democratic Republic of the"
+                                    data-code="CD"
+                                >
+                                    Congo, Democratic Republic of the
+                                </option>{" "}
+                                <option value="Cook Islands" data-code="CK">
+                                    Cook Islands
+                                </option>{" "}
+                                <option value="Costa Rica" data-code="CR">
+                                    Costa Rica
+                                </option>{" "}
+                                <option value="Croatia" data-code="HR">
+                                    Croatia
+                                </option>{" "}
+                                <option value="Cuba" data-code="CU">
+                                    Cuba
+                                </option>{" "}
+                                <option value="Curaçao" data-code="CW">
+                                    Curaçao
+                                </option>{" "}
+                                <option value="Cyprus" data-code="CY">
+                                    Cyprus
+                                </option>{" "}
+                                <option value="Czech Republic" data-code="CZ">
+                                    Czech Republic
+                                </option>{" "}
+                                <option value="Denmark" data-code="DK">
+                                    Denmark
+                                </option>{" "}
+                                <option value="Djibouti" data-code="DJ">
+                                    Djibouti
+                                </option>{" "}
+                                <option value="Dominica" data-code="DM">
+                                    Dominica
+                                </option>{" "}
+                                <option
+                                    value="Dominican Republic"
+                                    data-code="DO"
+                                >
+                                    Dominican Republic
+                                </option>{" "}
+                                <option value="Ecuador" data-code="EC">
+                                    Ecuador
+                                </option>{" "}
+                                <option value="Egypt" data-code="EG">
+                                    Egypt
+                                </option>{" "}
+                                <option value="El Salvador" data-code="SV">
+                                    El Salvador
+                                </option>{" "}
+                                <option
+                                    value="Equatorial Guinea"
+                                    data-code="GQ"
+                                >
+                                    Equatorial Guinea
+                                </option>{" "}
+                                <option value="Eritrea" data-code="ER">
+                                    Eritrea
+                                </option>{" "}
+                                <option value="Estonia" data-code="EE">
+                                    Estonia
+                                </option>{" "}
+                                <option value="Eswatini" data-code="SZ">
+                                    Eswatini
+                                </option>{" "}
+                                <option value="Ethiopia" data-code="ET">
+                                    Ethiopia
+                                </option>{" "}
+                                <option
+                                    value="Falkland Islands (Malvinas)"
+                                    data-code="FK"
+                                >
+                                    Falkland Islands (Malvinas)
+                                </option>{" "}
+                                <option value="Faroe Islands" data-code="FO">
+                                    Faroe Islands
+                                </option>{" "}
+                                <option value="Fiji" data-code="FJ">
+                                    Fiji
+                                </option>{" "}
+                                <option value="Finland" data-code="FI">
+                                    Finland
+                                </option>{" "}
+                                <option value="France" data-code="FR">
+                                    France
+                                </option>{" "}
+                                <option value="French Guiana" data-code="GF">
+                                    French Guiana
+                                </option>{" "}
+                                <option value="French Polynesia" data-code="PF">
+                                    French Polynesia
+                                </option>{" "}
+                                <option
+                                    value="French Southern Territories"
+                                    data-code="TF"
+                                >
+                                    French Southern Territories
+                                </option>{" "}
+                                <option value="Gabon" data-code="GA">
+                                    Gabon
+                                </option>{" "}
+                                <option value="Gambia" data-code="GM">
+                                    Gambia
+                                </option>{" "}
+                                <option value="Georgia" data-code="GE">
+                                    Georgia
+                                </option>{" "}
+                                <option value="Germany" data-code="DE">
+                                    Germany
+                                </option>{" "}
+                                <option value="Ghana" data-code="GH">
+                                    Ghana
+                                </option>{" "}
+                                <option value="Gibraltar" data-code="GI">
+                                    Gibraltar
+                                </option>{" "}
+                                <option value="Greece" data-code="GR">
+                                    Greece
+                                </option>{" "}
+                                <option value="Greenland" data-code="GL">
+                                    Greenland
+                                </option>{" "}
+                                <option value="Grenada" data-code="GD">
+                                    Grenada
+                                </option>{" "}
+                                <option value="Guadeloupe" data-code="GP">
+                                    Guadeloupe
+                                </option>{" "}
+                                <option value="Guam" data-code="GU">
+                                    Guam
+                                </option>{" "}
+                                <option value="Guatemala" data-code="GT">
+                                    Guatemala
+                                </option>{" "}
+                                <option value="Guernsey" data-code="GG">
+                                    Guernsey
+                                </option>{" "}
+                                <option value="Guinea" data-code="GN">
+                                    Guinea
+                                </option>{" "}
+                                <option value="Guinea-Bissau" data-code="GW">
+                                    Guinea-Bissau
+                                </option>{" "}
+                                <option value="Guyana" data-code="GY">
+                                    Guyana
+                                </option>{" "}
+                                <option value="Haiti" data-code="HT">
+                                    Haiti
+                                </option>{" "}
+                                <option
+                                    value="Heard Island and McDonald Islands"
+                                    data-code="HM"
+                                >
+                                    Heard Island and McDonald Islands
+                                </option>{" "}
+                                <option value="Honduras" data-code="HN">
+                                    Honduras
+                                </option>{" "}
+                                <option value="Hong Kong" data-code="HK">
+                                    Hong Kong
+                                </option>{" "}
+                                <option value="Hungary" data-code="HU">
+                                    Hungary
+                                </option>{" "}
+                                <option value="Iceland" data-code="IS">
+                                    Iceland
+                                </option>{" "}
+                                <option value="India" data-code="IN">
+                                    India
+                                </option>{" "}
+                                <option value="Indonesia" data-code="ID">
+                                    Indonesia
+                                </option>{" "}
+                                <option value="Iran" data-code="IR">
+                                    Iran
+                                </option>{" "}
+                                <option value="Iraq" data-code="IQ">
+                                    Iraq
+                                </option>{" "}
+                                <option value="Ireland" data-code="IE">
+                                    Ireland
+                                </option>{" "}
+                                <option value="Isle of Man" data-code="IM">
+                                    Isle of Man
+                                </option>{" "}
+                                <option value="Israel" data-code="IL">
+                                    Israel
+                                </option>{" "}
+                                <option value="Italy" data-code="IT">
+                                    Italy
+                                </option>{" "}
+                                <option value="Jamaica" data-code="JM">
+                                    Jamaica
+                                </option>{" "}
+                                <option value="Jersey" data-code="JE">
+                                    Jersey
+                                </option>{" "}
+                                <option value="Jordan" data-code="JO">
+                                    Jordan
+                                </option>{" "}
+                                <option value="Kazakhstan" data-code="KZ">
+                                    Kazakhstan
+                                </option>{" "}
+                                <option value="Kenya" data-code="KE">
+                                    Kenya
+                                </option>{" "}
+                                <option value="Kiribati" data-code="KI">
+                                    Kiribati
+                                </option>{" "}
+                                <option
+                                    value="Korea, Democratic People's Republic of"
+                                    data-code="KP"
+                                >
+                                    Korea, Democratic People&apos;s Republic of
+                                </option>{" "}
+                                <option
+                                    value="Korea, Republic of"
+                                    data-code="KR"
+                                >
+                                    Korea, Republic of
+                                </option>{" "}
+                                <option value="Kuwait" data-code="KW">
+                                    Kuwait
+                                </option>{" "}
+                                <option value="Kyrgyzstan" data-code="KG">
+                                    Kyrgyzstan
+                                </option>{" "}
+                                <option
+                                    value="Lao People's Democratic Republic"
+                                    data-code="LA"
+                                >
+                                    Lao People&apos;s Democratic Republic
+                                </option>{" "}
+                                <option value="Latvia" data-code="LV">
+                                    Latvia
+                                </option>{" "}
+                                <option value="Lebanon" data-code="LB">
+                                    Lebanon
+                                </option>{" "}
+                                <option value="Lesotho" data-code="LS">
+                                    Lesotho
+                                </option>{" "}
+                                <option value="Liberia" data-code="LR">
+                                    Liberia
+                                </option>{" "}
+                                <option value="Libya" data-code="LY">
+                                    Libya
+                                </option>{" "}
+                                <option value="Liechtenstein" data-code="LI">
+                                    Liechtenstein
+                                </option>{" "}
+                                <option value="Lithuania" data-code="LT">
+                                    Lithuania
+                                </option>{" "}
+                                <option value="Luxembourg" data-code="LU">
+                                    Luxembourg
+                                </option>{" "}
+                                <option value="Macao" data-code="MO">
+                                    Macao
+                                </option>{" "}
+                                <option value="Madagascar" data-code="MG">
+                                    Madagascar
+                                </option>{" "}
+                                <option value="Malawi" data-code="MW">
+                                    Malawi
+                                </option>{" "}
+                                <option value="Malaysia" data-code="MY">
+                                    Malaysia
+                                </option>{" "}
+                                <option value="Maldives" data-code="MV">
+                                    Maldives
+                                </option>{" "}
+                                <option value="Mali" data-code="ML">
+                                    Mali
+                                </option>{" "}
+                                <option value="Malta" data-code="MT">
+                                    Malta
+                                </option>{" "}
+                                <option value="Marshall Islands" data-code="MH">
+                                    Marshall Islands
+                                </option>{" "}
+                                <option value="Martinique" data-code="MQ">
+                                    Martinique
+                                </option>{" "}
+                                <option value="Mauritania" data-code="MR">
+                                    Mauritania
+                                </option>{" "}
+                                <option value="Mauritius" data-code="MU">
+                                    Mauritius
+                                </option>{" "}
+                                <option value="Mayotte" data-code="YT">
+                                    Mayotte
+                                </option>{" "}
+                                <option value="Mexico" data-code="MX">
+                                    Mexico
+                                </option>{" "}
+                                <option
+                                    value="Micronesia, Federated States of"
+                                    data-code="FM"
+                                >
+                                    Micronesia, Federated States of
+                                </option>{" "}
+                                <option
+                                    value="Moldova, Republic of"
+                                    data-code="MD"
+                                >
+                                    Moldova, Republic of
+                                </option>{" "}
+                                <option value="Monaco" data-code="MC">
+                                    Monaco
+                                </option>{" "}
+                                <option value="Mongolia" data-code="MN">
+                                    Mongolia
+                                </option>{" "}
+                                <option value="Montenegro" data-code="ME">
+                                    Montenegro
+                                </option>{" "}
+                                <option value="Montserrat" data-code="MS">
+                                    Montserrat
+                                </option>{" "}
+                                <option value="Morocco" data-code="MA">
+                                    Morocco
+                                </option>{" "}
+                                <option value="Mozambique" data-code="MZ">
+                                    Mozambique
+                                </option>{" "}
+                                <option value="Myanmar" data-code="MM">
+                                    Myanmar
+                                </option>{" "}
+                                <option value="Namibia" data-code="NA">
+                                    Namibia
+                                </option>{" "}
+                                <option value="Nauru" data-code="NR">
+                                    Nauru
+                                </option>{" "}
+                                <option value="Nepal" data-code="NP">
+                                    Nepal
+                                </option>{" "}
+                                <option value="Netherlands" data-code="NL">
+                                    Netherlands
+                                </option>{" "}
+                                <option value="New Caledonia" data-code="NC">
+                                    New Caledonia
+                                </option>{" "}
+                                <option value="New Zealand" data-code="NZ">
+                                    New Zealand
+                                </option>{" "}
+                                <option value="Nicaragua" data-code="NI">
+                                    Nicaragua
+                                </option>{" "}
+                                <option value="Niger" data-code="NE">
+                                    Niger
+                                </option>{" "}
+                                <option value="Nigeria" data-code="NG">
+                                    Nigeria
+                                </option>{" "}
+                                <option value="Niue" data-code="NU">
+                                    Niue
+                                </option>{" "}
+                                <option value="Norfolk Island" data-code="NF">
+                                    Norfolk Island
+                                </option>{" "}
+                                <option value="North Macedonia" data-code="MK">
+                                    North Macedonia
+                                </option>{" "}
+                                <option
+                                    value="Northern Mariana Islands"
+                                    data-code="MP"
+                                >
+                                    Northern Mariana Islands
+                                </option>{" "}
+                                <option value="Norway" data-code="NO">
+                                    Norway
+                                </option>{" "}
+                                <option value="Oman" data-code="OM">
+                                    Oman
+                                </option>{" "}
+                                <option value="Pakistan" data-code="PK">
+                                    Pakistan
+                                </option>{" "}
+                                <option value="Palau" data-code="PW">
+                                    Palau
+                                </option>{" "}
+                                <option
+                                    value="Palestine, State of"
+                                    data-code="PS"
+                                >
+                                    Palestine, State of
+                                </option>{" "}
+                                <option value="Panama" data-code="PA">
+                                    Panama
+                                </option>{" "}
+                                <option value="Papua New Guinea" data-code="PG">
+                                    Papua New Guinea
+                                </option>{" "}
+                                <option value="Paraguay" data-code="PY">
+                                    Paraguay
+                                </option>{" "}
+                                <option value="Peru" data-code="PE">
+                                    Peru
+                                </option>{" "}
+                                <option value="Philippines" data-code="PH">
+                                    Philippines
+                                </option>{" "}
+                                <option value="Pitcairn" data-code="PN">
+                                    Pitcairn
+                                </option>{" "}
+                                <option value="Poland" data-code="PL">
+                                    Poland
+                                </option>{" "}
+                                <option value="Portugal" data-code="PT">
+                                    Portugal
+                                </option>{" "}
+                                <option value="Puerto Rico" data-code="PR">
+                                    Puerto Rico
+                                </option>{" "}
+                                <option value="Qatar" data-code="QA">
+                                    Qatar
+                                </option>{" "}
+                                <option value="Réunion" data-code="RE">
+                                    Réunion
+                                </option>{" "}
+                                <option value="Romania" data-code="RO">
+                                    Romania
+                                </option>{" "}
+                                <option
+                                    value="Russian Federation"
+                                    data-code="RU"
+                                >
+                                    Russian Federation
+                                </option>{" "}
+                                <option value="Rwanda" data-code="RW">
+                                    Rwanda
+                                </option>{" "}
+                                <option value="Saint Barthélemy" data-code="BL">
+                                    Saint Barthélemy
+                                </option>{" "}
+                                <option
+                                    value="Saint Helena, Ascension and Tristan da Cunha"
+                                    data-code="SH"
+                                >
+                                    Saint Helena, Ascension and Tristan da Cunha
+                                </option>{" "}
+                                <option
+                                    value="Saint Kitts and Nevis"
+                                    data-code="KN"
+                                >
+                                    Saint Kitts and Nevis
+                                </option>{" "}
+                                <option value="Saint Lucia" data-code="LC">
+                                    Saint Lucia
+                                </option>{" "}
+                                <option
+                                    value="Saint Martin (French part)"
+                                    data-code="MF"
+                                >
+                                    Saint Martin (French part)
+                                </option>{" "}
+                                <option
+                                    value="Saint Pierre and Miquelon"
+                                    data-code="PM"
+                                >
+                                    Saint Pierre and Miquelon
+                                </option>{" "}
+                                <option
+                                    value="Saint Vincent and the Grenadines"
+                                    data-code="VC"
+                                >
+                                    Saint Vincent and the Grenadines
+                                </option>{" "}
+                                <option value="Samoa" data-code="WS">
+                                    Samoa
+                                </option>{" "}
+                                <option value="San Marino" data-code="SM">
+                                    San Marino
+                                </option>{" "}
+                                <option
+                                    value="Sao Tome and Principe"
+                                    data-code="ST"
+                                >
+                                    Sao Tome and Principe
+                                </option>{" "}
+                                <option value="Saudi Arabia" data-code="SA">
+                                    Saudi Arabia
+                                </option>{" "}
+                                <option value="Senegal" data-code="SN">
+                                    Senegal
+                                </option>{" "}
+                                <option value="Serbia" data-code="RS">
+                                    Serbia
+                                </option>{" "}
+                                <option value="Seychelles" data-code="SC">
+                                    Seychelles
+                                </option>{" "}
+                                <option value="Sierra Leone" data-code="SL">
+                                    Sierra Leone
+                                </option>{" "}
+                                <option value="Singapore" data-code="SG">
+                                    Singapore
+                                </option>{" "}
+                                <option
+                                    value="Sint Maarten (Dutch part)"
+                                    data-code="SX"
+                                >
+                                    Sint Maarten (Dutch part)
+                                </option>{" "}
+                                <option value="Slovakia" data-code="SK">
+                                    Slovakia
+                                </option>{" "}
+                                <option value="Slovenia" data-code="SI">
+                                    Slovenia
+                                </option>{" "}
+                                <option value="Solomon Islands" data-code="SB">
+                                    Solomon Islands
+                                </option>{" "}
+                                <option value="Somalia" data-code="SO">
+                                    Somalia
+                                </option>{" "}
+                                <option value="South Africa" data-code="ZA">
+                                    South Africa
+                                </option>{" "}
+                                <option
+                                    value="South Georgia and the South Sandwich Islands"
+                                    data-code="GS"
+                                >
+                                    South Georgia and the South Sandwich Islands
+                                </option>{" "}
+                                <option value="South Sudan" data-code="SS">
+                                    South Sudan
+                                </option>{" "}
+                                <option value="Spain" data-code="ES">
+                                    Spain
+                                </option>{" "}
+                                <option value="Sri Lanka" data-code="LK">
+                                    Sri Lanka
+                                </option>{" "}
+                                <option value="Sudan" data-code="SD">
+                                    Sudan
+                                </option>{" "}
+                                <option value="Suriname" data-code="SR">
+                                    Suriname
+                                </option>{" "}
+                                <option
+                                    value="Svalbard and Jan Mayen"
+                                    data-code="SJ"
+                                >
+                                    Svalbard and Jan Mayen
+                                </option>{" "}
+                                <option value="Sweden" data-code="SE">
+                                    Sweden
+                                </option>{" "}
+                                <option value="Switzerland" data-code="CH">
+                                    Switzerland
+                                </option>{" "}
+                                <option
+                                    value="Syrian Arab Republic"
+                                    data-code="SY"
+                                >
+                                    Syrian Arab Republic
+                                </option>{" "}
+                                <option
+                                    value="Taiwan, Province of China"
+                                    data-code="TW"
+                                >
+                                    Taiwan, Province of China
+                                </option>{" "}
+                                <option value="Tajikistan" data-code="TJ">
+                                    Tajikistan
+                                </option>{" "}
+                                <option
+                                    value="Tanzania, United Republic of"
+                                    data-code="TZ"
+                                >
+                                    Tanzania, United Republic of
+                                </option>{" "}
+                                <option value="Thailand" data-code="TH">
+                                    Thailand
+                                </option>{" "}
+                                <option value="Timor-Leste" data-code="TL">
+                                    Timor-Leste
+                                </option>{" "}
+                                <option value="Togo" data-code="TG">
+                                    Togo
+                                </option>{" "}
+                                <option value="Tokelau" data-code="TK">
+                                    Tokelau
+                                </option>{" "}
+                                <option value="Tonga" data-code="TO">
+                                    Tonga
+                                </option>{" "}
+                                <option
+                                    value="Trinidad and Tobago"
+                                    data-code="TT"
+                                >
+                                    Trinidad and Tobago
+                                </option>{" "}
+                                <option value="Tunisia" data-code="TN">
+                                    Tunisia
+                                </option>{" "}
+                                <option value="Turkey" data-code="TR">
+                                    Turkey
+                                </option>{" "}
+                                <option value="Turkmenistan" data-code="TM">
+                                    Turkmenistan
+                                </option>{" "}
+                                <option value="Tuvalu" data-code="TV">
+                                    Tuvalu
+                                </option>{" "}
+                                <option value="Uganda" data-code="UG">
+                                    Uganda
+                                </option>{" "}
+                                <option value="Ukraine" data-code="UA">
+                                    Ukraine
+                                </option>{" "}
+                                <option
+                                    value="United Arab Emirates"
+                                    data-code="AE"
+                                >
+                                    United Arab Emirates
+                                </option>{" "}
+                                <option
+                                    value="United Kingdom of Great Britain and Northern Ireland"
+                                    data-code="GB"
+                                >
+                                    United Kingdom of Great Britain and Northern
+                                    Ireland
+                                </option>{" "}
+                                <option
+                                    value="United States of America"
+                                    data-code="US"
+                                >
+                                    United States of America
+                                </option>{" "}
+                                <option value="Uruguay" data-code="UY">
+                                    Uruguay
+                                </option>{" "}
+                                <option value="Uzbekistan" data-code="UZ">
+                                    Uzbekistan
+                                </option>{" "}
+                                <option value="Vanuatu" data-code="VU">
+                                    Vanuatu
+                                </option>{" "}
+                                <option
+                                    value="Venezuela (Bolivarian Republic of)"
+                                    data-code="VE"
+                                >
+                                    Venezuela (Bolivarian Republic of)
+                                </option>{" "}
+                                <option value="Viet Nam" data-code="VN">
+                                    Viet Nam
+                                </option>{" "}
+                                <option value="Western Sahara" data-code="EH">
+                                    Western Sahara
+                                </option>{" "}
+                                <option value="Yemen" data-code="YE">
+                                    Yemen
+                                </option>{" "}
+                                <option value="Zambia" data-code="ZM">
+                                    Zambia
+                                </option>{" "}
+                                <option value="Zimbabwe" data-code="ZW">
+                                    Zimbabwe
+                                </option>
                             </motion.select>
                             {errors.country && (
                                 <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">

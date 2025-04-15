@@ -54,7 +54,7 @@ export default function DashboardNavBar({
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <Image
-                                    src="/hackMESA_logo_1.png"
+                                    src="/MESA_logo.svg"
                                     alt="HackMESA Logo"
                                     width={40}
                                     height={40}
