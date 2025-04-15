@@ -1,18 +1,17 @@
+"use client";
+
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "@/app/dashboard/types";
 import { useEffect, useState } from "react";
 
-interface DashboardNavBarProps {
+interface AdminNavBarProps {
     user: User | null;
     onSignOut: () => Promise<void>;
 }
 
-export default function DashboardNavBar({
-    user,
-    onSignOut,
-}: DashboardNavBarProps) {
+export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
@@ -22,7 +21,7 @@ export default function DashboardNavBar({
     const buttonVariants = {
         hover: {
             scale: 1.03,
-            boxShadow: "0 8px 15px rgba(255, 137, 62, 0.2)",
+            boxShadow: "0 8px 15px rgba(255, 69, 57, 0.2)",
             transition: {
                 type: "spring",
                 stiffness: 400,
@@ -46,16 +45,16 @@ export default function DashboardNavBar({
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div className="flex justify-between items-center">
-                    {/* Logo and dashboard label */}
+                    {/* Logo and admin label */}
                     <div className="flex items-center justify-center">
-                        <Link href="/dashboard" className="flex items-center">
+                        <Link href="/admin" className="flex items-center">
                             <motion.div
                                 className="flex items-center"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <span className="text-[rgb(var(--mesa-warm-red))] font-bold text-xl mb-1.5">
-                                    HACK
+                                    ADMIN
                                 </span>
                                 <Image
                                     src="/MESA_logo.svg"
@@ -71,28 +70,34 @@ export default function DashboardNavBar({
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-6">
                         <Link
-                            href="/dashboard"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                            href="/admin"
+                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
                         >
-                            Home
+                            Dashboard
                         </Link>
                         <Link
-                            href="/dashboard/apply"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                            href="/admin/users"
+                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
                         >
-                            Apply
+                            Users
                         </Link>
                         <Link
-                            href="/dashboard/resources"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                            href="/admin/applications"
+                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
                         >
-                            Resources
+                            Applications
+                        </Link>
+                        <Link
+                            href="/admin/settings"
+                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
+                        >
+                            Settings
                         </Link>
 
-                        {/* User info and sign out button */}
+                        {/* Admin info and sign out button */}
                         <div className="flex items-center ml-6 pl-6 border-l border-gray-200">
                             <div className="text-right mr-4">
-                                <p className="text-sm text-gray-500">Welcome</p>
+                                <p className="text-sm text-gray-500">Admin</p>
                                 <p className="font-medium">
                                     {user?.user_metadata?.first_name}
                                 </p>
@@ -113,9 +118,7 @@ export default function DashboardNavBar({
                     <div className="md:hidden flex items-center">
                         <div className="flex items-center space-x-3 mr-4">
                             <div className="text-right">
-                                <p className="text-xs text-gray-500">
-                                    Welcome,
-                                </p>
+                                <p className="text-xs text-gray-500">Admin</p>
                                 <p className="font-medium text-sm truncate max-w-[100px]">
                                     {user?.user_metadata?.first_name}
                                 </p>
@@ -173,25 +176,39 @@ export default function DashboardNavBar({
             >
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
                     <Link
+                        href="/admin"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Dashboard
+                    </Link>
+                    <Link
+                        href="/admin/users"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Users
+                    </Link>
+                    <Link
+                        href="/admin/applications"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Applications
+                    </Link>
+                    <Link
+                        href="/admin/settings"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Settings
+                    </Link>
+                    <Link
                         href="/dashboard"
                         className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        Home
-                    </Link>
-                    <Link
-                        href="/dashboard/apply"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Apply
-                    </Link>
-                    <Link
-                        href="/dashboard/resources"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Resources
+                        User Dashboard
                     </Link>
                     <div className="pt-4 pb-3 border-t border-gray-200">
                         <motion.button

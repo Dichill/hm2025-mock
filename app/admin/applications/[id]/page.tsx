@@ -1,80 +1,60 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { getCurrentApplication } from "@/core/apply/api/apply";
+import React, { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { getApplicationById, updateApplication } from "@/core/apply/api/apply";
 import {
+    ApplicationDto,
     ApplicationResponseDto,
     ApplicationStatus,
-    ApplicationDto,
 } from "@/core/apply/types/apply.dto";
 
-type FullApplicationDto = ApplicationResponseDto &
-    ApplicationDto & {
-        applied_at?: string;
-    };
+type ApplicationDetail = ApplicationDto & Partial<ApplicationResponseDto>;
 
-export default function ViewApplicationPage() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [applicationData, setApplicationData] =
-        useState<FullApplicationDto | null>(null);
+export default function ApplicationDetailPage() {
     const router = useRouter();
+    const params = useParams();
+    const [application, setApplication] = useState<ApplicationDetail | null>(
+        null
+    );
+    const [loading, setLoading] = useState(true);
+    const [updating, setUpdating] = useState(false);
 
     useEffect(() => {
-        const fetchApplication = async () => {
+        const fetchApplicationDetails = async () => {
+            if (!params.id) return;
+
             try {
-                setIsLoading(true);
-
-                const application = await getCurrentApplication();
-
-                if (!application) {
-                    router.push("/dashboard/apply");
-                    return;
-                }
-
-                if (application.status !== ApplicationStatus.PENDING) {
-                    if (application.status === ApplicationStatus.SAVED) {
-                        router.push("/dashboard/apply");
-                    } else {
-                        router.push("/dashboard");
-                    }
-                    return;
-                }
-
-                setApplicationData(application as FullApplicationDto);
+                setLoading(true);
+                const result = await getApplicationById(params.id as string);
+                setApplication(result);
             } catch (error) {
-                console.error("Error fetching application:", error);
-                setError(
-                    "An error occurred while fetching your application. Please try again later."
-                );
+                console.error("Error fetching application details:", error);
             } finally {
-                setIsLoading(false);
+                setLoading(false);
             }
         };
 
-        fetchApplication();
-    }, [router]);
+        fetchApplicationDetails();
+    }, [params.id]);
 
-    const formatBoolean = (value: boolean | undefined) => {
-        if (value === undefined) return "Not provided";
-        return value ? "Yes" : "No";
+    const handleBack = () => {
+        router.back();
     };
 
-    const formatDate = (dateString: string | undefined) => {
-        if (!dateString) return "Not available";
+    const handleStatusUpdate = async (status: ApplicationStatus) => {
+        if (!application || !params.id) return;
 
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return "Invalid date";
-
-        return new Intl.DateTimeFormat("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-        }).format(date);
+        try {
+            setUpdating(true);
+            const updatedApplication = { ...application, status };
+            await updateApplication(params.id as string, updatedApplication);
+            setApplication(updatedApplication);
+        } catch (error) {
+            console.error("Error updating application status:", error);
+        } finally {
+            setUpdating(false);
+        }
     };
 
     const getStatusBadgeColor = (status: ApplicationStatus) => {
@@ -94,7 +74,12 @@ export default function ViewApplicationPage() {
         }
     };
 
-    if (isLoading) {
+    const formatBoolean = (value: boolean | undefined) => {
+        if (value === undefined) return "Not provided";
+        return value ? "Yes" : "No";
+    };
+
+    if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="w-12 h-12 border-4 border-t-[rgb(var(--mesa-orange))] border-r-[rgb(var(--mesa-orange))] border-b-[rgb(var(--mesa-orange))] border-l-transparent rounded-full animate-spin"></div>
@@ -102,42 +87,22 @@ export default function ViewApplicationPage() {
         );
     }
 
-    if (error) {
+    if (!application) {
         return (
             <div className="py-6">
+                <button
+                    onClick={handleBack}
+                    className="mb-6 cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-warm-red))] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(var(--mesa-orange))]"
+                >
+                    Back to Applications
+                </button>
                 <div className="bg-white shadow sm:rounded-lg p-6">
                     <h1 className="text-xl font-semibold text-gray-900 mb-4">
-                        Error
+                        Application Not Found
                     </h1>
-                    <p className="text-gray-600 mb-6">{error}</p>
-                    <button
-                        onClick={() => router.push("/dashboard")}
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-warm-red))] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(var(--mesa-orange))]"
-                    >
-                        Return to Dashboard
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    if (!applicationData) {
-        return (
-            <div className="py-6">
-                <div className="bg-white shadow sm:rounded-lg p-6">
-                    <h1 className="text-xl font-semibold text-gray-900 mb-4">
-                        No Application Found
-                    </h1>
-                    <p className="text-gray-600 mb-6">
-                        We couldn&apos;t find your application. Please create a
-                        new one.
+                    <p className="text-gray-600">
+                        The requested application could not be found.
                     </p>
-                    <button
-                        onClick={() => router.push("/dashboard/apply")}
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-warm-red))] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(var(--mesa-orange))]"
-                    >
-                        Apply Now
-                    </button>
                 </div>
             </div>
         );
@@ -147,11 +112,40 @@ export default function ViewApplicationPage() {
         <div className="py-6">
             <div className="flex justify-between items-center mb-6">
                 <button
-                    onClick={() => router.push("/dashboard")}
+                    onClick={handleBack}
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-warm-red))] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(var(--mesa-orange))]"
                 >
-                    Back to Dashboard
+                    Back to Applications
                 </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() =>
+                            handleStatusUpdate(ApplicationStatus.APPROVED)
+                        }
+                        disabled={updating}
+                        className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {updating ? "Updating..." : "Approve"}
+                    </button>
+                    <button
+                        onClick={() =>
+                            handleStatusUpdate(ApplicationStatus.WAITLISTED)
+                        }
+                        disabled={updating}
+                        className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {updating ? "Updating..." : "Waitlist"}
+                    </button>
+                    <button
+                        onClick={() =>
+                            handleStatusUpdate(ApplicationStatus.REJECTED)
+                        }
+                        disabled={updating}
+                        className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {updating ? "Updating..." : "Reject"}
+                    </button>
+                </div>
             </div>
 
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -161,28 +155,21 @@ export default function ViewApplicationPage() {
                             Application Details
                         </h3>
                         <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                            {applicationData.firstName}{" "}
-                            {applicationData.lastName}
-                            {applicationData.applied_at && (
-                                <span className="ml-2">
-                                    • Submitted on:{" "}
-                                    {formatDate(applicationData.applied_at)}
-                                </span>
-                            )}
+                            {application.firstName} {application.lastName}
                         </p>
                     </div>
                     <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(
-                            applicationData.status as ApplicationStatus
+                            application.status as ApplicationStatus
                         )}`}
                     >
-                        {applicationData.status}
+                        {application.status}
                     </span>
                 </div>
 
                 <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-                        {/* Personal Information */}
+                        {/* Personal Information Section */}
                         <div className="sm:col-span-2">
                             <dt className="text-sm font-medium text-gray-900 mb-2">
                                 Personal Information
@@ -195,17 +182,16 @@ export default function ViewApplicationPage() {
                                 Full name
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.firstName}{" "}
-                                {applicationData.lastName}
+                                {application.firstName} {application.lastName}
                             </dd>
                         </div>
 
                         <div className="sm:col-span-1">
                             <dt className="text-sm font-medium text-gray-500">
-                                Email Address
+                                Email
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.email}
+                                {application.email}
                             </dd>
                         </div>
 
@@ -214,7 +200,7 @@ export default function ViewApplicationPage() {
                                 Phone Number
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.phoneNumber}
+                                {application.phoneNumber || "Not provided"}
                             </dd>
                         </div>
 
@@ -223,7 +209,7 @@ export default function ViewApplicationPage() {
                                 Student Number
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.studentNumber}
+                                {application.studentNumber}
                             </dd>
                         </div>
 
@@ -232,7 +218,7 @@ export default function ViewApplicationPage() {
                                 Age
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.age}
+                                {application.age}
                             </dd>
                         </div>
 
@@ -241,7 +227,7 @@ export default function ViewApplicationPage() {
                                 Gender
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.gender}
+                                {application.gender}
                             </dd>
                         </div>
 
@@ -250,7 +236,7 @@ export default function ViewApplicationPage() {
                                 Country of Residence
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.country}
+                                {application.country}
                             </dd>
                         </div>
 
@@ -259,7 +245,7 @@ export default function ViewApplicationPage() {
                                 T-Shirt Size
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.tShirtSize}
+                                {application.tShirtSize}
                             </dd>
                         </div>
 
@@ -268,14 +254,14 @@ export default function ViewApplicationPage() {
                                 LinkedIn URL
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.linkedInUrl ? (
+                                {application.linkedInUrl ? (
                                     <a
-                                        href={applicationData.linkedInUrl}
+                                        href={application.linkedInUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-[rgb(var(--mesa-orange))] hover:underline"
                                     >
-                                        {applicationData.linkedInUrl}
+                                        {application.linkedInUrl}
                                     </a>
                                 ) : (
                                     "Not provided"
@@ -283,7 +269,7 @@ export default function ViewApplicationPage() {
                             </dd>
                         </div>
 
-                        {/* Education Information */}
+                        {/* Education Information Section */}
                         <div className="sm:col-span-2">
                             <dt className="text-sm font-medium text-gray-900 mb-2 mt-6">
                                 Education Information
@@ -296,7 +282,7 @@ export default function ViewApplicationPage() {
                                 School
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.school}
+                                {application.school}
                             </dd>
                         </div>
 
@@ -305,7 +291,7 @@ export default function ViewApplicationPage() {
                                 Level of Study
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.levelOfStudy}
+                                {application.levelOfStudy}
                             </dd>
                         </div>
 
@@ -314,7 +300,7 @@ export default function ViewApplicationPage() {
                                 Field of Study
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.fieldOfStudy}
+                                {application.fieldOfStudy}
                             </dd>
                         </div>
 
@@ -323,7 +309,7 @@ export default function ViewApplicationPage() {
                                 First Hackathon?
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {formatBoolean(applicationData.firstTime)}
+                                {formatBoolean(application.firstTime)}
                             </dd>
                         </div>
 
@@ -332,7 +318,7 @@ export default function ViewApplicationPage() {
                                 Skill Level
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {applicationData.skillLevel}
+                                {application.skillLevel}
                             </dd>
                         </div>
 
@@ -341,11 +327,11 @@ export default function ViewApplicationPage() {
                                 MESA Student?
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {formatBoolean(applicationData.isMesaStudent)}
+                                {formatBoolean(application.isMesaStudent)}
                             </dd>
                         </div>
 
-                        {/* Skills & Interests */}
+                        {/* Skills & Interests Section */}
                         <div className="sm:col-span-2">
                             <dt className="text-sm font-medium text-gray-900 mb-2 mt-6">
                                 Skills & Interests
@@ -359,11 +345,11 @@ export default function ViewApplicationPage() {
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
                                 <div className="flex flex-wrap gap-2">
-                                    {applicationData.primarySkills &&
+                                    {application.primarySkills &&
                                         Array.isArray(
-                                            applicationData.primarySkills
+                                            application.primarySkills
                                         ) &&
-                                        applicationData.primarySkills.map(
+                                        application.primarySkills.map(
                                             (skill, index) => (
                                                 <span
                                                     key={index}
@@ -373,27 +359,27 @@ export default function ViewApplicationPage() {
                                                 </span>
                                             )
                                         )}
-                                    {(!applicationData.primarySkills ||
+                                    {(!application.primarySkills ||
                                         !Array.isArray(
-                                            applicationData.primarySkills
+                                            application.primarySkills
                                         ) ||
-                                        applicationData.primarySkills.length ===
+                                        application.primarySkills.length ===
                                             0) &&
                                         "None"}
                                 </div>
                             </dd>
                         </div>
 
-                        {applicationData.otherSkill &&
-                            Array.isArray(applicationData.otherSkill) &&
-                            applicationData.otherSkill.length > 0 && (
+                        {application.otherSkill &&
+                            Array.isArray(application.otherSkill) &&
+                            application.otherSkill.length > 0 && (
                                 <div className="sm:col-span-2">
                                     <dt className="text-sm font-medium text-gray-500">
                                         Other Skills
                                     </dt>
                                     <dd className="mt-1 text-sm text-gray-900">
                                         <div className="flex flex-wrap gap-2">
-                                            {applicationData.otherSkill.map(
+                                            {application.otherSkill.map(
                                                 (skill, index) => (
                                                     <span
                                                         key={index}
@@ -408,24 +394,28 @@ export default function ViewApplicationPage() {
                                 </div>
                             )}
 
-                        {/* Essay Response */}
-                        <div className="sm:col-span-2">
-                            <dt className="text-sm font-medium text-gray-900 mb-2 mt-6">
-                                Essay Response
-                            </dt>
-                            <div className="border-b border-gray-200 mb-4"></div>
-                        </div>
+                        {/* Essay Response Section */}
+                        {application.whyAttend && (
+                            <>
+                                <div className="sm:col-span-2">
+                                    <dt className="text-sm font-medium text-gray-900 mb-2 mt-6">
+                                        Essay Response
+                                    </dt>
+                                    <div className="border-b border-gray-200 mb-4"></div>
+                                </div>
 
-                        <div className="sm:col-span-2">
-                            <dt className="text-sm font-medium text-gray-500">
-                                Why do you want to attend our hackathon?
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 whitespace-pre-line bg-gray-50 p-4 rounded-lg">
-                                {applicationData.whyAttend}
-                            </dd>
-                        </div>
+                                <div className="sm:col-span-2">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                        Why do you want to attend our hackathon?
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900 whitespace-pre-line bg-gray-50 p-4 rounded-lg">
+                                        {application.whyAttend}
+                                    </dd>
+                                </div>
+                            </>
+                        )}
 
-                        {/* Additional Information */}
+                        {/* Additional Information Section */}
                         <div className="sm:col-span-2">
                             <dt className="text-sm font-medium text-gray-900 mb-2 mt-6">
                                 Additional Information
@@ -433,18 +423,16 @@ export default function ViewApplicationPage() {
                             <div className="border-b border-gray-200 mb-4"></div>
                         </div>
 
-                        {applicationData.dietaryRestrictions &&
-                            Array.isArray(
-                                applicationData.dietaryRestrictions
-                            ) &&
-                            applicationData.dietaryRestrictions.length > 0 && (
+                        {application.dietaryRestrictions &&
+                            Array.isArray(application.dietaryRestrictions) &&
+                            application.dietaryRestrictions.length > 0 && (
                                 <div className="sm:col-span-2">
                                     <dt className="text-sm font-medium text-gray-500">
                                         Dietary Restrictions
                                     </dt>
                                     <dd className="mt-1 text-sm text-gray-900">
                                         <div className="flex flex-wrap gap-2">
-                                            {applicationData.dietaryRestrictions.map(
+                                            {application.dietaryRestrictions.map(
                                                 (restriction, index) => (
                                                     <span
                                                         key={index}
@@ -464,9 +452,7 @@ export default function ViewApplicationPage() {
                                 MLH Code of Conduct
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {formatBoolean(
-                                    applicationData.mlhCodeOfConduct
-                                )}
+                                {formatBoolean(application.mlhCodeOfConduct)}
                             </dd>
                         </div>
 
@@ -475,9 +461,7 @@ export default function ViewApplicationPage() {
                                 MLH Privacy Policy
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {formatBoolean(
-                                    applicationData.mlhPrivacyPolicy
-                                )}
+                                {formatBoolean(application.mlhPrivacyPolicy)}
                             </dd>
                         </div>
 
@@ -487,21 +471,44 @@ export default function ViewApplicationPage() {
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
                                 {formatBoolean(
-                                    applicationData.mlhEmailSubscription
+                                    application.mlhEmailSubscription
                                 )}
                             </dd>
                         </div>
 
                         <div className="sm:col-span-1">
                             <dt className="text-sm font-medium text-gray-500">
-                                MESA Subscription
+                                MESA Newsletter Subscription
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900">
-                                {formatBoolean(
-                                    applicationData.mesaSubscription
-                                )}
+                                {formatBoolean(application.mesaSubscription)}
                             </dd>
                         </div>
+
+                        {/* Resume Section */}
+                        {application.resumeFileName && (
+                            <>
+                                <div className="sm:col-span-2">
+                                    <dt className="text-sm font-medium text-gray-900 mb-2 mt-6">
+                                        Resume
+                                    </dt>
+                                    <div className="border-b border-gray-200 mb-4"></div>
+                                </div>
+                                <div className="sm:col-span-2">
+                                    <dd className="text-sm text-gray-900">
+                                        <a
+                                            href={application.resumeUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-warm-red))] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(var(--mesa-orange))]"
+                                        >
+                                            View Resume (
+                                            {application.resumeFileName})
+                                        </a>
+                                    </dd>
+                                </div>
+                            </>
+                        )}
                     </dl>
                 </div>
             </div>

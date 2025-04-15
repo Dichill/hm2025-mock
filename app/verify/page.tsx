@@ -102,6 +102,22 @@ function VerificationContent() {
     useEffect(() => {
         setIsClient(true);
 
+        const checkSession = async () => {
+            try {
+                const { data } = await supabase.auth.getSession();
+
+                if (data.session) {
+                    router.push("/dashboard");
+                }
+            } catch (error) {
+                console.error(
+                    "Error checking session in register form:",
+                    error
+                );
+            }
+        };
+        checkSession();
+
         const checkVerification = async () => {
             try {
                 const { data: session } = await supabase.auth.getSession();
@@ -152,7 +168,7 @@ function VerificationContent() {
         if (isClient) {
             checkVerification();
         }
-    }, [isClient, searchParams]);
+    }, [isClient, router, searchParams]);
 
     // Animation variants
     const containerVariants = {
@@ -338,7 +354,11 @@ function VerificationContent() {
                                 <span className="font-semibold">
                                     {userEmail}
                                 </span>{" "}
-                                for your verification code.
+                                for your verification code. Also check your{" "}
+                                <span className="font-semibold">
+                                    spam folder
+                                </span>{" "}
+                                if you don&apos;t see it in your inbox.
                             </p>
                         )}
                         <p className="text-center text-[rgb(var(--mesa-grey))]">

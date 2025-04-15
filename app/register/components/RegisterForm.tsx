@@ -35,13 +35,11 @@ export function RegisterForm() {
     useEffect(() => {
         setIsClient(true);
 
-        // Check if user is already logged in
         const checkSession = async () => {
             try {
                 const { data } = await supabase.auth.getSession();
 
                 if (data.session) {
-                    // User is already logged in, redirect to dashboard
                     router.push("/dashboard");
                 }
             } catch (error) {
@@ -143,7 +141,6 @@ export function RegisterForm() {
                 // Store email in sessionStorage for verification page
                 sessionStorage.setItem("registeredEmail", registerData.email);
 
-                // Redirect to verify page, with or without token after animation completes
                 const redirectUrl =
                     response && response.token
                         ? `/verify?token=${encodeURIComponent(response.token)}`

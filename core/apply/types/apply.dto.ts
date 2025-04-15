@@ -110,3 +110,18 @@ export enum ApplicationStatus {
     REJECTED = "REJECTED",
     WAITLISTED = "WAITLISTED",
 }
+
+export interface ApplicationSummaryDto {
+    id: string;
+    firstName: string;
+    lastName: string;
+    school: School;
+    status: ApplicationStatus;
+}
+
+export interface ApplicationsPageDto {
+    applications: ApplicationSummaryDto[];
+    total: number;
+    page: number;
+    limit: number;
+}

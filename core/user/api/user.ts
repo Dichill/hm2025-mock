@@ -1,5 +1,6 @@
 import { userClient } from "@/api/user-client";
 import { RegisterDto } from "../types/register.dto";
+import { StatsResponse, UserDataResponse } from "../types/user.dto";
 
 export interface RegisterResponseDto {
     message: string;
@@ -47,4 +48,24 @@ export async function resendVerificationCode(
         email,
     });
     return response.data;
+}
+
+export async function getUserData(): Promise<UserDataResponse> {
+    try {
+        const response = await userClient.get("/auth/data");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        throw error;
+    }
+}
+
+export async function getStats(): Promise<StatsResponse> {
+    try {
+        const response = await userClient.get("/auth/stats");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching stats:", error);
+        throw error;
+    }
 }

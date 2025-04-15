@@ -2,6 +2,8 @@ import {
     ApplicationDto,
     ApplicationResponseDto,
     ApplicationStatus,
+    ApplicationsPageDto,
+    School,
 } from "../types/apply.dto";
 import { applicationClient } from "@/api/application-client";
 
@@ -109,23 +111,16 @@ export async function updateApplication(
     resumeFile?: File
 ): Promise<ApplicationResponseDto> {
     try {
-        // Create FormData object for multipart/form-data submission
         const formData = new FormData();
 
-        // Add all application fields to the form data
         Object.entries(applicationData).forEach(([key, value]) => {
-            // Handle arrays (primarySkills, dietaryRestrictions, otherSkill)
             if (Array.isArray(value)) {
                 value.forEach((item, index) => {
                     formData.append(`${key}[${index}]`, item);
                 });
-            }
-            // Handle booleans
-            else if (typeof value === "boolean") {
+            } else if (typeof value === "boolean") {
                 formData.append(key, value.toString());
-            }
-            // Handle other primitive values
-            else if (value !== undefined && value !== null) {
+            } else if (value !== undefined && value !== null) {
                 formData.append(key, value.toString());
             }
         });
@@ -148,6 +143,50 @@ export async function updateApplication(
         return response.data;
     } catch (error) {
         console.error(`Error updating application ${applicationId}:`, error);
+        throw error;
+    }
+}
+
+export async function getAllApplications(
+    page: number = 1,
+    limit: number = 10,
+    status?: ApplicationStatus,
+    school?: School
+): Promise<ApplicationsPageDto> {
+    try {
+        const params: Record<string, string | number> = {
+            page,
+            limit,
+        };
+
+        if (status) {
+            params.status = status;
+        }
+
+        if (school) {
+            params.school = school;
+        }
+
+        const response = await applicationClient.get("/applications", {
+            params,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching applications:", error);
+        throw error;
+    }
+}
+
+export async function getApplicationById(
+    applicationId: string
+): Promise<ApplicationDto> {
+    try {
+        const response = await applicationClient.get(
+            `/applications/${applicationId}`
+        );
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching application ${applicationId}:`, error);
         throw error;
     }
 }
