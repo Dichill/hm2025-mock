@@ -1,50 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import {
+    ApplicationDto,
+    School,
+    Gender,
+    TShirtSize,
+    FieldOfStudy,
+    SkillLevel,
+    ApplicationStatus,
+} from "@/core/apply/types/apply.dto";
+import {
+    createApplication,
+    saveApplication,
+    getCurrentApplication,
+    updateApplication,
+} from "@/core/apply/api/apply";
+import { updateProfile } from "@/core/user/api/profile";
+import { UserProfileDto } from "@/core/user/types/profile.dto";
+import { applicationClient } from "@/api/application-client";
 
-// Types for form data
-type FormData = {
-    // Personal Information
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    age: string;
-    studentNumber: string;
-
-    // Education
-    school: string;
-    levelOfStudy: string;
-    country: string;
-    linkedInUrl: string;
-    whyAttend: string;
-    firstTime: string;
-    skillLevel: string;
-    primarySkills: string[];
-    otherSkill: string;
-    resumeFile: File | null;
-
-    // MLH Specific
-    mlhCodeOfConduct: boolean;
-    mlhPrivacyPolicy: boolean;
-    mlhEmailSubscription: boolean;
-    mesaSubscription: boolean;
-
-    // Optional Demographics
-    dietaryRestrictions: string[];
-    isMesaStudent: string;
-    gender: string;
-    tShirtSize: string;
-
-    // Field of Study
-    fieldOfStudy: string;
-};
-
-// Custom error type that includes 'general'
 type FormErrors = Partial<Record<keyof FormData, string>> & {
     general?: string;
+};
+
+type FormData = ApplicationDto & {
+    resumeFile: File | null;
 };
 
 export function ApplicationForm() {
@@ -52,6 +35,7 @@ export function ApplicationForm() {
     const [currentStep, setCurrentStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [formData, setFormData] = useState<FormData>({
         firstName: "",
         lastName: "",
@@ -59,8 +43,7 @@ export function ApplicationForm() {
         phoneNumber: "",
         age: "",
         studentNumber: "",
-        school: "",
-        levelOfStudy: "",
+        school: School.EAST_LA_COLLEGE,
         country: "",
         linkedInUrl: "",
         mlhCodeOfConduct: false,
@@ -68,21 +51,120 @@ export function ApplicationForm() {
         mlhEmailSubscription: false,
         mesaSubscription: false,
         dietaryRestrictions: [],
-        isMesaStudent: "",
-        gender: "",
-        tShirtSize: "",
-        fieldOfStudy: "",
+        isMesaStudent: false,
+        gender: Gender.PREFER_NOT_TO_SAY,
+        tShirtSize: TShirtSize.M,
+        fieldOfStudy: FieldOfStudy.OTHER,
         whyAttend: "",
-        firstTime: "",
-        skillLevel: "",
+        firstTime: false,
+        skillLevel: SkillLevel.BEGINNER,
         primarySkills: [],
-        otherSkill: "",
+        otherSkill: [],
         resumeFile: null,
+        levelOfStudy: "",
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
+    const [savedApplicationId, setSavedApplicationId] = useState<string | null>(
+        null
+    );
 
-    // Animation variants
+    useEffect(() => {
+        const loadSavedApplication = async () => {
+            try {
+                setIsLoading(true);
+                const savedApp = await getCurrentApplication();
+
+                if (savedApp) {
+                    if (
+                        savedApp.status === ApplicationStatus.APPROVED ||
+                        savedApp.status === ApplicationStatus.REJECTED ||
+                        savedApp.status === ApplicationStatus.WAITLISTED
+                    ) {
+                        router.push("/dashboard");
+                        return;
+                    }
+
+                    if (savedApp.status === ApplicationStatus.PENDING) {
+                        router.push("/dashboard/application/view");
+                        return;
+                    }
+
+                    if (savedApp.status === ApplicationStatus.SAVED) {
+                        setSavedApplicationId(savedApp.id);
+
+                        if (savedApp) {
+                            const appData = savedApp as unknown as FormData;
+
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                firstName:
+                                    appData.firstName || prevData.firstName,
+                                lastName: appData.lastName || prevData.lastName,
+                                email: appData.email || prevData.email,
+                                phoneNumber:
+                                    appData.phoneNumber || prevData.phoneNumber,
+                                age: appData.age || prevData.age,
+                                studentNumber:
+                                    appData.studentNumber ||
+                                    prevData.studentNumber,
+                                school: appData.school || prevData.school,
+                                country: appData.country || prevData.country,
+                                linkedInUrl:
+                                    appData.linkedInUrl || prevData.linkedInUrl,
+                                mlhCodeOfConduct:
+                                    appData.mlhCodeOfConduct ||
+                                    prevData.mlhCodeOfConduct,
+                                mlhPrivacyPolicy:
+                                    appData.mlhPrivacyPolicy ||
+                                    prevData.mlhPrivacyPolicy,
+                                mlhEmailSubscription:
+                                    appData.mlhEmailSubscription ||
+                                    prevData.mlhEmailSubscription,
+                                mesaSubscription:
+                                    appData.mesaSubscription ||
+                                    prevData.mesaSubscription,
+                                dietaryRestrictions:
+                                    appData.dietaryRestrictions ||
+                                    prevData.dietaryRestrictions,
+                                isMesaStudent:
+                                    appData.isMesaStudent ||
+                                    prevData.isMesaStudent,
+                                gender: appData.gender || prevData.gender,
+                                tShirtSize:
+                                    appData.tShirtSize || prevData.tShirtSize,
+                                fieldOfStudy:
+                                    appData.fieldOfStudy ||
+                                    prevData.fieldOfStudy,
+                                whyAttend:
+                                    appData.whyAttend || prevData.whyAttend,
+                                firstTime:
+                                    appData.firstTime || prevData.firstTime,
+                                skillLevel:
+                                    appData.skillLevel || prevData.skillLevel,
+                                primarySkills:
+                                    appData.primarySkills ||
+                                    prevData.primarySkills,
+                                otherSkill:
+                                    appData.otherSkill || prevData.otherSkill,
+                                levelOfStudy:
+                                    appData.levelOfStudy ||
+                                    prevData.levelOfStudy,
+                                resumeFile: null,
+                            }));
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading saved application:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadSavedApplication();
+    }, [router]);
+
     const formVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -131,7 +213,6 @@ export function ApplicationForm() {
         },
     };
 
-    // Handle input changes
     const handleChange = (
         e: React.ChangeEvent<
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -146,19 +227,24 @@ export function ApplicationForm() {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
 
-        // Clear the error when user types
         if (errors[name as keyof FormData]) {
             setErrors((prev) => ({ ...prev, [name]: "" }));
         }
     };
 
-    // Handle checkbox group changes (for multi-select)
     const handleCheckboxGroupChange = (
         name: keyof FormData,
         value: string,
         checked: boolean
     ) => {
         setFormData((prev) => {
+            if (name === "otherSkill") {
+                return {
+                    ...prev,
+                    otherSkill: checked ? [value] : [],
+                };
+            }
+
             const currentValues = prev[name] as string[];
             if (checked) {
                 return { ...prev, [name]: [...currentValues, value] };
@@ -171,13 +257,11 @@ export function ApplicationForm() {
         });
     };
 
-    // Validate current step
     const validateStep = (step: number): boolean => {
         const newErrors: FormErrors = {};
         let isValid = true;
 
         if (step === 1) {
-            // Personal Information validation
             if (!formData.firstName.trim()) {
                 newErrors.firstName = "First name is required";
                 isValid = false;
@@ -196,7 +280,7 @@ export function ApplicationForm() {
                 isValid = false;
             }
 
-            if (!formData.phoneNumber.trim()) {
+            if (!formData.phoneNumber?.trim()) {
                 newErrors.phoneNumber = "Phone number is required";
                 isValid = false;
             }
@@ -238,12 +322,12 @@ export function ApplicationForm() {
                 isValid = false;
             }
 
-            // Essay validation
-            const wordCount = formData.whyAttend
+            const whyAttend = formData.whyAttend || "";
+            const wordCount = whyAttend
                 .trim()
                 .split(/\s+/)
                 .filter(Boolean).length;
-            if (!formData.whyAttend.trim()) {
+            if (!whyAttend.trim()) {
                 newErrors.whyAttend = "Please share why you want to attend";
                 isValid = false;
             } else if (wordCount < 100) {
@@ -254,7 +338,6 @@ export function ApplicationForm() {
                 isValid = false;
             }
         } else if (step === 4) {
-            // MLH validation
             if (!formData.mlhCodeOfConduct) {
                 newErrors.mlhCodeOfConduct =
                     "You must agree to the MLH Code of Conduct";
@@ -267,75 +350,74 @@ export function ApplicationForm() {
                 isValid = false;
             }
         }
-        // No validation for step 3 (Optional Demographics) since it's optional
 
         setErrors(newErrors);
         return isValid;
     };
 
-    // Navigate to next step
-    const handleNextStep = () => {
+    const handleNextStep = (e: React.MouseEvent) => {
+        e.preventDefault();
+
         if (validateStep(currentStep)) {
-            // Make sure we don't exceed the maximum number of steps
             if (currentStep < 4) {
                 setCurrentStep(currentStep + 1);
             }
         }
     };
 
-    // Navigate to previous step
-    const handlePrevStep = () => {
+    const handlePrevStep = (e: React.MouseEvent) => {
+        e.preventDefault();
         setCurrentStep(currentStep - 1);
     };
 
-    // Save the form data for later
     const handleSaveForLater = async () => {
         setIsSaving(true);
 
         try {
-            // Create a form data object for file upload
-            const formDataObj = new FormData();
+            const partialApplicationData: Partial<ApplicationDto> = {
+                firstName: formData.firstName || undefined,
+                lastName: formData.lastName || undefined,
+                email: formData.email || undefined,
+                phoneNumber: formData.phoneNumber || undefined,
+                age: formData.age || undefined,
+                studentNumber: formData.studentNumber || undefined,
+                school: formData.school || undefined,
+                country: formData.country || undefined,
+                linkedInUrl: formData.linkedInUrl || undefined,
+                mlhCodeOfConduct: formData.mlhCodeOfConduct,
+                mlhPrivacyPolicy: formData.mlhPrivacyPolicy,
+                mlhEmailSubscription: formData.mlhEmailSubscription,
+                mesaSubscription: formData.mesaSubscription,
+                dietaryRestrictions: formData.dietaryRestrictions,
+                isMesaStudent: formData.isMesaStudent,
+                gender: formData.gender || undefined,
+                tShirtSize: formData.tShirtSize || undefined,
+                fieldOfStudy: formData.fieldOfStudy || undefined,
+                whyAttend: formData.whyAttend || undefined,
+                firstTime: formData.firstTime,
+                skillLevel: formData.skillLevel || undefined,
+                primarySkills: formData.primarySkills,
+                otherSkill: formData.otherSkill,
+                levelOfStudy: formData.levelOfStudy || undefined,
+                updated_at: new Date().toISOString(),
+            };
 
-            // Add all form fields to FormData
-            Object.entries(formData).forEach(([key, value]) => {
-                if (key === "resumeFile" && value instanceof File) {
-                    // Add the file
-                    formDataObj.append("resumeFile", value);
-                } else if (
-                    key === "primarySkills" ||
-                    key === "dietaryRestrictions"
-                ) {
-                    // Handle arrays by converting to JSON string
-                    if (Array.isArray(value)) {
-                        formDataObj.append(key, JSON.stringify(value));
-                    }
-                } else if (typeof value === "boolean") {
-                    // Convert booleans to strings
-                    formDataObj.append(key, value.toString());
-                } else if (typeof value === "string") {
-                    // Add string values
-                    formDataObj.append(key, value);
-                }
-            });
+            let response;
+            if (savedApplicationId) {
+                response = await updateApplication(
+                    savedApplicationId,
+                    partialApplicationData as ApplicationDto,
+                    formData.resumeFile || undefined
+                );
+            } else {
+                response = await saveApplication(
+                    partialApplicationData,
+                    formData.resumeFile || undefined
+                );
+                setSavedApplicationId(response.id);
+            }
 
-            // Add the saved status
-            formDataObj.append("status", "saved");
-
-            // Submit to your API or database
-            // const response = await fetch("/api/application/save", {
-            //     method: "POST",
-            //     body: formDataObj,
-            // });
-
-            // if (!response.ok) {
-            //     throw new Error("Failed to save application");
-            // }
-
-            // Simulate successful save
-            setTimeout(() => {
-                console.log("Application saved:", formData);
-                router.push("/dashboard?application=saved");
-            }, 1500);
+            console.log("Application saved:", response);
         } catch (error) {
             console.error("Error saving application:", error);
             setErrors({
@@ -347,7 +429,6 @@ export function ApplicationForm() {
         }
     };
 
-    // Submit the form
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -358,58 +439,149 @@ export function ApplicationForm() {
         setIsSubmitting(true);
 
         try {
-            // Create a form data object for file upload
-            const formDataObj = new FormData();
+            const applicationData: ApplicationDto = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phoneNumber: formData.phoneNumber || "",
+                age: formData.age,
+                studentNumber: formData.studentNumber,
+                school: formData.school,
+                isMesaStudent: formData.isMesaStudent,
+                country: formData.country,
+                linkedInUrl: formData.linkedInUrl,
+                gender: formData.gender,
+                tShirtSize: formData.tShirtSize,
+                fieldOfStudy: formData.fieldOfStudy,
+                firstTime: formData.firstTime,
+                skillLevel: formData.skillLevel,
+                primarySkills: formData.primarySkills,
+                whyAttend: formData.whyAttend || "",
+                otherSkill: formData.otherSkill,
+                dietaryRestrictions: Array.isArray(formData.dietaryRestrictions)
+                    ? formData.dietaryRestrictions
+                    : [],
+                mlhCodeOfConduct: formData.mlhCodeOfConduct,
+                mlhPrivacyPolicy: formData.mlhPrivacyPolicy,
+                mlhEmailSubscription: formData.mlhEmailSubscription,
+                mesaSubscription: formData.mesaSubscription,
+                levelOfStudy: formData.levelOfStudy,
+            };
 
-            // Add all form fields to FormData
-            Object.entries(formData).forEach(([key, value]) => {
-                if (key === "resumeFile" && value instanceof File) {
-                    // Add the file
-                    formDataObj.append("resumeFile", value);
-                } else if (
-                    key === "primarySkills" ||
-                    key === "dietaryRestrictions"
-                ) {
-                    // Handle arrays by converting to JSON string
-                    if (Array.isArray(value)) {
-                        formDataObj.append(key, JSON.stringify(value));
+            const profileData: Partial<UserProfileDto> = {
+                full_name: `${formData.firstName} ${formData.lastName}`,
+                school: formData.school,
+                major: formData.fieldOfStudy,
+                year: formData.levelOfStudy,
+                dietary_restrictions: Array.isArray(
+                    formData.dietaryRestrictions
+                )
+                    ? formData.dietaryRestrictions.join(", ")
+                    : "",
+                t_shirt_size: formData.tShirtSize,
+            };
+
+            let applicationResponse;
+            if (savedApplicationId) {
+                applicationResponse = await updateApplication(
+                    savedApplicationId,
+                    applicationData,
+                    formData.resumeFile || undefined
+                );
+            } else {
+                applicationResponse = await createApplication(
+                    applicationData,
+                    formData.resumeFile || undefined
+                );
+            }
+
+            const appId = applicationResponse.id || savedApplicationId;
+            if (appId) {
+                const statusFormData = new FormData();
+                statusFormData.append("status", ApplicationStatus.PENDING);
+
+                await applicationClient.patch(
+                    `/applications/${appId}`,
+                    statusFormData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
                     }
-                } else if (typeof value === "boolean") {
-                    // Convert booleans to strings
-                    formDataObj.append(key, value.toString());
-                } else if (typeof value === "string") {
-                    // Add string values
-                    formDataObj.append(key, value);
-                }
-            });
+                );
+            }
 
-            // Submit to your API or database
-            // const response = await fetch("/api/application", {
-            //     method: "POST",
-            //     body: formDataObj, // Use FormData instead of JSON
-            // });
+            const profileResponse = await updateProfile(profileData);
 
-            // if (!response.ok) {
-            //     throw new Error("Failed to submit application");
-            // }
+            console.log("Application submitted:", applicationResponse);
+            console.log("Profile updated:", profileResponse);
 
-            // Simulate successful submission
-            setTimeout(() => {
-                console.log("Application submitted:", formData);
-                router.push("/dashboard?application=success");
-            }, 1500);
+            router.push("/dashboard?application=success");
         } catch (error) {
             console.error("Error submitting application:", error);
             setErrors({
                 ...errors,
                 general: "Failed to submit application. Please try again.",
             });
+        } finally {
             setIsSubmitting(false);
         }
     };
 
+    const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+
+        if (name === "firstTime" || name === "isMesaStudent") {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value === "Yes",
+            }));
+        } else {
+            handleChange(e);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="bg-white shadow-xl rounded-lg overflow-hidden p-8 flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <svg
+                        className="animate-spin h-10 w-10 text-[rgb(var(--mesa-orange))] mx-auto mb-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                        ></circle>
+                        <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                    </svg>
+                    <p className="text-lg font-medium text-gray-700">
+                        Loading your application...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+            {/* Editing Saved Application Badge */}
+            {savedApplicationId && (
+                <div className="bg-blue-100 text-blue-800 text-sm font-medium px-4 py-2 text-center">
+                    Editing saved application
+                </div>
+            )}
+
             {/* Form Steps Indicator */}
             <div className="bg-gray-50 px-6 py-4 border-b">
                 <div className="flex justify-between items-center">
@@ -707,34 +879,33 @@ export function ApplicationForm() {
                                 }`}
                             >
                                 <option value="">Select your school</option>
-                                <option value="East Los Angeles College">
+                                <option value={School.EAST_LA_COLLEGE}>
                                     East Los Angeles College
                                 </option>
-                                <option value="Los Angeles City College">
+                                <option value={School.LA_CITY_COLLEGE}>
                                     Los Angeles City College
                                 </option>
-                                <option value="Los Angeles Harbor College">
+                                <option value={School.LA_HARBOR_COLLEGE}>
                                     Los Angeles Harbor College
                                 </option>
-                                <option value="Los Angeles Mission College">
+                                <option value={School.LA_MISSION_COLLEGE}>
                                     Los Angeles Mission College
                                 </option>
-                                <option value="Los Angeles Pierce College">
+                                <option value={School.LA_PIERCE_COLLEGE}>
                                     Los Angeles Pierce College
                                 </option>
-                                <option value="Los Angeles Southwest College">
+                                <option value={School.LA_SOUTHWEST_COLLEGE}>
                                     Los Angeles Southwest College
                                 </option>
-                                <option value="Los Angeles Trade-Technical College">
+                                <option value={School.LA_TRADE_TECH_COLLEGE}>
                                     Los Angeles Trade-Technical College
                                 </option>
-                                <option value="Los Angeles Valley College">
+                                <option value={School.LA_VALLEY_COLLEGE}>
                                     Los Angeles Valley College
                                 </option>
-                                <option value="West Los Angeles College">
+                                <option value={School.WEST_LA_COLLEGE}>
                                     West Los Angeles College
                                 </option>
-                                <option value="Other">Other</option>
                             </motion.select>
                             {errors.school && (
                                 <p className="text-[rgb(var(--mesa-warm-red))] text-xs mt-1">
@@ -954,8 +1125,8 @@ export function ApplicationForm() {
                             <motion.select
                                 id="firstTime"
                                 name="firstTime"
-                                value={formData.firstTime}
-                                onChange={handleChange}
+                                value={formData.firstTime ? "Yes" : "No"}
+                                onChange={handleSelect}
                                 className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200 ${
                                     errors.firstTime
                                         ? "border-[rgb(var(--mesa-warm-red))] ring-[rgb(var(--mesa-warm-red))]/20"
@@ -1084,7 +1255,7 @@ export function ApplicationForm() {
                                         onChange={(e) => {
                                             setFormData((prev) => ({
                                                 ...prev,
-                                                otherSkill: e.target.value,
+                                                otherSkill: [e.target.value],
                                             }));
                                         }}
                                     />
@@ -1123,7 +1294,7 @@ export function ApplicationForm() {
                                 </div>
                                 <div className="text-xs text-gray-500">
                                     {
-                                        formData.whyAttend
+                                        (formData.whyAttend || "")
                                             .trim()
                                             .split(/\s+/)
                                             .filter(Boolean).length
@@ -1131,11 +1302,11 @@ export function ApplicationForm() {
                                     /
                                     <span
                                         className={`${
-                                            formData.whyAttend
+                                            (formData.whyAttend || "")
                                                 .trim()
                                                 .split(/\s+/)
                                                 .filter(Boolean).length < 100 ||
-                                            formData.whyAttend
+                                            (formData.whyAttend || "")
                                                 .trim()
                                                 .split(/\s+/)
                                                 .filter(Boolean).length > 300
@@ -1184,8 +1355,8 @@ export function ApplicationForm() {
                             <motion.select
                                 id="isMesaStudent"
                                 name="isMesaStudent"
-                                value={formData.isMesaStudent}
-                                onChange={handleChange}
+                                value={formData.isMesaStudent ? "Yes" : "No"}
+                                onChange={handleSelect}
                                 className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >
                                 <option value="">Select an option</option>
@@ -1223,9 +1394,11 @@ export function ApplicationForm() {
                                         <input
                                             id={`dietary-${option}`}
                                             type="checkbox"
-                                            checked={formData.dietaryRestrictions.includes(
-                                                option
-                                            )}
+                                            checked={
+                                                formData.dietaryRestrictions?.includes(
+                                                    option
+                                                ) || false
+                                            }
                                             onChange={(e) =>
                                                 handleCheckboxGroupChange(
                                                     "dietaryRestrictions",
@@ -1564,7 +1737,7 @@ export function ApplicationForm() {
                     {currentStep > 1 && (
                         <motion.button
                             type="button"
-                            onClick={handlePrevStep}
+                            onClick={(e) => handlePrevStep(e)}
                             className="py-2.5 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400/50 shadow-sm transition-all duration-200"
                             variants={buttonVariants}
                             whileHover="hover"
@@ -1592,7 +1765,7 @@ export function ApplicationForm() {
                         {currentStep < 4 ? (
                             <motion.button
                                 type="button"
-                                onClick={handleNextStep}
+                                onClick={(e) => handleNextStep(e)}
                                 className="py-2.5 px-6 bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-orange))]/90 text-white rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-orange))]/50 shadow-md hover:shadow-lg transition-all duration-200"
                                 variants={buttonVariants}
                                 whileHover="hover"

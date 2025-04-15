@@ -1,23 +1,24 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { User, UserProfile } from "@/app/dashboard/types";
-import { useState } from "react";
+import { User } from "@/app/dashboard/types";
+import { useEffect, useState } from "react";
 
 interface DashboardNavBarProps {
     user: User | null;
-    userProfile: UserProfile | null;
     onSignOut: () => Promise<void>;
 }
 
 export default function DashboardNavBar({
     user,
-    userProfile,
     onSignOut,
 }: DashboardNavBarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // Animation variants
+    useEffect(() => {
+        console.log(user);
+    }, [user]);
+
     const buttonVariants = {
         hover: {
             scale: 1.03,
@@ -31,7 +32,6 @@ export default function DashboardNavBar({
         tap: { scale: 0.97 },
     };
 
-    // Mobile menu animation variants
     const menuVariants = {
         closed: { opacity: 0, y: -20, display: "none" },
         open: { opacity: 1, y: 0, display: "block" },
@@ -48,7 +48,7 @@ export default function DashboardNavBar({
                 <div className="flex justify-between items-center">
                     {/* Logo and dashboard label */}
                     <div className="flex items-center">
-                        <Link href="/" className="flex items-center">
+                        <Link href="/dashboard" className="flex items-center">
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -100,9 +100,7 @@ export default function DashboardNavBar({
                                     Welcome,
                                 </p>
                                 <p className="font-medium">
-                                    {user?.email ||
-                                        userProfile?.full_name ||
-                                        "User"}
+                                    {user?.user_metadata?.first_name}
                                 </p>
                             </div>
                             <motion.button
@@ -125,9 +123,7 @@ export default function DashboardNavBar({
                                     Welcome,
                                 </p>
                                 <p className="font-medium text-sm truncate max-w-[100px]">
-                                    {user?.email?.split("@")[0] ||
-                                        userProfile?.full_name?.split(" ")[0] ||
-                                        "User"}
+                                    {user?.user_metadata?.first_name}
                                 </p>
                             </div>
                         </div>
