@@ -343,7 +343,7 @@ export function ApplicationForm() {
                 isValid = false;
             }
 
-            if (!formData.firstTime) {
+            if (formData.firstTime !== true && formData.firstTime !== false) {
                 newErrors.firstTime =
                     "Please indicate if this is your first hackathon";
                 isValid = false;
@@ -747,6 +747,14 @@ export function ApplicationForm() {
                 ...prev,
                 [name]: value === "Yes",
             }));
+
+            // Reset validation error if any
+            if (errors[name as keyof FormErrors]) {
+                setErrors((prev) => ({
+                    ...prev,
+                    [name]: "",
+                }));
+            }
         } else {
             handleChange(e);
         }
@@ -2337,7 +2345,13 @@ export function ApplicationForm() {
                             <motion.select
                                 id="firstTime"
                                 name="firstTime"
-                                value={formData.firstTime ? "Yes" : "No"}
+                                value={
+                                    formData.firstTime === undefined
+                                        ? ""
+                                        : formData.firstTime
+                                        ? "Yes"
+                                        : "No"
+                                }
                                 onChange={handleSelect}
                                 className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 transition-all duration-200 ${
                                     errors.firstTime
@@ -2572,7 +2586,13 @@ export function ApplicationForm() {
                             <motion.select
                                 id="isMesaStudent"
                                 name="isMesaStudent"
-                                value={formData.isMesaStudent ? "Yes" : "No"}
+                                value={
+                                    formData.isMesaStudent === undefined
+                                        ? ""
+                                        : formData.isMesaStudent
+                                        ? "Yes"
+                                        : "No"
+                                }
                                 onChange={handleSelect}
                                 className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >

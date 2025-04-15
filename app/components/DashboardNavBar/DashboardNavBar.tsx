@@ -47,28 +47,24 @@ export default function DashboardNavBar({
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div className="flex justify-between items-center">
                     {/* Logo and dashboard label */}
-                    <div className="flex items-center">
+                    <div className="flex items-center justify-center">
                         <Link href="/dashboard" className="flex items-center">
                             <motion.div
+                                className="flex items-center"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
+                                <span className="text-[rgb(var(--mesa-warm-red))] font-bold text-xl mb-1.5">
+                                    HACK
+                                </span>
                                 <Image
                                     src="/MESA_logo.svg"
                                     alt="HackMESA Logo"
-                                    width={40}
-                                    height={40}
-                                    className="mr-2"
+                                    width={80}
+                                    height={80}
+                                    className="mx-auto"
                                 />
                             </motion.div>
-                            <div>
-                                <h1 className="text-2xl font-bold text-[rgb(var(--mesa-warm-red))]">
-                                    HackMESA
-                                </h1>
-                                <span className="text-sm text-gray-500">
-                                    Dashboard
-                                </span>
-                            </div>
                         </Link>
                     </div>
 
