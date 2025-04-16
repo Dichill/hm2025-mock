@@ -6,7 +6,7 @@ import { useState } from "react";
 import { TeamMember, teamMembers } from "@/lib/team_info";
 import Image from "next/image";
 
-const PLACEHOLDER_IMAGE = "/Logo_filler.svg";
+const PLACEHOLDER_IMAGE = "/profile_filler.svg";
 
 const TeamMemberCard = ({ member }: { member: TeamMember }) => {
     const [isFlipped, setIsFlipped] = useState(false);
