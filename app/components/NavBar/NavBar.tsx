@@ -243,7 +243,7 @@ const NavBar = () => {
 
     // Track active section based on scroll position
     useEffect(() => {
-        const sections = ["about", "schedule", "location", "sponsors", "faq"];
+        const sections = ["about", "location", "sponsors", "faq", "team"];
 
         const handleScroll = () => {
             const currentPos = window.scrollY + 100;
@@ -279,7 +279,7 @@ const NavBar = () => {
                     <h4
                         id="nav__logo"
                         style={{ fontSize: DT_base_fontSize }}
-                        className="color-black text-justify w-full"
+                        className="color-black text-justify w-full text-gray-700"
                     >
                         {HackMESA_casing}
                     </h4>
@@ -289,10 +289,7 @@ const NavBar = () => {
                         text="About"
                         isActive={activeSection === "about"}
                     />
-                    <NavBarButton_O
-                        text="Team"
-                        isActive={activeSection === "team"}
-                    />
+
                     <NavBarButton_O
                         text="Location"
                         isActive={activeSection === "location"}
@@ -304,6 +301,10 @@ const NavBar = () => {
                     <NavBarButton_O
                         text="FAQ"
                         isActive={activeSection === "faq"}
+                    />
+                    <NavBarButton_O
+                        text="Team"
+                        isActive={activeSection === "team"}
                     />
                 </nav>
 

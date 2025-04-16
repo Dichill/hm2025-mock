@@ -127,6 +127,7 @@ export const mobile_size_reference = 800;
 export const backgroundColor = "#433966";
 export const sectionBase_side_padding_desktop = 10;
 export const sectionBase_side_padding_mobile = 2;
+export const MLH_Logo_Text_Blue = "#132f4c";
 
 export default MESA_COLORS;
 
