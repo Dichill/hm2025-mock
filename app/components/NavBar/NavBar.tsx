@@ -150,7 +150,7 @@ const MobileNavOpen = (props: MobileNavOpen_Props) => {
                 <MobileNavDivider />
                 <MobileNavOpen_Button
                     close_nav={props.close_nav}
-                    text="Schedule"
+                    text="Team"
                 />
                 <MobileNavDivider />
                 <MobileNavOpen_Button
@@ -290,8 +290,8 @@ const NavBar = () => {
                         isActive={activeSection === "about"}
                     />
                     <NavBarButton_O
-                        text="Schedule"
-                        isActive={activeSection === "schedule"}
+                        text="Team"
+                        isActive={activeSection === "team"}
                     />
                     <NavBarButton_O
                         text="Location"
