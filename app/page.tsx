@@ -404,8 +404,8 @@ function App() {
                         bg_color={backgroundColor}
                     >
                         <SectionBase_HeroText text="Location" />
-                        <div className="max-w-5xl mx-auto p-6">
-                            <div className="bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-xl p-6 mb-8 transform transition-all hover:scale-[1.01] duration-300">
+                        <div className="max-w-5xl mx-auto p-6 ">
+                            <div className="bg-opacity-80 backdrop-blur-sm bg-[#564b79] flex justify-center rounded-xl shadow-xl p-6 mb-8 transform transition-all hover:scale-[1.01] duration-300">
                                 <div className="flex flex-col md:flex-row items-center justify-between">
                                     <div className="md:w-1/2 p-4">
                                         <h3 className="text-2xl font-bold text-[#FFE550] mb-2">
@@ -472,7 +472,7 @@ function App() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="rounded-xl overflow-hidden shadow-2xl hover-scale">
+                            <div className="flex justify-center rounded-xl overflow-hidden shadow-2xl hover-scale">
                                 <LocationMap />
                             </div>
                         </div>
