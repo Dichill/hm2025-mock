@@ -2503,8 +2503,8 @@ export function ApplicationForm() {
                                 htmlFor="whyAttend"
                                 className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
                             >
-                                Why do you want to attend our hackathon?
-                                (100-300 words)
+                                Why do you want to attend our hackathon? (50-300
+                                words)
                             </label>
                             <motion.textarea
                                 id="whyAttend"
@@ -2536,7 +2536,7 @@ export function ApplicationForm() {
                                             (formData.whyAttend || "")
                                                 .trim()
                                                 .split(/\s+/)
-                                                .filter(Boolean).length < 100 ||
+                                                .filter(Boolean).length < 50 ||
                                             (formData.whyAttend || "")
                                                 .trim()
                                                 .split(/\s+/)
@@ -2545,7 +2545,7 @@ export function ApplicationForm() {
                                                 : "text-green-600"
                                         }`}
                                     >
-                                        100-300
+                                        50-300
                                     </span>{" "}
                                     words
                                 </div>

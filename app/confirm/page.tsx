@@ -42,19 +42,20 @@ function VerificationContent() {
             return;
         }
 
-        if (!token) {
-            setErrorMessage(
-                "Authentication token not found. Please try logging in again."
-            );
-            return;
-        }
-
         setIsSubmitting(true);
         try {
-            const verified = await verifyUserEmail(token, verificationCode);
+            const verified = await verifyUserEmail(
+                token || "",
+                verificationCode,
+                userEmail || undefined
+            );
             setVerificationStatus(verified ? "verified" : "unverified");
             if (!verified) {
                 setErrorMessage("Invalid verification code");
+            } else {
+                if (isClient && typeof window !== "undefined") {
+                    sessionStorage.removeItem("registrationToken");
+                }
             }
         } catch (error) {
             console.error("Code verification error:", error);
@@ -81,7 +82,8 @@ function VerificationContent() {
             const response = await resendVerificationCode(userEmail);
             if (response.success) {
                 setSuccessMessage(
-                    response.message || "Verification code sent successfully!"
+                    response.message ||
+                        "Verification code sent successfully! Please check your email for the verification link or code."
                 );
                 setVerificationCode("");
             } else {
@@ -135,7 +137,7 @@ function VerificationContent() {
                     }
                 }
 
-                const tokenParam = searchParams.get("token");
+                const tokenParam = searchParams.get("t");
                 if (tokenParam) {
                     setToken(tokenParam);
 
@@ -149,6 +151,43 @@ function VerificationContent() {
                     }
 
                     setVerificationStatus("pending");
+                    return;
+                }
+
+                const emailParam = searchParams.get("email");
+                if (emailParam) {
+                    setUserEmail(emailParam);
+
+                    if (isClient && typeof window !== "undefined") {
+                        sessionStorage.setItem("registeredEmail", emailParam);
+                    }
+
+                    setVerificationStatus("pending");
+                    return;
+                }
+
+                const registeredEmail =
+                    isClient && typeof window !== "undefined"
+                        ? sessionStorage.getItem("registeredEmail")
+                        : null;
+
+                if (registeredEmail) {
+                    setUserEmail(registeredEmail);
+
+                    // Check for token in sessionStorage
+                    const storedToken =
+                        isClient && typeof window !== "undefined"
+                            ? sessionStorage.getItem("registrationToken")
+                            : null;
+
+                    if (storedToken) {
+                        setToken(storedToken);
+                    }
+
+                    setVerificationStatus("pending");
+                    setSuccessMessage(
+                        "Please check your email for a verification link or code to complete your registration."
+                    );
                     return;
                 }
 
@@ -362,8 +401,9 @@ function VerificationContent() {
                             </p>
                         )}
                         <p className="text-center text-[rgb(var(--mesa-grey))]">
-                            Enter the 6-digit code sent to your email to
-                            complete verification.
+                            {!token
+                                ? "Please check your email for a verification code to complete your registration. If it has expired, you can click the resend verification email."
+                                : "Enter the 6-digit code sent to your email to complete verification."}
                         </p>
 
                         <div className="w-full max-w-xs">
@@ -475,7 +515,7 @@ function VerificationContent() {
                                     {verificationStatus ===
                                     ("resending" as VerificationStatusType)
                                         ? "Sending..."
-                                        : "Resend verification code"}
+                                        : "Resend verification email"}
                                 </motion.button>
                             </div>
                         </div>

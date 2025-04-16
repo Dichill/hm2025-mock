@@ -21,12 +21,13 @@ export async function register(
 
 export async function verifyUserEmail(
     token: string,
-    code: string
+    code: string,
+    email?: string
 ): Promise<boolean> {
     try {
         const response = await userClient.post(
             "/auth/verify",
-            { code },
+            { code, email },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
