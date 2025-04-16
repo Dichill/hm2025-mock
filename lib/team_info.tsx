@@ -3,6 +3,10 @@ export interface TeamMember {
     role: string;
     image: string;
     description: string;
+    linked_in: {
+        hasLink: boolean,
+        url: string,
+    },
     school: string;
 }
 
@@ -13,6 +17,11 @@ export const teamMembers: TeamMember[] = [
         image: "/dichill_WR.jpg",
         description:
             "Software Engineer and aspiring entrepreneur. CEO of DashTech. Created Dash Software for LACC MESA's student sign-in system.",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
+
         school: "LACC",
     },
     {
@@ -20,6 +29,10 @@ export const teamMembers: TeamMember[] = [
         role: "Logistics Lead",
         description: "Computer science and Aerospace Major",
         image: "/fajat_WR.jpg",
+        linked_in: {
+            hasLink: true,
+            url: "https://www.linkedin.com/in/fahatyousuf/"
+        },
         school: "LACC",
     },
     {
@@ -28,6 +41,10 @@ export const teamMembers: TeamMember[] = [
         description:
             "Biology major active in MESA, supporting community and outreach through HackMESA’s marketing team and social media management",
         image: "/evelyn_WR.jpg",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "ELAC",
     },
     {
@@ -35,6 +52,10 @@ export const teamMembers: TeamMember[] = [
         role: "Backend Lead",
         description: "Computer Science major. CS lead for MESA Skills Lab at LAVC. CS and Math tutor for MESA",
         image: "/cash_WR.jpg",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "LAVC",
     },
     {
@@ -42,6 +63,10 @@ export const teamMembers: TeamMember[] = [
         role: "Tech Team",
         description: "About info coming soon!",
         image: "",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "CSULB",
     },
     {
@@ -50,6 +75,10 @@ export const teamMembers: TeamMember[] = [
         description:
             "Designer, mechanical engineering undergrad, former NASA & Caltech intern, currently tutoring STEM for MESA.",
         image: "/diego_WR.jpg",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "ELAC",
     },
     {
@@ -57,6 +86,10 @@ export const teamMembers: TeamMember[] = [
         role: "Tech/Logistics Teams",
         description: "About info coming soon!",
         image: "",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "ELAC",
     },
     {
@@ -64,6 +97,10 @@ export const teamMembers: TeamMember[] = [
         role: "Logistics/Social Media Teams",
         description: "About info coming soon!",
         image: "",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "LACC",
     },
     {
@@ -72,6 +109,10 @@ export const teamMembers: TeamMember[] = [
         description:
             "Artist, programmer, and full time engineering student. Passionate about learning. CS Tutor for MESA.",
         image: "/jay_WR.jpg",
+        linked_in: {
+            hasLink: true,
+            url: "https://www.linkedin.com/in/jay-crawford-prod/"
+        },
         school: "LACC",
     },
     {
@@ -79,6 +120,10 @@ export const teamMembers: TeamMember[] = [
         role: "Designer/Tech Team",
         description: "Computer Engineer student, Currently Tutor for Mesa",
         image: "",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "CSULB",
     },
     {
@@ -87,6 +132,10 @@ export const teamMembers: TeamMember[] = [
         description:
             "Student, experienced in outreach and content creation from working in the MESA program",
         image: "/serena_WR.jpg",
+        linked_in: {
+            hasLink: false,
+            url: ""
+        },
         school: "LAVC",
     },
 ];
