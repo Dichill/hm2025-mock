@@ -20,7 +20,6 @@ import {
 } from "@/core/apply/api/apply";
 import { updateProfile } from "@/core/user/api/profile";
 import { UserProfileDto } from "@/core/user/types/profile.dto";
-import { applicationClient } from "@/api/application-client";
 
 type FormErrors = Partial<Record<keyof FormData, string>> & {
     general?: string;
@@ -71,6 +70,7 @@ export function ApplicationForm() {
         resumeUrl: "",
         resumeFileName: "",
         levelOfStudy: "",
+        needsParkingPermit: undefined,
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
@@ -182,6 +182,10 @@ export function ApplicationForm() {
                                 resumeFile: null,
                                 resumeUrl: appData.resumeUrl || "",
                                 resumeFileName: appData.resumeFileName || "",
+                                needsParkingPermit:
+                                    appData.needsParkingPermit !== undefined
+                                        ? appData.needsParkingPermit
+                                        : prevData.needsParkingPermit,
                             }));
                         }
                     }
@@ -249,13 +253,34 @@ export function ApplicationForm() {
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
         >
     ) => {
-        const { name, value, type } = e.target as HTMLInputElement;
+        const { name, type } = e.target as HTMLInputElement;
 
         if (type === "checkbox") {
             const checked = (e.target as HTMLInputElement).checked;
             setFormData((prev) => ({ ...prev, [name]: checked }));
+        } else if (name === "otherDietaryRestriction" && e.target.value) {
+            const currentRestrictions = Array.isArray(
+                formData.dietaryRestrictions
+            )
+                ? formData.dietaryRestrictions
+                : [];
+
+            const filteredRestrictions = currentRestrictions.filter(
+                (item) => !item.startsWith("Other:")
+            );
+
+            setFormData({
+                ...formData,
+                dietaryRestrictions: [
+                    ...filteredRestrictions,
+                    `Other: ${e.target.value}`,
+                ],
+            });
         } else {
-            setFormData((prev) => ({ ...prev, [name]: value }));
+            setFormData({
+                ...formData,
+                [name]: e.target.value,
+            });
         }
 
         if (errors[name as keyof FormData]) {
@@ -268,25 +293,51 @@ export function ApplicationForm() {
         value: string,
         checked: boolean
     ) => {
-        setFormData((prev) => {
-            if (name === "otherSkill") {
-                return {
-                    ...prev,
-                    otherSkill: checked ? [value] : [],
-                };
-            }
+        let currentValues = Array.isArray(formData[name])
+            ? [...(formData[name] as string[])]
+            : [];
 
-            // Handle JSONB fields (primarySkills and dietaryRestrictions)
-            const currentValues = prev[name] as string[];
-            if (checked) {
-                return { ...prev, [name]: [...currentValues, value] };
+        if (checked) {
+            // If selecting "None" or "Prefer not to answer", clear other selections
+            if (value === "None" || value === "Prefer not to answer") {
+                currentValues = [value];
             } else {
-                return {
-                    ...prev,
-                    [name]: currentValues.filter((item) => item !== value),
-                };
+                // If selecting any other option, remove "None" and "Prefer not to answer"
+                currentValues = currentValues.filter(
+                    (item) => item !== "None" && item !== "Prefer not to answer"
+                );
+                currentValues.push(value);
             }
-        });
+        } else {
+            currentValues = currentValues.filter((item) => item !== value);
+
+            // If removing "Other", also clear any "Other:" entries
+            if (value === "Other") {
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: currentValues.filter(
+                        (item) => !item.startsWith("Other:")
+                    ),
+                }));
+                return;
+            }
+        }
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: currentValues,
+        }));
+    };
+
+    // Get the "Other" value from dietaryRestrictions
+    const getOtherDietaryValue = (): string => {
+        if (!Array.isArray(formData.dietaryRestrictions)) return "";
+
+        const otherEntry = formData.dietaryRestrictions.find((item) =>
+            item.startsWith("Other:")
+        );
+
+        return otherEntry ? otherEntry.substring(7).trim() : "";
     };
 
     const validateStep = (step: number): boolean => {
@@ -362,8 +413,8 @@ export function ApplicationForm() {
             if (!whyAttend.trim()) {
                 newErrors.whyAttend = "Please share why you want to attend";
                 isValid = false;
-            } else if (wordCount < 100) {
-                newErrors.whyAttend = `Your response is too short (${wordCount}/100 words minimum)`;
+            } else if (wordCount < 50) {
+                newErrors.whyAttend = `Your response is too short (${wordCount}/50 words minimum)`;
                 isValid = false;
             } else if (wordCount > 300) {
                 newErrors.whyAttend = `Your response is too long (${wordCount}/300 words maximum)`;
@@ -480,6 +531,7 @@ export function ApplicationForm() {
                     : [],
                 levelOfStudy: formData.levelOfStudy || "",
                 updated_at: new Date().toISOString(),
+                needsParkingPermit: formData.needsParkingPermit,
             };
 
             // Log the data being sent to help debug
@@ -650,6 +702,7 @@ export function ApplicationForm() {
                 mlhEmailSubscription: Boolean(formData.mlhEmailSubscription),
                 mesaSubscription: Boolean(formData.mesaSubscription),
                 levelOfStudy: formData.levelOfStudy || "Not specified",
+                needsParkingPermit: formData.needsParkingPermit,
             };
 
             // Log the data being submitted
@@ -677,8 +730,9 @@ export function ApplicationForm() {
             let applicationResponse;
             let appId = savedApplicationId;
 
-            // Create new application if no saved ID exists
+            // Check if we have a saved application
             if (!appId) {
+                // No saved application, create a new one
                 console.log("Creating new application");
                 applicationResponse = await createApplication(
                     applicationData,
@@ -689,13 +743,14 @@ export function ApplicationForm() {
                     console.log("New application created with ID:", appId);
                 }
             } else {
-                // Update existing application
+                // Update existing application - use the same ID to prevent duplication
                 console.log("Updating existing application with ID:", appId);
                 applicationResponse = await updateApplication(
                     appId,
                     applicationData,
                     formData.resumeFile || undefined
                 );
+                console.log("Application updated:", applicationResponse);
             }
 
             // Verify we have a valid application ID before proceeding
@@ -704,27 +759,23 @@ export function ApplicationForm() {
                 throw new Error("Failed to get valid application ID");
             }
 
-            // Update application status to PENDING
+            // Update application status to PENDING - this makes it a submitted application
             console.log(
                 "Updating application status to PENDING for ID:",
                 appId
             );
-            const statusFormData = new FormData();
-            statusFormData.append("status", ApplicationStatus.PENDING);
 
-            await applicationClient.patch(
-                `/applications/${appId}`,
-                statusFormData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
+            // Use the updateApplication function instead of a direct PATCH
+            // This ensures we're updating the existing record, not creating a new one
+            const pendingAppData = {
+                ...applicationData,
+                status: ApplicationStatus.PENDING,
+            };
 
+            await updateApplication(appId, pendingAppData, undefined);
+
+            // Update user profile
             const profileResponse = await updateProfile(profileData);
-
-            console.log("Application submitted:", applicationResponse);
             console.log("Profile updated:", profileResponse);
 
             router.push("/dashboard?application=success");
@@ -1306,6 +1357,81 @@ export function ApplicationForm() {
                                     {errors.levelOfStudy}
                                 </p>
                             )}
+                        </motion.div>
+
+                        {/* Field of Study */}
+                        <motion.div
+                            className="space-y-1"
+                            variants={formItemVariants}
+                        >
+                            <label
+                                htmlFor="fieldOfStudy"
+                                className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
+                            >
+                                Major/Field of Study
+                            </label>
+                            <motion.select
+                                id="fieldOfStudy"
+                                name="fieldOfStudy"
+                                value={formData.fieldOfStudy}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                            >
+                                <option value="">Select an option</option>
+                                <option value="Computer science, computer engineering, or software engineering">
+                                    Computer science, computer engineering, or
+                                    software engineering
+                                </option>
+                                <option value="Another engineering discipline (such as civil, electrical, mechanical, etc.)">
+                                    Another engineering discipline (such as
+                                    civil, electrical, mechanical, etc.)
+                                </option>
+                                <option value="Information systems, information technology, or system administration">
+                                    Information systems, information technology,
+                                    or system administration
+                                </option>
+                                <option value="A natural science (such as biology, chemistry, physics, etc.)">
+                                    A natural science (such as biology,
+                                    chemistry, physics, etc.)
+                                </option>
+                                <option value="Mathematics or statistics">
+                                    Mathematics or statistics
+                                </option>
+                                <option value="Web development or web design">
+                                    Web development or web design
+                                </option>
+                                <option value="Business discipline (such as accounting, finance, marketing, etc.)">
+                                    Business discipline (such as accounting,
+                                    finance, marketing, etc.)
+                                </option>
+                                <option value="Humanities discipline (such as literature, history, philosophy, etc.)">
+                                    Humanities discipline (such as literature,
+                                    history, philosophy, etc.)
+                                </option>
+                                <option value="Social science (such as anthropology, psychology, political science, etc.)">
+                                    Social science (such as anthropology,
+                                    psychology, political science, etc.)
+                                </option>
+                                <option value="Fine arts or performing arts (such as graphic design, music, studio art, etc.)">
+                                    Fine arts or performing arts (such as
+                                    graphic design, music, studio art, etc.)
+                                </option>
+                                <option value="Health science (such as nursing, pharmacy, radiology, etc.)">
+                                    Health science (such as nursing, pharmacy,
+                                    radiology, etc.)
+                                </option>
+                                <option value="Other">Other</option>
+                                <option value="Undecided / No Declared Major">
+                                    Undecided / No Declared Major
+                                </option>
+                                <option value="My school does not offer majors / primary areas of study">
+                                    My school does not offer majors / primary
+                                    areas of study
+                                </option>
+                                <option value="Prefer not to answer">
+                                    Prefer not to answer
+                                </option>
+                            </motion.select>
                         </motion.div>
 
                         {/* Country */}
@@ -2635,9 +2761,17 @@ export function ApplicationForm() {
                                                 Array.isArray(
                                                     formData.dietaryRestrictions
                                                 ) &&
-                                                formData.dietaryRestrictions.includes(
-                                                    option
-                                                )
+                                                (option === "Other"
+                                                    ? formData.dietaryRestrictions.some(
+                                                          (item) =>
+                                                              item.startsWith(
+                                                                  "Other:"
+                                                              ) ||
+                                                              item === "Other"
+                                                      )
+                                                    : formData.dietaryRestrictions.includes(
+                                                          option
+                                                      ))
                                             }
                                             onChange={(e) =>
                                                 handleCheckboxGroupChange(
@@ -2657,6 +2791,32 @@ export function ApplicationForm() {
                                     </div>
                                 ))}
                             </div>
+                            {Array.isArray(formData.dietaryRestrictions) &&
+                                (formData.dietaryRestrictions.includes(
+                                    "Other"
+                                ) ||
+                                    formData.dietaryRestrictions.some((item) =>
+                                        item.startsWith("Other:")
+                                    )) && (
+                                    <div className="mt-2">
+                                        <label
+                                            htmlFor="otherDietaryRestriction"
+                                            className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
+                                        >
+                                            Please specify your dietary
+                                            restriction
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="otherDietaryRestriction"
+                                            name="otherDietaryRestriction"
+                                            value={getOtherDietaryValue()}
+                                            onChange={handleChange}
+                                            className="mt-1 w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
+                                            placeholder="Enter your dietary restriction"
+                                        />
+                                    </div>
+                                )}
                         </motion.div>
 
                         {/* Gender */}
@@ -2719,80 +2879,33 @@ export function ApplicationForm() {
                             </motion.select>
                         </motion.div>
 
-                        {/* More demographics fields... */}
-
-                        {/* Field of Study */}
+                        {/* Parking Permit */}
                         <motion.div
                             className="space-y-1"
                             variants={formItemVariants}
                         >
                             <label
-                                htmlFor="fieldOfStudy"
+                                htmlFor="needsParkingPermit"
                                 className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
                             >
-                                Major/Field of Study
+                                Do you need a parking permit?
                             </label>
                             <motion.select
-                                id="fieldOfStudy"
-                                name="fieldOfStudy"
-                                value={formData.fieldOfStudy}
-                                onChange={handleChange}
+                                id="needsParkingPermit"
+                                name="needsParkingPermit"
+                                value={
+                                    formData.needsParkingPermit === undefined
+                                        ? ""
+                                        : formData.needsParkingPermit
+                                        ? "Yes"
+                                        : "No"
+                                }
+                                onChange={handleSelect}
                                 className="w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]/40 focus:border-[rgb(var(--mesa-orange))]"
                             >
                                 <option value="">Select an option</option>
-                                <option value="Computer science, computer engineering, or software engineering">
-                                    Computer science, computer engineering, or
-                                    software engineering
-                                </option>
-                                <option value="Another engineering discipline (such as civil, electrical, mechanical, etc.)">
-                                    Another engineering discipline (such as
-                                    civil, electrical, mechanical, etc.)
-                                </option>
-                                <option value="Information systems, information technology, or system administration">
-                                    Information systems, information technology,
-                                    or system administration
-                                </option>
-                                <option value="A natural science (such as biology, chemistry, physics, etc.)">
-                                    A natural science (such as biology,
-                                    chemistry, physics, etc.)
-                                </option>
-                                <option value="Mathematics or statistics">
-                                    Mathematics or statistics
-                                </option>
-                                <option value="Web development or web design">
-                                    Web development or web design
-                                </option>
-                                <option value="Business discipline (such as accounting, finance, marketing, etc.)">
-                                    Business discipline (such as accounting,
-                                    finance, marketing, etc.)
-                                </option>
-                                <option value="Humanities discipline (such as literature, history, philosophy, etc.)">
-                                    Humanities discipline (such as literature,
-                                    history, philosophy, etc.)
-                                </option>
-                                <option value="Social science (such as anthropology, psychology, political science, etc.)">
-                                    Social science (such as anthropology,
-                                    psychology, political science, etc.)
-                                </option>
-                                <option value="Fine arts or performing arts (such as graphic design, music, studio art, etc.)">
-                                    Fine arts or performing arts (such as
-                                    graphic design, music, studio art, etc.)
-                                </option>
-                                <option value="Health science (such as nursing, pharmacy, radiology, etc.)">
-                                    Health science (such as nursing, pharmacy,
-                                    radiology, etc.)
-                                </option>
-                                <option value="Other">Other</option>
-                                <option value="Undecided / No Declared Major">
-                                    Undecided / No Declared Major
-                                </option>
-                                <option value="My school does not offer majors / primary areas of study">
-                                    My school does not offer majors / primary
-                                    areas of study
-                                </option>
-                                <option value="Prefer not to answer">
-                                    Prefer not to answer
-                                </option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
                             </motion.select>
                         </motion.div>
                     </div>

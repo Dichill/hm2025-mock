@@ -84,6 +84,7 @@ export interface ApplicationDto {
     whyAttend?: string;
     resume?: File;
     mesaSubscription?: boolean;
+    needsParkingPermit?: boolean;
     updated_at?: string;
 }
 
