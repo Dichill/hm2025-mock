@@ -32,9 +32,9 @@ export const teamMembers: TeamMember[] = [
     },
     {
         name: "Cash Webb",
-        role: "Tech Team",
-        description: "About info coming soon!",
-        image: "",
+        role: "Backend Lead",
+        description: "Computer Science major. CS lead for MESA Skills Lab at LAVC. CS and Math tutor for MESA",
+        image: "/cash_WR.jpg",
         school: "LAVC",
     },
     {
