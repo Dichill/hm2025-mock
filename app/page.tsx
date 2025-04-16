@@ -13,7 +13,6 @@ import SectionBase from "./components/SectionBase/SectionBase";
 import HeroHeader from "./components/HeroHeader/HeroHeader";
 import TrifectaGraphic from "./components/TrifectaGraphic/TrifectaGraphic";
 import MESA_Color_Graphic from "./components/MESA_Color_Graphic/MESA_Color_Graphic";
-import LACC_Color_Graphic from "./components/LACC_Color_Graphic/LACC_Color_Graphic";
 import Image_Overlay from "./components/Image_Overlay/Image_Overlay";
 import useWindowSize from "@/lib/useWindowSize";
 import LocationMap from "./components/LocationMap/LocationMap";
@@ -28,7 +27,7 @@ import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window"
 
 import "./page_grid.css";
 import "./animations.css";
-import { lacc, MESA } from "@/lib/link_base";
+import { MESA } from "@/lib/link_base";
 import { useEffect } from "react";
 import { initScrollReveal, addRevealClasses } from "./scrollReveal";
 
@@ -212,65 +211,57 @@ function App() {
                     >
                         {width > mobile_size_reference && (
                             <>
-                                <SectionBase_HeroText text="About MESA" />
 
-                                <div
-                                    id="area-in-question"
-                                    className="transition-all hover:scale-[1.01] duration-300 hover-glow"
-                                >
-                                    <div id="about_image_elem">
-                                        <Image_Overlay
-                                            source="/MESA_student_overlay1.jpg"
-                                            opacity={100}
-                                            float="right"
-                                            display="inline"
-                                            width="80%"
-                                            height="90%"
-                                            margin="2em"
-                                        />
+                                <div className="rounded-xl p-3 pl-6 mb-10 pb-12 transition-all hover:scale-[1.01] duration-300 hover-glow">
+                                    <SectionBase_HeroText text="About MESA" />
+
+                                    <div
+                                        id="about_grid"
+
+                                    >
+                                        <div id="about_image_elem">
+                                            <Image_Overlay
+                                                source="/MESA_student_overlay1.jpg"
+                                                opacity={100}
+                                                float="right"
+                                                display="inline"
+                                                width="80%"
+                                                height="90%"
+                                                margin="2em"
+                                            />
+                                        </div>
+
+                                        <span
+                                            id="about_mesa_gr_elem_1"
+                                            className="flex justify-center items-center"
+                                        >
+                                            <a
+                                                href={MESA}
+                                                target="new"
+                                                className="transition-transform hover:scale-105 duration-200"
+                                            >
+                                                <div className="bg-white p-[2vw] pt-[1vw] inline-block rounded-xl shadow-xl hover:shadow-2xl">
+                                                    <MESA_Color_Graphic
+                                                    />
+                                                </div>
+                                            </a>
+                                        </span>
+
+
+
+                                        <span id="about_mesa_gr_elem_3">
+                                            <div className="text-white p-6 m-2 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg">
+                                                <AboutMesaText />
+                                            </div>
+                                        </span>
                                     </div>
 
-                                    <span
-                                        id="about_mesa_gr_elem_1"
-                                        className="flex justify-center items-center"
-                                    >
-                                        <a
-                                            href={MESA}
-                                            target="new"
-                                            className="transition-transform hover:scale-105 duration-200"
-                                        >
-                                            <div className="bg-white inline-block p-5 rounded-xl shadow-xl hover:shadow-2xl">
-                                                <MESA_Color_Graphic
-                                                    width={28}
-                                                />
-                                            </div>
-                                        </a>
-                                    </span>
-
-                                    <span id="about_mesa_gr_elem_4">
-                                        <a
-                                            href={lacc}
-                                            target="new"
-                                            className="transition-transform hover:scale-105 duration-200"
-                                        >
-                                            <div className="bg-white inline-block p-5 rounded-xl shadow-xl hover:shadow-2xl float-right">
-                                                <LACC_Color_Graphic
-                                                    width={22}
-                                                />
-                                            </div>
-                                        </a>
-                                    </span>
-
-                                    <span id="about_mesa_gr_elem_3">
-                                        <div className="text-white p-6 m-2 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg">
-                                            <AboutMesaText />
-                                        </div>
-                                    </span>
                                 </div>
+
 
                                 <SectionBase_HeroText text="About the Hackathon" />
 
-                                <div className="text-white p-6 m-2 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg max-w-4xl mx-auto transition-all hover:shadow-xl hover:scale-[1.01] duration-300 hover-glow">
+                                <div className="text-white p-6 m-2 mb-10 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg max-w-4xl mx-auto transition-all hover:shadow-xl hover:scale-[1.01] duration-300 hover-glow">
                                     <AboutHackathonText />
                                 </div>
                             </>
@@ -298,8 +289,8 @@ function App() {
                                         target="new"
                                         className="transition-transform hover:scale-105 duration-200"
                                     >
-                                        <div className="z-10 bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
-                                            <MESA_Color_Graphic width={28} />
+                                        <div className="z-10 w-[50%] bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
+                                            <MESA_Color_Graphic />
                                         </div>
                                     </a>
 
@@ -313,19 +304,7 @@ function App() {
                                         margin="5%"
                                     />
 
-                                    <section>
-                                        <a
-                                            href={lacc}
-                                            target="new"
-                                            className="transition-transform hover:scale-105 duration-200"
-                                        >
-                                            <div className="bg-white inline-block p-5 rounded-xl shadow-xl absolute bottom-10 right-10">
-                                                <LACC_Color_Graphic
-                                                    width={22}
-                                                />
-                                            </div>
-                                        </a>
-                                    </section>
+
                                 </section>
                                 <div className="border-solid border-0 text-white p-6 m-4 text-xl rounded-2xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] shadow-lg hover-glow">
                                     <AboutMesaText />
