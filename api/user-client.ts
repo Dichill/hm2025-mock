@@ -22,7 +22,7 @@ userClient.interceptors.request.use(
 
         if (accessToken && !config.headers.get("Authorization")) {
             config.headers.set("Authorization", `Bearer ${accessToken}`);
-        }
+        }   
         return config;
     },
     (error: Error) => Promise.reject(error)

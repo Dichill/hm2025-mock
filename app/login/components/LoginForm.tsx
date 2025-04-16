@@ -57,6 +57,16 @@ export function LoginForm() {
             });
 
             if (error) {
+                if (
+                    error.message === "Email not confirmed" ||
+                    error.code === "email_not_confirmed"
+                ) {
+                    if (typeof window !== "undefined") {
+                        sessionStorage.setItem("registeredEmail", email);
+                        router.push("/confirm");
+                        return;
+                    }
+                }
                 throw error;
             }
 

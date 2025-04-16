@@ -138,13 +138,16 @@ export function RegisterForm() {
                 console.log("Registration response:", response);
                 setIsSuccess(true);
 
-                // Store email in sessionStorage for verification page
+                // Store email and token in sessionStorage for verification page
                 sessionStorage.setItem("registeredEmail", registerData.email);
+                if (response && response.token) {
+                    sessionStorage.setItem("registrationToken", response.token);
+                }
 
                 const redirectUrl =
                     response && response.token
-                        ? `/verify?token=${encodeURIComponent(response.token)}`
-                        : "/verify";
+                        ? `/confirm?t=${encodeURIComponent(response.token)}`
+                        : "/confirm";
 
                 // Let the animation play before redirecting
                 setTimeout(() => {
