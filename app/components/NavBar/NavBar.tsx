@@ -284,7 +284,7 @@ const NavBar = () => {
                         {HackMESA_casing}
                     </h4>
                 </div>
-                <nav id="nav__routes" className="inline">
+                <nav id="nav__routes" className="flex items-center">
                     <NavBarButton_O
                         text="About"
                         isActive={activeSection === "about"}
@@ -327,14 +327,14 @@ const NavBar = () => {
                             backgroundColor:
                                 !isHovering && !isPressed
 
-                                    ? PRIMARY_COLORS.WARM_RED.hex
+                                    ? SECONDARY_COLORS.ORANGE_151.hex
                                     : isHovering && !isPressed
                                         ? darkenColor(
-                                            PRIMARY_COLORS.WARM_RED.hex,
+                                            SECONDARY_COLORS.ORANGE_151.hex,
                                             20
                                         )
                                         : darkenColor(
-                                            PRIMARY_COLORS.WARM_RED.hex,
+                                            SECONDARY_COLORS.ORANGE_151.hex,
                                             50
                                         ),
 
@@ -379,7 +379,7 @@ const NavBarButton_O = (props: NavBarButtonProps_O) => {
     return (
         <a href={`#section-${props.text.toLowerCase()}`} className="px-2">
             <motion.div
-                className={`py-2 px-4 rounded-md transition-all duration-150 ${props.isActive
+                className={`flex py-2 px-4 rounded-md w-[80%] transition-all duration-150 ${props.isActive
                     ? "text-white bg-purple-600"
                     : "text-gray-700 hover:text-purple-800"
                     }`}
@@ -396,7 +396,7 @@ const NavBarButton_O = (props: NavBarButtonProps_O) => {
                 <div
                     style={{ fontSize: DT_base_fontSize }}
                     className="flex justify-center items-center h-[98%] w-[98%] font-bold cursor-pointer navBarButton">
-                    <div className="h-[70%] w-[70%] flex justify-center items-center">
+                    <div className="">
                         <span>{props.text}</span>
                     </div>
                 </div>
@@ -406,103 +406,3 @@ const NavBarButton_O = (props: NavBarButtonProps_O) => {
     );
 };
 
-
-
-// const DesktopNavBar_O = () => {
-//     const [isPressed, setIsPressed] = useState(false);
-//     const [isHovering, setIsHovering] = useState(false);
-//     const [activeSection, setActiveSection] = useState("");
-
-//     // Track active section based on scroll position
-//     useEffect(() => {
-//         const sections = ["about", "schedule", "location", "sponsors", "faq"];
-
-//         const handleScroll = () => {
-//             const currentPos = window.scrollY + 100;
-
-//             for (const section of sections) {
-//                 const element = document.getElementById(`section-${section}`);
-//                 if (element) {
-//                     const { offsetTop, offsetHeight } = element;
-//                     if (
-//                         currentPos >= offsetTop &&
-//                         currentPos < offsetTop + offsetHeight
-//                     ) {
-//                         setActiveSection(section);
-//                         break;
-//                     }
-//                 }
-//             }
-//         };
-
-//         window.addEventListener("scroll", handleScroll);
-//         return () => window.removeEventListener("scroll", handleScroll);
-//     }, []);
-
-//     return (
-//         <div className="fixed top-4 left-4 right-[200px] z-[150] bg-white/90 backdrop-blur-sm shadow-md rounded-xl mx-auto">
-//             <div className="max-w-7xl mx-auto px-4">
-//                 <div className="flex justify-between items-center h-14">
-//                     <div className="flex items-center">
-//                         <h1 className="text-xl font-bold text-gray-900">
-//                             {HackMESA_casing}
-//                         </h1>
-//                     </div>
-
-//                     <nav className="hidden md:flex space-x-1">
-//                         <NavBarButton_O
-//                             text="About"
-//                             isActive={activeSection === "about"}
-//                         />
-//                         <NavBarButton_O
-//                             text="Schedule"
-//                             isActive={activeSection === "schedule"}
-//                         />
-//                         <NavBarButton_O
-//                             text="Location"
-//                             isActive={activeSection === "location"}
-//                         />
-//                         <NavBarButton_O
-//                             text="Sponsors"
-//                             isActive={activeSection === "sponsors"}
-//                         />
-//                         <NavBarButton_O
-//                             text="FAQ"
-//                             isActive={activeSection === "faq"}
-//                         />
-//                     </nav>
-
-//                     <motion.button
-//                         key="desktop-nav__register"
-//                         initial={false}
-//                         className="px-5 py-2 rounded-md font-medium text-white shadow-sm"
-//                         whileTap={{ scale: 0.95 }}
-//                         animate={{
-//                             backgroundColor: isPressed
-//                                 ? darkenColor(
-//                                     SECONDARY_COLORS.ORANGE_151.hex,
-//                                     30
-//                                 )
-//                                 : isHovering
-//                                     ? darkenColor(
-//                                         SECONDARY_COLORS.ORANGE_151.hex,
-//                                         10
-//                                     )
-//                                     : SECONDARY_COLORS.ORANGE_151.hex,
-//                         }}
-//                         transition={{ duration: 0.1 }}
-//                         onClick={() => (window.location.href = "/register")}
-//                         onHoverStart={() => setIsHovering(true)}
-//                         onHoverEnd={() => setIsHovering(false)}
-//                         onTouchStart={() => setIsPressed(true)}
-//                         onTouchEnd={() => setIsPressed(false)}
-//                         onMouseDown={() => setIsPressed(true)}
-//                         onMouseUp={() => setIsPressed(false)}
-//                     >
-//                         Register
-//                     </motion.button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
