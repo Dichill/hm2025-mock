@@ -93,7 +93,7 @@ export default function RegisterPage() {
                 variants={imageVariants}
             >
                 <Image
-                    src="/MESA_student_overlay1.jpg"
+                    src="/MESA_student_overlay1.webp"
                     alt="MESA Students"
                     fill
                     className="object-cover"
