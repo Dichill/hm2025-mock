@@ -94,7 +94,7 @@ export default function ClientLayout({
      */
     const handleSignOut = async () => {
         try {
-            await supabase.auth.signOut();
+            await supabase.auth.signOut({ scope: "local" });
             router.push("/login");
         } catch (error) {
             console.error("Sign out error:", error);
