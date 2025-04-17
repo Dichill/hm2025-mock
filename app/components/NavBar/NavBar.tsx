@@ -281,7 +281,8 @@ const NavBar = () => {
                         style={{ fontSize: DT_base_fontSize }}
                         className="color-black text-justify w-full text-gray-700"
                     >
-                        {HackMESA_casing}
+                        {/* The hidden span will make our screen reading experience more friendly */}
+                        {HackMESA_casing} <span className="hidden">LACCD Hackathon</span>
                     </h1>
                 </div>
                 <nav id="nav__routes" className="flex items-center">
