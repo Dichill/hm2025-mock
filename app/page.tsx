@@ -221,7 +221,7 @@ function App() {
                                     >
                                         <div id="about_image_elem">
                                             <Image_Overlay
-                                                source="/MESA_student_overlay1.jpg"
+                                                source="/MESA_student_overlay1.webp"
                                                 opacity={100}
                                                 float="right"
                                                 display="inline"
@@ -516,7 +516,7 @@ const AboutMesaText = () => {
                 <a
                     target="new"
                     href={MESA}
-                    className="text-[#FFE550] hover:text-white transition-colors hover:underline"
+                    className="text-[#FFE550] font-medium hover:text-white transition-colors hover:underline"
                 >
                     MESA&apos;s community college level program
                 </a>{" "}
@@ -550,7 +550,7 @@ const AboutHackathonText = () => {
                 <a
                     target="new"
                     href={MESA}
-                    className="text-[#FFE550] hover:text-white transition-colors hover:underline"
+                    className="text-[#FFE550] font-medium hover:text-white transition-colors hover:underline"
                 >
                     MESA
                 </a>

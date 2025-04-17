@@ -276,13 +276,13 @@ const NavBar = () => {
                 style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
             >
                 <div className="flex content-center items-center">
-                    <h4
+                    <h1
                         id="nav__logo"
                         style={{ fontSize: DT_base_fontSize }}
                         className="color-black text-justify w-full text-gray-700"
                     >
                         {HackMESA_casing}
-                    </h4>
+                    </h1>
                 </div>
                 <nav id="nav__routes" className="flex items-center">
                     <NavBarButton_O
@@ -316,12 +316,12 @@ const NavBar = () => {
                         key="web-nav__register"
                         initial={false}
 
-                        className={`float-right m-4 mt-3 border-solid border-[0.5vh] text-white w-[90%] rounded-md bg-gray-50 drop-shadow-lg transition-colors duration-150`}
+                        className={`float-right m-4 mt-3 text-white w-[90%] rounded-md drop-shadow-lg transition-colors duration-150`}
                         style={{
                             cursor: "pointer",
                             border: isHovering
-                                ? "0.5vh solid white"
-                                : `0.5vh solid ${darkenColor("white", 40)}`,
+                                ? "0.17vw solid white"
+                                : `0.17vw solid ${darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 30)}`,
                         }}
                         whileTap={{ scale: 0.95 }}
                         animate={{
@@ -353,8 +353,9 @@ const NavBar = () => {
                             style={{
                                 fontSize: DT_base_fontSize,
                                 padding: "1vh",
+                                color: darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 65)
                             }}
-                            className="font-bold flex justify-center content-center"
+                            className={`font-bold flex justify-center content-center`}
                         >
                             Register
                         </p>
