@@ -516,7 +516,7 @@ const AboutMesaText = () => {
                 <a
                     target="new"
                     href={MESA}
-                    className="text-[#FFE550] hover:text-white transition-colors"
+                    className="text-[#FFE550] hover:text-white transition-colors hover:underline"
                 >
                     MESA&apos;s community college level program
                 </a>{" "}
@@ -536,7 +536,7 @@ const AboutMesaText = () => {
 const AboutHackathonText = () => {
     return (
         <div style={{ lineHeight: "1.8" }}>
-            <p className="mt-4 font-bold text-center mb-5 text-[#FFE550]">
+            <p className="mt-4 font-bold text-center mb-5 text-[#FFE550] ">
                 We are proud to present the very first Los Angeles City College
                 & MESA HackMESA Hackathon! 🎉
             </p>
@@ -550,7 +550,7 @@ const AboutHackathonText = () => {
                 <a
                     target="new"
                     href={MESA}
-                    className="text-[#FFE550] hover:text-white transition-colors"
+                    className="text-[#FFE550] hover:text-white transition-colors hover:underline"
                 >
                     MESA
                 </a>

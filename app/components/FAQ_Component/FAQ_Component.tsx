@@ -129,7 +129,7 @@ const FAQ_Question_Header = (props: FAQ_Question_Header__Props) => {
                 {props.text}
             </h5>
             <span
-                className={`flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ${
+                className={`flex items-center justify-center p-1 w-auto h-auto rounded-full transition-all duration-300 ${
                     props.open
                         ? `bg-[${SECONDARY_COLORS.YELLOW_107.hex}]`
                         : "bg-white bg-opacity-20"
