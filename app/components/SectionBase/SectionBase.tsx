@@ -13,7 +13,6 @@ interface SectionBaseProps {
 
 const SectionBase = (props: SectionBaseProps) => {
   const { width } = useWindowSize();
-  console.log(width, "is the width")
 
   return (
     <>
