@@ -30,6 +30,7 @@ import "./animations.css";
 import { MESA } from "@/lib/link_base";
 import { useEffect } from "react";
 import { initScrollReveal, addRevealClasses } from "./scrollReveal";
+import Sponsors from "./components/Sponsors/Sponsors";
 
 function App() {
     const { width, height } = useWindowSize();
@@ -415,6 +416,11 @@ function App() {
                         bg_color={backgroundColor}
                     >
                         <SectionBase_HeroText text="Sponsors" />
+
+                        <Sponsors />
+
+
+
                         <div className="mb-30 mt-12 p-10 max-w-4xl mx-auto">
                             <div className="bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-xl p-8 text-center hover-glow">
                                 <div className="mb-6">
