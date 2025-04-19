@@ -140,7 +140,7 @@ function App() {
                     <div
                         id="header-container"
                         style={{}}
-                        className="z-10 top-120 flex flex-col justify-center w-full animate-slideInFromBottom"
+                        className="z-10 relative -top-100 -mb-100 flex flex-col justify-center w-full animate-slideInFromBottom"
                     >
                         <HeroHeader />
                     </div>
