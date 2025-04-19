@@ -4,8 +4,8 @@ const SVG_Window = () => {
 
 
     return (
-
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="110 0 1920 1702.8">
+        <div style={{zIndex: -100}}>
+        <svg  xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="110 0 1920 1702.8">
             <defs>
                 <style>
                     {
@@ -103,6 +103,7 @@ const SVG_Window = () => {
                 </g>
             </g>
         </svg>
+        </div>
     );
 };
 

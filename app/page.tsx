@@ -124,13 +124,16 @@ function App() {
                 style={{ backgroundColor: backgroundColor }}
                 id="page-backdrop"
             >
-                
+
 
                 {/* Contains the hero SVG component */}
-                <div className="relative h-screen">
-                    {width > mobile_size_reference && <SVG_Window />}
-                    {width <= mobile_size_reference && <Mobile_SVG_Window />}
-                </div>
+
+                {width > mobile_size_reference && <SVG_Window />}
+                {width <= mobile_size_reference &&
+                    <div className="relative h-screen">
+                        <Mobile_SVG_Window />
+                    </div>}
+
 
                 {/* This is the jumbotron */}
                 {width > mobile_size_reference && (
