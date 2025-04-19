@@ -9,6 +9,34 @@ const Mobile_SVG_Window = () => {
             <defs>
                 <style>
                     {`
+
+
+     
+                         @keyframes floatLeft {
+                                0%, 100% { transform: scale(1, 1); }
+                                50% { transform: scale(1.1, 1.1); }
+                            }
+                            @keyframes floatRight {
+                                0%, 100% { transform: scale(1, 1); }
+                                50% { transform: scale(1.05, 1.05); }
+                            }
+                            #L_Cloud {
+                                animation: floatLeft 20s ease-in-out infinite;
+                            }
+                            #R_Cloud {
+                                animation: floatRight 20s ease-in-out infinite;
+                            }
+
+                            @keyframes heroCloud {
+                                0%, 100% { transform: translate(0px, 0px) scale(1, 1); }
+                                30% { transform: translate(0px, 0px) scale(1.03, 1.03); }
+                            }
+                            #Hero_Cloud {
+                                animation: heroCloud 12s ease-in-out infinite;
+                            }
+
+
+
       .cls-1 {
         fill: #443a66;
       }
@@ -47,6 +75,11 @@ const Mobile_SVG_Window = () => {
                     <stop offset=".63" stopColor="#f68942" />
                     <stop offset="1" stopColor="#e94e97" />
                 </linearGradient>
+                                    {/* Glow filter */}
+                                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
             </defs>
             <g id="Sunset">
                 <rect className="cls-4" x="137.6" width="633.33" height="814.14" />
@@ -62,7 +95,7 @@ const Mobile_SVG_Window = () => {
                 </g>
             </g>
             <g id="Sun">
-                <circle className="cls-8" cx="345.33" cy="302.89" r="176.6" />
+                <circle className="cls-8" cx="345.33" cy="302.89" r="176.6" filter="url(#glow)"/>
             </g>
             <g id="L_Cloud">
                 <path className="cls-6" d="M342.05,293.73s-.91-34.85-40.96-33.42c0,0,19.92-16.53-9.21-31.46-29.13-14.93-35.82,17.44-35.82,17.44,0,0,8.29-30.91-21.88-48.35-30.17-17.44-49.62,10.57-49.62,10.57,0,0,5.66-51.1-23.19-70.33-26.89-17.92-59.63-3.46-58.39,12.36,0,0-3-14.89-12.13-26.46-.17,66.31,1.48,217.54,1.48,217.54l278.33-.38s24.67-36.23-28.62-47.51Z" />
