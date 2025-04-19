@@ -1,15 +1,11 @@
 "use client";
 
-// interface SVG_WindowProps {
-//     className?: string;
-// }
-
 const SVG_Window = () => {
 
 
     return (
 
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 2092.05 1702.8">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="110 0 1920 1702.8">
             <defs>
                 <style>
                     {

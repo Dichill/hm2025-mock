@@ -33,7 +33,7 @@ import { initScrollReveal, addRevealClasses } from "./scrollReveal";
 import Sponsors from "./components/Sponsors/Sponsors";
 
 function App() {
-    const { width, height } = useWindowSize();
+    const { width } = useWindowSize();
 
     // Add smooth scrolling to all internal links
     useEffect(() => {
