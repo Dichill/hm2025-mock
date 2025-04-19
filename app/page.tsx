@@ -296,7 +296,7 @@ function App() {
                                     </a>
 
                                     <Image_Overlay
-                                        source="/MESA_student_overlay1.jpg"
+                                        source="/MESA_student_overlay1.webp"
                                         opacity={70}
                                         float="none"
                                         display="block"

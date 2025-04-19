@@ -5,10 +5,6 @@ interface LogoProps {
 
 const Logo = (props: LogoProps) => {
 
-  //REMOVE THIS POINTLESS VARIABLE!
-  const pointless_variable = props.size;
-  console.log(pointless_variable)
-
   return (
     <div style={{opacity: props.opacity}} className="w-full flex justify-center -mt-5">
       <LOGO_svg_base height={props.size} />
