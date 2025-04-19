@@ -17,7 +17,7 @@ import Image_Overlay from "./components/Image_Overlay/Image_Overlay";
 import useWindowSize from "@/lib/useWindowSize";
 import LocationMap from "./components/LocationMap/LocationMap";
 import FAQ_component from "./components/FAQ_Component/FAQ_Component";
-import Logo from "./components/Logo/Logo";
+
 import SVG_Window from "./components/SVG_Window/SVG_Window";
 import TheTeam from "./components/TheTeam/TheTeam";
 import { backgroundColor } from "@/lib/colors";
@@ -124,25 +124,7 @@ function App() {
                 style={{ backgroundColor: backgroundColor }}
                 id="page-backdrop"
             >
-                {/* This is the hero logo */}
-                {width > mobile_size_reference && (
-                    <div
-                        id="hero-logo_container"
-                        className="z-100 flex justify-center absolute top-40 w-full animate-fadeIn"
-                    >
-                        <Logo size={300} opacity="100%" />
-                    </div>
-                )}
-                {width <= mobile_size_reference && (
-                    <div
-                        id="hero-logo_container"
-                        className="z-100 flex justify-center absolute top-40 w-full animate-fadeIn"
-                    >
-                        {height > 540 && <Logo size={380} opacity="100%" />}
-                        {/* wierd but possible edge case */}
-                        {height <= 540 && <Logo size={200} opacity="100%" />}
-                    </div>
-                )}
+                
 
                 {/* Contains the hero SVG component */}
                 <div className="relative h-screen">
