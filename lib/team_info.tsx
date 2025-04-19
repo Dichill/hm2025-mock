@@ -18,8 +18,8 @@ export const teamMembers: TeamMember[] = [
         description:
             "Software Engineer and aspiring entrepreneur. CEO of DashTech. Created Dash Software for LACC MESA's student sign-in system.",
         linked_in: {
-            hasLink: false,
-            url: ""
+            hasLink: true,
+            url: "https://www.linkedin.com/in/dichill-tomarong-883b9729b/"
         },
 
         school: "LACC",
@@ -76,8 +76,8 @@ export const teamMembers: TeamMember[] = [
             "Designer, mechanical engineering undergrad, former NASA & Caltech intern, currently tutoring STEM for MESA.",
         image: "/diego_WR.jpg",
         linked_in: {
-            hasLink: false,
-            url: ""
+            hasLink: true,
+            url: "https://www.linkedin.com/in/ceadiego/"
         },
         school: "ELAC",
     },
@@ -98,8 +98,8 @@ export const teamMembers: TeamMember[] = [
         description: "About info coming soon!",
         image: "",
         linked_in: {
-            hasLink: false,
-            url: ""
+            hasLink: true,
+            url: "https://www.linkedin.com/in/bendiel-passos-85173450/"
         },
         school: "LACC",
     },
