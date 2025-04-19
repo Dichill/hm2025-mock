@@ -330,7 +330,7 @@ function App() {
                                             Los Angeles City College
                                         </h3>
                                         <p className="text-xl text-white mb-4">
-                                            Student Services Building
+                                            Student Union Building
                                         </p>
                                         <div className="flex items-center mb-4">
                                             <svg
