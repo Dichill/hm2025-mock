@@ -130,7 +130,7 @@ function App() {
 
                 {width > mobile_size_reference && <SVG_Window />}
                 {width <= mobile_size_reference &&
-                    <div className="relative h-screen">
+                    <div className="">
                         <Mobile_SVG_Window />
                     </div>}
 
@@ -149,7 +149,7 @@ function App() {
                 {width <= mobile_size_reference && (
                     <div
                         id="header-container"
-                        className="z-10 top-130 flex flex-col justify-center w-full animate-slideInFromBottom"
+                        className="z-10 relative -top-40 -mb-30 flex flex-col justify-center w-full animate-slideInFromBottom"
                     >
                         <HeroHeader />
                     </div>
