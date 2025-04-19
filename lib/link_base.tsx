@@ -7,6 +7,13 @@ export const tiktok = "https://www.tiktok.com/@hackmesa?is_from_webapp=1&sender_
 
 export const lacc = "https://www.lacc.edu/";
 export const laccd = "https://www.laccd.edu/";
+export const elac = "https://www.elac.edu/";
+export const lahc = "https://www.lahc.edu/";
+export const lamc = "https://www.lamission.edu/";
+export const lavc = "https://www.lavc.edu/";
+
+export const WSS_link = "https://www.shopwss.com/";
+export const EC_Council_Link = "https://www.eccouncil.org/";
 
 export const register = "#";
 
