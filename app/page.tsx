@@ -198,7 +198,8 @@ function App() {
                         {width > mobile_size_reference && (
                             <>
 
-                                <div className="rounded-xl p-3 pl-6 mb-10 pb-12 transition-all hover:scale-[1.01] duration-300 hover-glow">
+                                <div className="flex justify-center">
+                                <div className="rounded-xl p-3 pl-6 mb-10 pb-12 transition-all max-w-7xl hover:scale-[1.01] duration-300 hover-glow">
                                     <SectionBase_HeroText text="About MESA" />
 
                                     <div
@@ -242,6 +243,7 @@ function App() {
                                         </span>
                                     </div>
 
+                                </div>
                                 </div>
 
 

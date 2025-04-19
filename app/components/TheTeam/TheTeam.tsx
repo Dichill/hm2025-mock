@@ -91,18 +91,20 @@ const TheTeam = () => {
     const { width } = useWindowSize();
 
     return (
-        <div className="w-full py-8">
-            <div
-                className={`grid gap-6 ${width > 1500
-                    ? "grid-cols-4"
-                    : width > mobile_size_reference
-                        ? "grid-cols-2"
-                        : "grid-cols-1"
-                    } justify-items-center`}
-            >
-                {teamMembers.map((member, index) => (
-                    <TeamMemberCard key={index} member={member} />
-                ))}
+        <div className="flex justify-center">
+            <div className="w-full max-w-[1200px] py-8">
+                <div
+                    className={`grid gap-6 ${width > 1500
+                        ? "grid-cols-4"
+                        : width > mobile_size_reference
+                            ? "grid-cols-2"
+                            : "grid-cols-1"
+                        } justify-items-center`}
+                >
+                    {teamMembers.map((member, index) => (
+                        <TeamMemberCard key={index} member={member} />
+                    ))}
+                </div>
             </div>
         </div>
     );
