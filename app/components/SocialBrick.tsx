@@ -1,5 +1,5 @@
 import { TERTIARY_COLORS } from "@/lib/colors";
-import { github, instagram, tiktok } from "@/lib/link_base";
+import { discord, github, instagram, tiktok } from "@/lib/link_base";
 
 interface Social_SVG__Props {
     name: string
@@ -68,7 +68,7 @@ const Social_SVG = (props: Social_SVG__Props) => {
 
 const SocialBrick = () => {
     const socials = [
-        { name: "Discord", url: "" },
+        { name: "Discord", url: discord },
         { name: "Instagram", url: instagram },
         { name: "Tiktok", url: tiktok },
         { name: "Github", url: github }

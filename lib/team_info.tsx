@@ -121,8 +121,8 @@ export const teamMembers: TeamMember[] = [
         description: "Computer Engineer student, Currently Tutor for Mesa",
         image: "",
         linked_in: {
-            hasLink: false,
-            url: ""
+            hasLink: true,
+            url: "https://www.linkedin.com/in/andrcas/"
         },
         school: "CSULB",
     },
