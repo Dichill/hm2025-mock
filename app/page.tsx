@@ -31,6 +31,10 @@ import { MESA } from "@/lib/link_base";
 import { useEffect } from "react";
 import { initScrollReveal, addRevealClasses } from "./scrollReveal";
 import Sponsors from "./components/Sponsors/Sponsors";
+import SocialBrick from "./components/SocialBrick";
+
+
+
 
 function App() {
     const { width } = useWindowSize();
@@ -155,6 +159,8 @@ function App() {
                     </div>
                 )}
 
+                <SocialBrick />
+
                 {/* This container will render either the NavBar or the mobile NavBar */}
                 <div
                     id="nav-bar__sticky-container"
@@ -199,51 +205,51 @@ function App() {
                             <>
 
                                 <div className="flex justify-center">
-                                <div className="rounded-xl p-3 pl-6 mb-10 pb-12 transition-all max-w-7xl hover:scale-[1.01] duration-300 hover-glow">
-                                    <SectionBase_HeroText text="About MESA" />
+                                    <div className="rounded-xl p-3 pl-6 mb-10 pb-12 transition-all max-w-7xl hover:scale-[1.01] duration-300 hover-glow">
+                                        <SectionBase_HeroText text="About MESA" />
 
-                                    <div
-                                        id="about_grid"
+                                        <div
+                                            id="about_grid"
 
-                                    >
-                                        <div id="about_image_elem">
-                                            <Image_Overlay
-                                                source="/MESA_student_overlay1.webp"
-                                                opacity={100}
-                                                float="right"
-                                                display="inline"
-                                                width="80%"
-                                                height="90%"
-                                                margin="2em"
-                                            />
+                                        >
+                                            <div id="about_image_elem">
+                                                <Image_Overlay
+                                                    source="/MESA_student_overlay1.webp"
+                                                    opacity={100}
+                                                    float="right"
+                                                    display="inline"
+                                                    width="80%"
+                                                    height="90%"
+                                                    margin="2em"
+                                                />
+                                            </div>
+
+                                            <span
+                                                id="about_mesa_gr_elem_1"
+                                                className="flex justify-center items-center"
+                                            >
+                                                <a
+                                                    href={MESA}
+                                                    target="new"
+                                                    className="transition-transform hover:scale-105 duration-200"
+                                                >
+                                                    <div className="bg-white p-[2vw] pt-[1vw] inline-block rounded-xl shadow-xl hover:shadow-2xl">
+                                                        <MESA_Color_Graphic
+                                                        />
+                                                    </div>
+                                                </a>
+                                            </span>
+
+
+
+                                            <span id="about_mesa_gr_elem_3">
+                                                <div className="text-white p-6 m-2 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg">
+                                                    <AboutMesaText />
+                                                </div>
+                                            </span>
                                         </div>
 
-                                        <span
-                                            id="about_mesa_gr_elem_1"
-                                            className="flex justify-center items-center"
-                                        >
-                                            <a
-                                                href={MESA}
-                                                target="new"
-                                                className="transition-transform hover:scale-105 duration-200"
-                                            >
-                                                <div className="bg-white p-[2vw] pt-[1vw] inline-block rounded-xl shadow-xl hover:shadow-2xl">
-                                                    <MESA_Color_Graphic
-                                                    />
-                                                </div>
-                                            </a>
-                                        </span>
-
-
-
-                                        <span id="about_mesa_gr_elem_3">
-                                            <div className="text-white p-6 m-2 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg">
-                                                <AboutMesaText />
-                                            </div>
-                                        </span>
                                     </div>
-
-                                </div>
                                 </div>
 
 
