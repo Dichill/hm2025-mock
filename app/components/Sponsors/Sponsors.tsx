@@ -1,6 +1,8 @@
 "use client";
 
+import { mobile_size_reference } from "@/lib/colors";
 import { EC_Council_Link, elac, lacc, laccd, lahc, lamc, lavc, MESA, WSS_link } from "@/lib/link_base";
+import useWindowSize from "@/lib/useWindowSize";
 import Image from "next/image";
 
 
@@ -11,11 +13,13 @@ interface SponsorCard__Props {
 }
 
 const SponsorCard = (props: SponsorCard__Props) => {
+  const {width} = useWindowSize();
+
   return (
     <a className="flex justify-center items-center bg-white rounded-2xl p-4" target="_blank" href={props.url}>
       <div className="">
         <Image
-          style={{ margin: props.alt == "MESA Logo" ? "5em" : "1  em" }}
+          style={{ padding: props.alt == "MESA Logo" ? width > mobile_size_reference ? "2em" : "0em" : width > mobile_size_reference ? "0em" : "1em" }}
           src={props.image}
           alt={props.alt}
           width={400} // Adjust width as needed
