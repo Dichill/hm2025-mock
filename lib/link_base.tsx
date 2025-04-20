@@ -15,7 +15,7 @@ export const lavc = "https://www.lavc.edu/";
 export const WSS_link = "https://www.shopwss.com/";
 export const EC_Council_Link = "https://www.eccouncil.org/";
 
-export const register = "#";
+export const register = "https://www.hackmesa.com/register";
 
 export const MESA = "https://mesa.ucop.edu/student/#community-college"
 
