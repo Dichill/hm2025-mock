@@ -416,7 +416,7 @@ function App() {
                         <div className="flex justify-center p-10">
                             <a
                                 href={`mailto:${team_email}`}
-                                className="inline-block bg-[#FFE550] text-[#433966] font-bold py-3 px-6 rounded-full hover:bg-[#FFB607] transition-colors duration-300 hover-scale"
+                                className="inline-block bg-[#FFE550] text-[#433966] font-bold py-3 px-6 rounded-full hover:bg-[#FFB607] transition-colors duration-300 text-center hover-scale"
                             >
                                 Email Us To Become A Sponsor!
                             </a>
