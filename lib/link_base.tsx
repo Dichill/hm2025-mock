@@ -20,3 +20,5 @@ export const register = "#";
 export const MESA = "https://mesa.ucop.edu/student/#community-college"
 
 export const MLH_Conduct = "https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md"
+
+export const team_email = "team@hackmesa.com"

@@ -27,7 +27,7 @@ import Mobile_SVG_Window from "./components/Mobile_SVG_Window/Mobile_SVG_Window"
 
 import "./page_grid.css";
 import "./animations.css";
-import { MESA } from "@/lib/link_base";
+import { MESA, team_email } from "@/lib/link_base";
 import { useEffect } from "react";
 import { initScrollReveal, addRevealClasses } from "./scrollReveal";
 import Sponsors from "./components/Sponsors/Sponsors";
@@ -413,49 +413,13 @@ function App() {
                         <Sponsors />
 
 
-
-                        <div className="mb-30 mt-12 p-10 max-w-4xl mx-auto">
-                            <div className="bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-xl p-8 text-center hover-glow">
-                                <div className="mb-6">
-                                    <div className="w-24 h-24 rounded-full bg-[#FFE550] mx-auto flex items-center justify-center animate-pulse-custom">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="48"
-                                            height="48"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            className="text-[#433966]"
-                                        >
-                                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
-                                            <line
-                                                x1="12"
-                                                x2="12"
-                                                y1="22"
-                                                y2="12"
-                                            ></line>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <h2 className="text-3xl font-bold text-white mb-4">
-                                    Become a Sponsor
-                                </h2>
-                                <p className="text-xl text-white opacity-80 mb-6">
-                                    Sponsor our hackathon and connect with
-                                    talented STEM students. Help shape the
-                                    future of technology.
-                                </p>
-                                <a
-                                    href="#"
-                                    className="inline-block bg-[#FFE550] text-[#433966] font-bold py-3 px-6 rounded-full hover:bg-[#FFB607] transition-colors duration-300 hover-scale"
-                                >
-                                    Get Sponsorship Info
-                                </a>
-                            </div>
+                        <div className="flex justify-center p-10">
+                            <a
+                                href={`mailto:${team_email}`}
+                                className="inline-block bg-[#FFE550] text-[#433966] font-bold py-3 px-6 rounded-full hover:bg-[#FFB607] transition-colors duration-300 hover-scale"
+                            >
+                                Email Us To Become A Sponsor!
+                            </a>
                         </div>
                     </SectionBase>
 
