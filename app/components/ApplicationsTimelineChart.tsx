@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import {
-    ApplicationStatus,
-    ApplicationSummaryDto,
-} from "@/core/apply/types/apply.dto";
+import { ApplicationSummaryDto } from "@/core/apply/types/apply.dto";
 import {
     ResponsiveContainer,
     LineChart,
@@ -66,7 +63,7 @@ export default function ApplicationsTimelineChart({
                 const dateB = new Date(b[0]);
                 return dateA.getTime() - dateB.getTime();
             })
-            .map(([_, dataPoint]) => dataPoint);
+            .map(([, dataPoint]) => dataPoint);
 
         return sortedDates;
     }, [applications]);
