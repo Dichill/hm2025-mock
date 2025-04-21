@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Application, ApplicationStatus } from "./types";
 import ApplicationStatusCard from "@/app/components/ApplicationStatusCard/ApplicationStatusCard";
+import DiscordCard from "@/app/components/DiscordCard/DiscordCard";
 import { getCurrentApplication } from "@/core/apply/api/apply";
 
 export default function DashboardPage() {
@@ -87,6 +88,9 @@ export default function DashboardPage() {
                 application={application}
                 onApplyNow={handleApplyNow}
             />
+
+            {/* Discord Card */}
+            <DiscordCard />
         </motion.div>
     );
 }

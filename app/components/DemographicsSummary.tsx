@@ -48,25 +48,21 @@ export default function DemographicsSummary({
 
                 // Process each detailed application
                 applications.forEach((app) => {
-                    // Count genders
                     if (app.gender) {
                         genderCounts[app.gender] =
                             (genderCounts[app.gender] || 0) + 1;
                     }
 
-                    // Count fields of study
                     if (app.fieldOfStudy) {
                         fieldOfStudyCounts[app.fieldOfStudy] =
                             (fieldOfStudyCounts[app.fieldOfStudy] || 0) + 1;
                     }
 
-                    // Count skill levels
                     if (app.skillLevel) {
                         skillLevelCounts[app.skillLevel] =
                             (skillLevelCounts[app.skillLevel] || 0) + 1;
                     }
 
-                    // Count first-time vs returning
                     if (app.firstTime !== undefined) {
                         if (app.firstTime) {
                             firstTimeCount++;
@@ -75,7 +71,6 @@ export default function DemographicsSummary({
                         }
                     }
 
-                    // Calculate average age
                     if (app.age) {
                         const ageNum = parseInt(app.age);
                         if (!isNaN(ageNum)) {
@@ -85,7 +80,6 @@ export default function DemographicsSummary({
                     }
                 });
 
-                // Set final stats
                 setStats({
                     totalApplicants: applications.length,
                     gender: genderCounts,
