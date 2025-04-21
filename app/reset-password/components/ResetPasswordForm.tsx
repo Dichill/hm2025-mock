@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import supabase from "@/lib/supabase/supabase-client";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,7 +8,7 @@ import Link from "next/link";
 
 type PasswordResetStatus = "idle" | "submitting" | "success" | "error";
 
-export function ResetPasswordForm() {
+function ResetPasswordFormContent() {
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [status, setStatus] = useState<PasswordResetStatus>("idle");
@@ -260,5 +260,19 @@ export function ResetPasswordForm() {
                 </Link>
             </motion.div>
         </motion.form>
+    );
+}
+
+export function ResetPasswordForm() {
+    return (
+        <Suspense
+            fallback={
+                <div className="h-32 w-full flex items-center justify-center">
+                    <div className="rounded-full h-8 w-8 bg-[rgb(var(--mesa-warm-red))]/30 animate-ping"></div>
+                </div>
+            }
+        >
+            <ResetPasswordFormContent />
+        </Suspense>
     );
 }

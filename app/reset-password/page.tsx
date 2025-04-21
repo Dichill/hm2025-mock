@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ResetPasswordForm } from "./components/ResetPasswordForm";
 import { useSearchParams } from "next/navigation";
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
     const [isClient, setIsClient] = useState(false);
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
     const searchParams = useSearchParams();
@@ -141,5 +141,19 @@ export default function ResetPasswordPage() {
                 {isClient && <ResetPasswordForm />}
             </motion.div>
         </motion.div>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="w-12 h-12 border-4 border-t-[rgb(var(--mesa-orange))] border-r-[rgb(var(--mesa-orange))] border-b-[rgb(var(--mesa-orange))] border-l-transparent rounded-full animate-spin"></div>
+                </div>
+            }
+        >
+            <ResetPasswordContent />
+        </Suspense>
     );
 }
