@@ -41,7 +41,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${kievitSans.variable} antialiased`}>
+            <body
+                className={`${kievitSans.variable} antialiased`}
+                suppressHydrationWarning
+            >
                 {children}
             </body>
         </html>

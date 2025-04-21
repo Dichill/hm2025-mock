@@ -269,6 +269,19 @@ export function LoginForm() {
                         Register
                     </motion.a>
                 </p>
+                <p className="text-[rgb(var(--mesa-grey))] mt-2">
+                    <motion.a
+                        href="/forgot-password"
+                        className="text-[rgb(var(--mesa-orange))] hover:text-[rgb(var(--mesa-yellow-116))] font-medium transition-colors"
+                        whileHover={{
+                            scale: 1.05,
+                            color: "rgb(255, 182, 10)",
+                            transition: { duration: 0.2 },
+                        }}
+                    >
+                        Forgot your password?
+                    </motion.a>
+                </p>
             </motion.div>
         </motion.form>
     );
