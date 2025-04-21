@@ -5,7 +5,13 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { getAllApplications } from "@/core/apply/api/apply";
 import { getStats } from "@/core/user/api/user";
-import { ApplicationStatus } from "@/core/apply/types/apply.dto";
+import {
+    ApplicationStatus,
+    ApplicationSummaryDto,
+} from "@/core/apply/types/apply.dto";
+import SchoolsPieChart from "@/app/components/SchoolsPieChart";
+import DemographicsSummary from "@/app/components/DemographicsSummary";
+import ApplicationsTimelineChart from "@/app/components/ApplicationsTimelineChart";
 
 interface DashboardStats {
     totalUsers: number;
@@ -22,31 +28,39 @@ export default function AdminDashboard() {
         approvedApplications: 0,
     });
     const [loading, setLoading] = useState(true);
+    const [applications, setApplications] = useState<ApplicationSummaryDto[]>(
+        []
+    );
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
                 setLoading(true);
 
-                const userStats = await getStats();
+                // Fetch all data in parallel
+                const [userStats, allApps] = await Promise.all([
+                    getStats(),
+                    getAllApplications(1, 1000),
+                ]);
 
-                const pendingApps = await getAllApplications(
-                    1,
-                    1000,
-                    ApplicationStatus.PENDING
-                );
-                const approvedApps = await getAllApplications(
-                    1,
-                    1000,
-                    ApplicationStatus.APPROVED
-                );
-                const allApps = await getAllApplications(1, 1000);
+                // Set applications data
+                setApplications(allApps.applications);
 
+                // Count applications by status
+                const pendingCount = allApps.applications.filter(
+                    (app) => app.status === ApplicationStatus.PENDING
+                ).length;
+
+                const approvedCount = allApps.applications.filter(
+                    (app) => app.status === ApplicationStatus.APPROVED
+                ).length;
+
+                // Set stats
                 setStats({
                     totalUsers: userStats.totalUsers || 0,
                     totalApplications: allApps.total,
-                    pendingApplications: pendingApps.total,
-                    approvedApplications: approvedApps.total,
+                    pendingApplications: pendingCount,
+                    approvedApplications: approvedCount,
                 });
             } catch (error) {
                 console.error("Error fetching dashboard stats:", error);
@@ -55,7 +69,7 @@ export default function AdminDashboard() {
             }
         };
 
-        fetchStats();
+        fetchData();
     }, []);
 
     const cardVariants = {
@@ -154,6 +168,33 @@ export default function AdminDashboard() {
                             </p>
                         </motion.div>
                     </div>
+
+                    {/* Charts Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        {/* Schools Pie Chart */}
+                        <motion.div
+                            custom={0}
+                            initial="hidden"
+                            animate="visible"
+                            variants={cardVariants}
+                        >
+                            <SchoolsPieChart applications={applications} />
+                        </motion.div>
+                        {/* Applications Timeline Chart */}
+                        <motion.div
+                            custom={1}
+                            initial="hidden"
+                            animate="visible"
+                            variants={cardVariants}
+                        >
+                            <ApplicationsTimelineChart
+                                applications={applications}
+                            />
+                        </motion.div>
+                    </div>
+
+                    {/* Demographics Summary */}
+                    <DemographicsSummary applications={applications} />
 
                     {/* Quick Actions */}
                     <motion.div
