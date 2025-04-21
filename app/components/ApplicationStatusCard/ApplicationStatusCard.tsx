@@ -295,7 +295,7 @@ export default function ApplicationStatusCard({
                     whileTap="tap"
                     variants={buttonVariants}
                     onClick={config.action}
-                    className={`w-full py-2 ${config.buttonColor} rounded-md font-medium mt-2`}
+                    className={`w-full py-2 ${config.buttonColor} rounded-md font-medium mt-2 cursor-pointer`}
                 >
                     {config.buttonText}
                 </motion.button>
