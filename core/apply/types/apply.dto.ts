@@ -118,6 +118,13 @@ export interface ApplicationSummaryDto {
     lastName: string;
     school: School;
     status: ApplicationStatus;
+    gender: Gender;
+    fieldOfStudy: FieldOfStudy;
+    skillLevel: SkillLevel;
+    isMesaStudent: boolean;
+    age: string;
+    firstTime: boolean;
+    updated_at: string;
 }
 
 export interface ApplicationsPageDto {
