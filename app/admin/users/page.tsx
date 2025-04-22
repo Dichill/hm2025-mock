@@ -14,9 +14,6 @@ export default function AdminUsersPage() {
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        /**
-         * Fetch students from the API
-         */
         const fetchStudents = async () => {
             try {
                 setLoading(true);
@@ -151,33 +148,6 @@ export default function AdminUsersPage() {
                         </table>
                     </div>
                 )}
-            </div>
-
-            {/* Notification Button for Students */}
-            <div className="mt-6">
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-4 py-2 bg-[rgb(var(--mesa-orange))] text-white rounded-md"
-                    onClick={async () => {
-                        try {
-                            // This would call the notifyNonApplicants API
-                            // const response = await notifyNonApplicants();
-                            // Show success message
-                            alert(
-                                "Notification feature will be implemented soon"
-                            );
-                        } catch (error) {
-                            console.error(
-                                "Error sending notifications:",
-                                error
-                            );
-                            alert("Failed to send notifications");
-                        }
-                    }}
-                >
-                    Notify Non-Applicants
-                </motion.button>
             </div>
         </div>
     );
