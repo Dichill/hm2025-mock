@@ -2,74 +2,52 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import supabase from "@/lib/supabase/supabase-client";
+import { getStudents } from "@/core/user/api/admin";
+import { StudentData } from "@/core/user/types/admin.dto";
 
 /**
- * Interface for a user profile
- */
-interface UserProfile {
-    id: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    role: string;
-    created_at: string;
-}
-
-/**
- * Admin Users Management Page
+ * Admin Users Management Page - Students only view
  */
 export default function AdminUsersPage() {
-    const [users, setUsers] = useState<UserProfile[]>([]);
+    const [students, setStudents] = useState<StudentData[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         /**
-         * Fetch users from the database
+         * Fetch students from the API
          */
-        const fetchUsers = async () => {
+        const fetchStudents = async () => {
             try {
                 setLoading(true);
-
-                const { data, error } = await supabase
-                    .from("profiles")
-                    .select(
-                        "id, email, first_name, last_name, role, created_at"
-                    )
-                    .order("created_at", { ascending: false });
-
-                if (error) {
-                    console.error("Error fetching users:", error);
-                    return;
-                }
-
-                setUsers(data as UserProfile[]);
+                const data = await getStudents();
+                setStudents(data);
             } catch (error) {
-                console.error("Error fetching users:", error);
+                console.error("Error fetching students:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchUsers();
+        fetchStudents();
     }, []);
 
     /**
-     * Filter users based on search term
+     * Filter students based on search term
      */
-    const filteredUsers = users.filter(
-        (user) =>
-            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.last_name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredStudents = students.filter(
+        (student) =>
+            student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.display_name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
     );
 
     return (
         <div className="py-6">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-[rgb(var(--mesa-warm-red))]">
-                    User Management
+                    Student Management
                 </h1>
 
                 <motion.button
@@ -77,7 +55,7 @@ export default function AdminUsersPage() {
                     whileTap={{ scale: 0.98 }}
                     className="px-4 py-2 bg-[rgb(var(--mesa-warm-red))] text-white rounded-md"
                 >
-                    Add New User
+                    Add New Student
                 </motion.button>
             </div>
 
@@ -86,7 +64,7 @@ export default function AdminUsersPage() {
                 <div className="relative">
                     <input
                         type="text"
-                        placeholder="Search users..."
+                        placeholder="Search students..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full p-3 pl-10 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(var(--mesa-orange))]"
@@ -108,7 +86,7 @@ export default function AdminUsersPage() {
                 </div>
             </div>
 
-            {/* Users Table */}
+            {/* Students Table */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
@@ -125,50 +103,27 @@ export default function AdminUsersPage() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Email
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Joined
-                                    </th>
                                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Actions
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredUsers.length > 0 ? (
-                                    filteredUsers.map((user) => (
+                                {filteredStudents.length > 0 ? (
+                                    filteredStudents.map((student) => (
                                         <tr
-                                            key={user.id}
+                                            key={student.id}
                                             className="hover:bg-gray-50"
                                         >
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm font-medium text-gray-900">
-                                                    {user.first_name}{" "}
-                                                    {user.last_name}
+                                                    {student.display_name}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm text-gray-500">
-                                                    {user.email}
+                                                    {student.email}
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span
-                                                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                        user.role === "admin"
-                                                            ? "bg-[rgb(var(--mesa-warm-red))] bg-opacity-10 text-[rgb(var(--mesa-warm-red))]"
-                                                            : "bg-[rgb(var(--mesa-grey))] bg-opacity-10 text-[rgb(var(--mesa-grey))]"
-                                                    }`}
-                                                >
-                                                    {user.role || "user"}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {new Date(
-                                                    user.created_at
-                                                ).toLocaleDateString()}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <button className="text-[rgb(var(--mesa-orange))] hover:text-[rgb(var(--mesa-warm-red))] mr-3">
@@ -183,12 +138,12 @@ export default function AdminUsersPage() {
                                 ) : (
                                     <tr>
                                         <td
-                                            colSpan={5}
+                                            colSpan={3}
                                             className="px-6 py-4 text-center text-sm text-gray-500"
                                         >
                                             {searchTerm
-                                                ? "No users found matching your search"
-                                                : "No users found"}
+                                                ? "No students found matching your search"
+                                                : "No students found"}
                                         </td>
                                     </tr>
                                 )}
@@ -196,6 +151,33 @@ export default function AdminUsersPage() {
                         </table>
                     </div>
                 )}
+            </div>
+
+            {/* Notification Button for Students */}
+            <div className="mt-6">
+                <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-4 py-2 bg-[rgb(var(--mesa-orange))] text-white rounded-md"
+                    onClick={async () => {
+                        try {
+                            // This would call the notifyNonApplicants API
+                            // const response = await notifyNonApplicants();
+                            // Show success message
+                            alert(
+                                "Notification feature will be implemented soon"
+                            );
+                        } catch (error) {
+                            console.error(
+                                "Error sending notifications:",
+                                error
+                            );
+                            alert("Failed to send notifications");
+                        }
+                    }}
+                >
+                    Notify Non-Applicants
+                </motion.button>
             </div>
         </div>
     );
