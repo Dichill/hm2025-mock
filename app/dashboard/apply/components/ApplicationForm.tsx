@@ -2353,7 +2353,8 @@ export function ApplicationForm() {
                                 htmlFor="resumeFile"
                                 className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
                             >
-                                Resume File
+                                Resume (You can upload now or submit
+                                it later)
                             </label>
                             <div className="flex flex-col">
                                 {formData.resumeUrl ? (
