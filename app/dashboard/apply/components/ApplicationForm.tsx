@@ -725,6 +725,7 @@ export function ApplicationForm() {
                     ? formData.dietaryRestrictions.join(", ")
                     : "",
                 t_shirt_size: formData.tShirtSize || "",
+                linkedin_url: formData.linkedInUrl || "",
             };
 
             let applicationResponse;
@@ -2312,7 +2313,7 @@ export function ApplicationForm() {
                                 htmlFor="linkedInUrl"
                                 className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
                             >
-                                LinkedIn URL
+                                LinkedIn URL (You can add this later)
                             </label>
                             <motion.input
                                 id="linkedInUrl"
@@ -2353,8 +2354,7 @@ export function ApplicationForm() {
                                 htmlFor="resumeFile"
                                 className="block text-sm font-medium text-[rgb(var(--mesa-grey))]"
                             >
-                                Resume (You can upload now or submit
-                                it later)
+                                Resume (You can upload now or submit it later)
                             </label>
                             <div className="flex flex-col">
                                 {formData.resumeUrl ? (
