@@ -37,7 +37,7 @@ export const teamMembers: TeamMember[] = [
     },
     {
         name: "Evelyn Toledo",
-        role: "Social Media Lead",
+        role: "Marketing Lead",
         description:
             "Biology major active in MESA, supporting community and outreach through HackMESA’s marketing team and social media management",
         image: "/evelyn_WR.jpg",
@@ -128,7 +128,7 @@ export const teamMembers: TeamMember[] = [
     },
     {
         name: "Serena Kaldawi",
-        role: "Social Media Team",
+        role: "Marketing Team",
         description:
             "Student, experienced in outreach and content creation from working in the MESA program",
         image: "/serena_WR.jpg",
