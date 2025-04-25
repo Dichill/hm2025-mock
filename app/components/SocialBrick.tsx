@@ -70,6 +70,7 @@ const SocialBrick = () => {
                 {socials.map((social, index) => {
                     return (
                         <a
+                            aria-label={`Our ${social.name}`}
                             href={social.url}
                             target="_blank"
                             key={index}

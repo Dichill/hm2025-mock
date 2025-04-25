@@ -1,29 +1,164 @@
-import { SECONDARY_COLORS } from "@/lib/colors"
-import { register } from "@/lib/link_base"
-// import useWindowSize from "@/lib/useWindowSize"
+import { backgroundColor, darkenColor, SECONDARY_COLORS, TERTIARY_COLORS } from "@/lib/colors"
+
+import { motion } from "framer-motion";
+import {useRouter} from "next/navigation"
+import { useState } from "react";
 
 
 const HeroHeader = () => {
-  // const {width} = useWindowSize();
+
+      const router = useRouter();
+
+      const [isPressed_register, setIsPressed_register] = useState(false);
+      const [isHovering_register, setIsHovering_register] = useState(false);
+
+      const [isPressed_about, setIsPressed_about] = useState(false);
+      const [isHovering_about, setIsHovering_about] = useState(false);
+
+
 
   return (
 
 
     <section className="">
+      <style>
+        {`
+        #hero_header_buzzwords {
+          list-style: none; /* Remove default bullets */
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 1rem;
+        }
+
+        #hero_header_buzzwords li {
+          color: ${backgroundColor};
+          font-size: 1.5rem;
+          font-weight: bold;
+          padding: 0.5em 1em;
+          border: 2px solid ${TERTIARY_COLORS.PURPLE_2655.hex};
+          border-radius: 1em;
+          background: ${TERTIARY_COLORS.PURPLE_2655.hex};
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #hero_header_buzzwords li:hover {
+          transform: scale(1.1);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        `}
+      </style>
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
-        <div style={{backgroundColor: SECONDARY_COLORS.YELLOW_107.hex,}} className="inline-block p-4 rounded-xl">
-        <h2 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl">May 9-10</h2>
-        <p className="mb-8 text-3xl font-normal lg:text-xl sm:px-16 lg:px-48 ">LACCD student Hackathon</p>
+        <div style={{backgroundColor: backgroundColor, borderRadius: "1.4vw"}} className="inline-block p-4 shadow-2xl">
+          <div style={{backgroundColor: backgroundColor, border: `1vw solid ${TERTIARY_COLORS.PURPLE_2655.hex}`, borderRadius: "1vw"}} className="p-6">
+        <h2 className="text-4xl font-extrabold tracking-tight leading-none text-white md:text-6xl lg:text-6xl">May 9 - 10</h2>
+  
+          <div className="mb-10 mt-6">
+          <p className=" mt-3 text-lg md:text-xl font-bold text-white inline border-2 border-red-500 p-3">Registration Deadline: May 7</p>
+
+          </div>
+  
+          <ul id="hero_header_buzzwords" className="mb-10">
+          <li>Innovate</li>
+          <li>Create</li>
+          <li>Inspire</li>
+          <li>Connect</li>
+        </ul>
+        <p className="mb-8 text-3xl font-normal lg:text-xl sm:px-16 lg:px-48 text-white mt-6">LACCD student Hackathon</p>
         <div style={{ maxWidth: "50%", margin: "auto", }} className="flex p-4 flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
-          <a href={`${register}`} style={{color: "#2c2c2c"}} className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center rounded-lg focus:ring-4">
-            Register
-            <svg transform="scale(1.5)" className="w-3.5 h-3.5 ms-2 rtl:rotate-180 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-              <path stroke="#2c2c2c" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-            </svg>
-          </a>
-          <a href="#section-about" style={{color: "#2c2c2c", border: "4px solid #2c2c2c"}} className="py-3 px-5 sm:ms-4 text-sm font-medium  focus:outline-none  border-4 rounded-lg focus:z-10 focus:ring-4">
-            About
-          </a>
+        <motion.button
+                        key="hero-register"
+                        initial={false}
+
+                        className={`float-right m-4 mt-3 text-white w-[90%] rounded-md drop-shadow-lg transition-colors duration-150`}
+                        style={{
+                            cursor: "pointer",
+                            border: isHovering_register
+                                ? "0.17vw solid white"
+                                : `0.17vw solid ${darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 30)}`,
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{
+                            backgroundColor:
+                                !isHovering_register && !isPressed_register
+
+                                    ? SECONDARY_COLORS.ORANGE_151.hex
+                                    : isHovering_register && !isPressed_register
+                                        ? darkenColor(
+                                            SECONDARY_COLORS.ORANGE_151.hex,
+                                            20
+                                        )
+                                        : darkenColor(
+                                            SECONDARY_COLORS.ORANGE_151.hex,
+                                            50
+                                        ),
+
+                        }} // Darkens when pressed
+                        transition={{ duration: 0.05 }}
+                        onHoverStart={() => setIsHovering_register(true)}
+                        onHoverEnd={() => setIsHovering_register(false)}
+                        onTouchStart={() => setIsPressed_register(true)}
+                        onTouchEnd={() => setIsPressed_register(false)}
+                        onMouseDown={() => setIsPressed_register(true)}
+                        onMouseUp={() => setIsPressed_register(false)}
+                        onClick={() => router.push("/register")}
+                    >
+                        <p
+                            style={{
+                                fontSize: "1.6vw",
+                                padding: "1vh",
+                                color: darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 65)
+                            }}
+                            className={`font-bold flex justify-center content-center text-lg`}
+                        >
+                            Register
+                        </p>
+                    </motion.button>
+                    <motion.button
+                        key="hero-about"
+                        initial={false}
+                        className={`float-right m-4 mt-3 text-white w-[90%] rounded-md drop-shadow-lg transition-colors duration-150`}
+                        style={{
+                            cursor: "pointer",
+                            border: isHovering_about
+                                ? "0.17vw solid white"
+                                : `0.17vw solid rgba(255, 255, 255, 0.6)`,
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{
+                            backgroundColor:
+                                !isHovering_about && !isPressed_about
+                                    ? backgroundColor
+                                    : isHovering_about && !isPressed_about
+                                        ? TERTIARY_COLORS.PURPLE_2655.hex
+                                        : darkenColor(
+                                          backgroundColor,
+                                            50
+                                        ),
+
+                        }} // Darkens when pressed
+                        transition={{ duration: 0.05 }}
+                        onHoverStart={() => setIsHovering_about(true)}
+                        onHoverEnd={() => setIsHovering_about(false)}
+                        onTouchStart={() => setIsPressed_about(true)}
+                        onTouchEnd={() => setIsPressed_about(false)}
+                        onMouseDown={() => setIsPressed_about(true)}
+                        onMouseUp={() => setIsPressed_about(false)}
+                        onClick={() => router.push("/#section-about")}
+                    >
+                        <p
+                            style={{
+                                padding: "1vh",
+                            }}
+                            className={`font-bold flex justify-center content-center text-white text-lg`}
+                        >
+                          About
+                        </p>
+                    </motion.button>
+        </div>
         </div>
         </div>
       </div>
@@ -35,27 +170,3 @@ const HeroHeader = () => {
 export default HeroHeader
 
 
-
-
-// const HeroHeader = () => {
-//   const {/* height */ width } = useWindowSize();
-
-//   return (
-//     <>
-//       {width < mobile_size_reference &&
-//         <Logo size={350} />
-//       }
-//       {width >= mobile_size_reference && <>
-//         <div className="mb-20 -mt-10">
-//           <Logo size={500} />
-//         </div>
-//       </>}
-//       <div className="text-center" style={{ marginTop: width > mobile_size_reference ? "0em" : "4em" }}>
-//         <p className="font-bold p-5" style={{ fontSize: width > mobile_size_reference ? "6em" : "4em" }}>May 9th-10th</p>
-//       </div>
-
-//     </>
-//   )
-// }
-
-// export default HeroHeader
