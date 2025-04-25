@@ -303,7 +303,7 @@ function App() {
                                 <div className="border-solid border-0 text-white p-6 m-4 text-xl rounded-2xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] shadow-lg hover-glow">
                                     <AboutMesaText />
                                 </div>
-                                <h2
+                                <h3
                                     style={{
                                         fontSize: width > 500 ? 60 : 40,
                                         fontWeight: "800",
@@ -313,7 +313,7 @@ function App() {
                                     className="text-center"
                                 >
                                     About Our Hackathon
-                                </h2>
+                                </h3>
                                 <div className="border-solid border-0 text-white p-6 m-4 text-xl rounded-2xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] shadow-lg hover-glow">
                                     <AboutHackathonText />
                                 </div>

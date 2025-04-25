@@ -184,14 +184,14 @@ interface FAQ_Question_Header__Props {
 const FAQ_Question_Header = (props: FAQ_Question_Header__Props) => {
     return (
         <div className="accordion-toggle group inline-flex items-center justify-between text-xl font-normal leading-8 text-white w-full">
-            <h5
+            <h3
                 className={`text-xl font-bold transition-colors duration-300 ${props.open
                     ? `text-[${SECONDARY_COLORS.YELLOW_107.hex}]`
                     : "text-white"
                     }`}
             >
                 {props.text}
-            </h5>
+            </h3>
             <span
                 className={`flex items-center justify-center p-1 w-auto h-auto rounded-full transition-all duration-300 ${props.open
                     ? `bg-[${SECONDARY_COLORS.YELLOW_107.hex}]`
