@@ -12,11 +12,40 @@ const Footer = () => {
               {/* <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 me-3" alt="FlowBite Logo" /> */}
               <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">HackMESA 2025</span>
             </a>
+            <style>
+            {`
+            #footer-contact-ul {
+              color: white;
+              padding: 1em;
+            }
+            #footer-contact-ul li {
+              margin-bottom: 1em;
+              
+            }
+            #footer-contact-ul li:hover {
+            text-decoration: underline;
+            }`}
+            </style>
+            <ul id="footer-contact-ul" className="text-md">
+              <li style={{textDecoration: "none"}} className="text-lg">
+                Contact Us
+              </li>
+              <li>
+                <a href="mailto:calpitml@lacitycollege.edu">
+                  <p  className="font-bold ">Maria Calpito</p>
+                  <p>LACC MESA Program Director</p>
+                  <p>calpitml@lacitycollege.edu</p>
+                </a>
+              </li>
+              <li>
+                <a href="mailto:team@hackmesa.com">
+                  <p className="font-bold ">HackMESA Team</p>
+                  <p>team@hackmesa.com</p>
+                </a>
+              </li>
+            </ul>
           </div>
-          <div className="grid grid-cols-3 gap-8 sm:gap-6 sm:grid-cols-3">
-
-
-
+          <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-2">
             <div>
               <h2 className="mb-6 text-sm font-semibold uppercase text-white">Conduct</h2>
               <ul className="text-white  font-medium">
@@ -30,23 +59,15 @@ const Footer = () => {
               <h2 className="mb-6 text-sm font-semibold uppercase text-white">Follow us</h2>
               <ul className="text-white  font-medium">
                 <li className="mb-4">
-                  <a href={github} target="new" className="hover:underline ">Github</a>
-                </li>
-                {/* <li>
-                  <a href={discord} className="hover:underline">Discord</a>
-                </li> */}
-              </ul>
-            </div>
-            <div>
-              <h2 className="mb-6 text-sm font-semibold uppercase text-white">Social Media</h2>
-              <ul className="text-white  font-medium">
-                <li className="mb-4">
                   <a href={instagram} target="new" className="hover:underline">Instagram</a>
                 </li>
                 <li>
                   <a href={tiktok} target="new" className="hover:underline">TikTok</a>
                 </li>
               </ul>
+            </div>
+            <div>
+
             </div>
           </div>
         </div>
