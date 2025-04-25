@@ -108,7 +108,6 @@ const HeroHeader = () => {
                     >
                         <p
                             style={{
-                                fontSize: "1.6vw",
                                 padding: "1vh",
                                 color: darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 65)
                             }}
