@@ -8,4 +8,5 @@ export interface UserProfileDto {
     year?: string;
     dietary_restrictions?: string;
     t_shirt_size?: string;
+    linkedin_url?: string;
 }

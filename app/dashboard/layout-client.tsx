@@ -80,7 +80,6 @@ export default function ClientLayout({
             } catch (error) {
                 console.error("Authentication error:", error);
 
-                // Also attempt to sign out in case of any other errors
                 try {
                     await supabase.auth.signOut();
                 } catch (signOutError) {
