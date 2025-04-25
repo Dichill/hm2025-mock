@@ -83,7 +83,7 @@ export const teamMembers: TeamMember[] = [
     },
     {
         name: "Mayra Saballos",
-        role: "Tech/Logistics Teams",
+        role: "Volunteer",
         description: "About info coming soon!",
         image: "",
         linked_in: {
