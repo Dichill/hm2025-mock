@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import supabase from "@/lib/supabase/supabase-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getUserData } from "@/core/user/api/user";
 
 export function LoginForm() {
@@ -11,9 +11,18 @@ export function LoginForm() {
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [verificationSuccess, setVerificationSuccess] =
+        useState<boolean>(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
+        // Check if the verified parameter exists in the URL
+        const verified = searchParams.get("verified");
+        if (verified === "true") {
+            setVerificationSuccess(true);
+        }
+
         const checkSession = async () => {
             try {
                 const { data } = await supabase.auth.getSession();
@@ -43,7 +52,7 @@ export function LoginForm() {
         };
 
         checkSession();
-    }, [router]);
+    }, [router, searchParams]);
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -224,10 +233,26 @@ export function LoginForm() {
                 </motion.div>
             )}
 
+            {verificationSuccess && (
+                <motion.div
+                    className="bg-[rgb(var(--mesa-green))]/10 border-l-4 border-[rgb(var(--mesa-green))] text-[rgb(var(--mesa-green))] p-4 rounded shadow-sm"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                    }}
+                >
+                    Your account has been successfully verified! Please sign in
+                    to continue applying.
+                </motion.div>
+            )}
+
             <motion.button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 px-4 bg-[rgb(var(--mesa-warm-red))] hover:bg-[rgb(var(--mesa-warm-red))]/90 text-white rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-warm-red))]/50 shadow-md hover:shadow-lg transition-all duration-200 ${
+                className={`w-full py-3 px-4 bg-[rgb(var(--mesa-warm-red))] cursor-pointer hover:bg-[rgb(var(--mesa-warm-red))]/90 text-white rounded-md focus:outline-none focus:ring-3 focus:ring-[rgb(var(--mesa-warm-red))]/50 shadow-md hover:shadow-lg transition-all duration-200 ${
                     loading ? "opacity-70 cursor-not-allowed" : ""
                 }`}
                 variants={buttonVariants}

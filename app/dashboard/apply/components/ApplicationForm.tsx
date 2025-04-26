@@ -11,15 +11,58 @@ import {
     FieldOfStudy,
     SkillLevel,
     ApplicationStatus,
+    ApplicationResponseDto,
 } from "@/core/apply/types/apply.dto";
 import {
-    createApplication,
     saveApplication,
     getCurrentApplication,
     updateApplication,
 } from "@/core/apply/api/apply";
 import { updateProfile } from "@/core/user/api/profile";
 import { UserProfileDto } from "@/core/user/types/profile.dto";
+import { applicationClient } from "@/api/application-client";
+
+// Local implementation of submitApplication function
+async function submitApplication(
+    applicationData: ApplicationDto,
+    resumeFile?: File
+): Promise<ApplicationResponseDto> {
+    try {
+        const formData = new FormData();
+
+        Object.entries(applicationData).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    formData.append(`${key}[${index}]`, item);
+                });
+            } else if (typeof value === "boolean") {
+                formData.append(key, value.toString());
+            } else if (value !== undefined && value !== null) {
+                formData.append(key, value.toString());
+            }
+        });
+
+        if (resumeFile) {
+            formData.append("resume", resumeFile);
+        }
+
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        };
+
+        const response = await applicationClient.post(
+            "/applications/submit",
+            formData,
+            config
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error submitting application:", error);
+        throw error;
+    }
+}
 
 type FormErrors = Partial<Record<keyof FormData, string>> & {
     general?: string;
@@ -199,6 +242,25 @@ export function ApplicationForm() {
 
         loadSavedApplication();
     }, [router]);
+
+    useEffect(() => {
+        // Initialize the localStorage for mesa_student_selection if it doesn't exist
+        if (typeof window !== "undefined") {
+            const currentSelection = localStorage.getItem(
+                "mesa_student_selection"
+            );
+            if (!currentSelection) {
+                // Set initial value based on formData
+                const initialValue =
+                    formData.isMesaStudent === undefined
+                        ? ""
+                        : formData.isMesaStudent
+                        ? "Yes"
+                        : "No";
+                localStorage.setItem("mesa_student_selection", initialValue);
+            }
+        }
+    }, [formData.isMesaStudent]);
 
     const formVariants = {
         hidden: { opacity: 0 },
@@ -728,52 +790,10 @@ export function ApplicationForm() {
                 linkedin_url: formData.linkedInUrl || "",
             };
 
-            let applicationResponse;
-            let appId = savedApplicationId;
-
-            // Check if we have a saved application
-            if (!appId) {
-                // No saved application, create a new one
-                console.log("Creating new application");
-                applicationResponse = await createApplication(
-                    applicationData,
-                    formData.resumeFile || undefined
-                );
-                if (applicationResponse && applicationResponse.id) {
-                    appId = applicationResponse.id;
-                    console.log("New application created with ID:", appId);
-                }
-            } else {
-                // Update existing application - use the same ID to prevent duplication
-                console.log("Updating existing application with ID:", appId);
-                applicationResponse = await updateApplication(
-                    appId,
-                    applicationData,
-                    formData.resumeFile || undefined
-                );
-                console.log("Application updated:", applicationResponse);
-            }
-
-            // Verify we have a valid application ID before proceeding
-            if (!appId) {
-                console.error("No valid application ID after save/create");
-                throw new Error("Failed to get valid application ID");
-            }
-
-            // Update application status to PENDING - this makes it a submitted application
-            console.log(
-                "Updating application status to PENDING for ID:",
-                appId
+            await submitApplication(
+                applicationData,
+                formData.resumeFile || undefined
             );
-
-            // Use the updateApplication function instead of a direct PATCH
-            // This ensures we're updating the existing record, not creating a new one
-            const pendingAppData = {
-                ...applicationData,
-                status: ApplicationStatus.PENDING,
-            };
-
-            await updateApplication(appId, pendingAppData, undefined);
 
             // Update user profile
             const profileResponse = await updateProfile(profileData);
@@ -795,10 +815,25 @@ export function ApplicationForm() {
         const { name, value } = e.target;
 
         if (name === "firstTime" || name === "isMesaStudent") {
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value === "Yes",
-            }));
+            // For isMesaStudent, treat "Not sure" as false but store the raw value elsewhere for UI display
+            if (name === "isMesaStudent" && value === "Not sure") {
+                // Store the actual selection in the form to keep track of user selection
+                localStorage.setItem("mesa_student_selection", "Not sure");
+
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: false, // For type compatibility, set to false
+                }));
+            } else {
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: value === "Yes",
+                }));
+
+                if (name === "isMesaStudent") {
+                    localStorage.setItem("mesa_student_selection", value);
+                }
+            }
 
             // Reset validation error if any
             if (errors[name as keyof FormErrors]) {
@@ -2714,7 +2749,12 @@ export function ApplicationForm() {
                                 id="isMesaStudent"
                                 name="isMesaStudent"
                                 value={
-                                    formData.isMesaStudent === undefined
+                                    typeof window !== "undefined" &&
+                                    localStorage.getItem(
+                                        "mesa_student_selection"
+                                    ) === "Not sure"
+                                        ? "Not sure"
+                                        : formData.isMesaStudent === undefined
                                         ? ""
                                         : formData.isMesaStudent
                                         ? "Yes"

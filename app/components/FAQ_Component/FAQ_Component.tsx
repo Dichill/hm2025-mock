@@ -4,9 +4,6 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 const FAQ_component = () => {
-
-
-
     return (
         <section className="-mt-20 py-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -79,7 +76,6 @@ const FAQ_Question = (props: FAQ_Question__Props) => {
 
     const router = useRouter();
 
-
     useEffect(() => {
         if (contentRef.current) {
             setContentHeight(contentRef.current.scrollHeight);
@@ -88,17 +84,19 @@ const FAQ_Question = (props: FAQ_Question__Props) => {
 
     return (
         <div
-            className={`m-3 rounded-xl overflow-hidden transition-all duration-300 bg-opacity-80 backdrop-blur-sm bg-[#564b79] hover:shadow-lg ${open ? "shadow-xl" : "shadow"
-                }`}
+            className={`m-3 rounded-xl overflow-hidden transition-all duration-300 bg-opacity-80 backdrop-blur-sm bg-[#564b79] hover:shadow-lg ${
+                open ? "shadow-xl" : "shadow"
+            }`}
         >
             <button
                 aria-controls="faq-question-content"
-                className="w-full"
+                className="w-full cursor-pointer"
                 onClick={() => setOpen(!open)}
             >
                 <div
-                    className={`accordion p-6 active transition-colors duration-300 ${open ? "bg-opacity-90" : ""
-                        }`}
+                    className={`accordion p-6 active transition-colors duration-300 ${
+                        open ? "bg-opacity-90" : ""
+                    }`}
                 >
                     <FAQ_Question_Header open={open} text={props.heading} />
                 </div>
@@ -116,37 +114,37 @@ const FAQ_Question = (props: FAQ_Question__Props) => {
                     <p className="text-white text-lg font-normal leading-relaxed">
                         {props.text}
                     </p>
-                    {
-                        props.special == "register" &&
+                    {props.special === "register" && (
                         <div className="p-[1%] flex justify-center">
-
                             <motion.button
                                 key="web-nav__register"
                                 initial={false}
-
                                 className={`float-right m-4 mt-3 text-white w-[70%] rounded-md drop-shadow-lg transition-colors duration-150`}
                                 style={{
                                     cursor: "pointer",
                                     border: isHovering
                                         ? "0.17vw solid white"
-                                        : `0.17vw solid ${darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 30)}`,
+                                        : `0.17vw solid ${darkenColor(
+                                              SECONDARY_COLORS.ORANGE_151.hex,
+                                              30
+                                          )}`,
                                 }}
                                 whileTap={{ scale: 0.95 }}
                                 animate={{
                                     backgroundColor:
                                         !isHovering && !isPressed
-
                                             ? SECONDARY_COLORS.ORANGE_151.hex
                                             : isHovering && !isPressed
-                                                ? darkenColor(
-                                                    SECONDARY_COLORS.ORANGE_151.hex,
-                                                    20
-                                                )
-                                                : darkenColor(
-                                                    SECONDARY_COLORS.ORANGE_151.hex,
-                                                    50
-                                                ),
-
+                                            ? darkenColor(
+                                                  SECONDARY_COLORS.ORANGE_151
+                                                      .hex,
+                                                  20
+                                              )
+                                            : darkenColor(
+                                                  SECONDARY_COLORS.ORANGE_151
+                                                      .hex,
+                                                  50
+                                              ),
                                 }} // Darkens when pressed
                                 transition={{ duration: 0.05 }}
                                 onHoverStart={() => setIsHovering(true)}
@@ -155,21 +153,23 @@ const FAQ_Question = (props: FAQ_Question__Props) => {
                                 onTouchEnd={() => setIsPressed(false)}
                                 onMouseDown={() => setIsPressed(true)}
                                 onMouseUp={() => setIsPressed(false)}
-                                onClick={() => router.push("/register")}
+                                onClick={() => router.push("/dashboard")}
                             >
                                 <p
                                     style={{
                                         padding: "1vh",
-                                        color: darkenColor(SECONDARY_COLORS.ORANGE_151.hex, 65)
+                                        color: darkenColor(
+                                            SECONDARY_COLORS.ORANGE_151.hex,
+                                            65
+                                        ),
                                     }}
                                     className={`font-bold flex justify-center content-center`}
                                 >
-                                    Register
+                                    Apply Now
                                 </p>
                             </motion.button>
-
                         </div>
-                    }
+                    )}
                 </div>
             </div>
         </div>
@@ -185,22 +185,25 @@ const FAQ_Question_Header = (props: FAQ_Question_Header__Props) => {
     return (
         <div className="accordion-toggle group inline-flex items-center justify-between text-xl font-normal leading-8 text-white w-full">
             <h5
-                className={`text-xl font-bold transition-colors duration-300 ${props.open
-                    ? `text-[${SECONDARY_COLORS.YELLOW_107.hex}]`
-                    : "text-white"
-                    }`}
+                className={`text-xl font-bold transition-colors duration-300 ${
+                    props.open
+                        ? `text-[${SECONDARY_COLORS.YELLOW_107.hex}]`
+                        : "text-white"
+                }`}
             >
                 {props.text}
             </h5>
             <span
-                className={`flex items-center justify-center p-1 w-auto h-auto rounded-full transition-all duration-300 ${props.open
-                    ? `bg-[${SECONDARY_COLORS.YELLOW_107.hex}]`
-                    : "bg-white bg-opacity-20"
-                    }`}
+                className={`flex items-center justify-center p-1 w-auto h-auto rounded-full transition-all duration-300 ${
+                    props.open
+                        ? `bg-[${SECONDARY_COLORS.YELLOW_107.hex}]`
+                        : "bg-white bg-opacity-40"
+                }`}
             >
                 <svg
-                    className={`transition-transform duration-300 ${props.open ? "rotate-180 text-[#564b79]" : "text-white"
-                        }`}
+                    className={`transition-transform duration-300 ${
+                        props.open ? "rotate-180 text-[#564b79]" : "text-black"
+                    }`}
                     width="20"
                     height="20"
                     viewBox="0 0 22 22"
@@ -210,7 +213,7 @@ const FAQ_Question_Header = (props: FAQ_Question_Header__Props) => {
                     <path
                         d="M16.5 8.25L12.4142 12.3358C11.7475 13.0025 11.4142 13.3358 11 13.3358C10.5858 13.3358 10.2525 13.0025 9.58579 12.3358L5.5 8.25"
                         stroke="currentColor"
-                        strokeWidth="1.6"
+                        strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                     />
