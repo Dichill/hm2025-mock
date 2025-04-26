@@ -147,6 +147,47 @@ export async function updateApplication(
     }
 }
 
+export async function submitApplication(
+    applicationData: ApplicationDto,
+    resumeFile?: File
+): Promise<ApplicationResponseDto> {
+    try {
+        const formData = new FormData();
+
+        Object.entries(applicationData).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    formData.append(`${key}[${index}]`, item);
+                });
+            } else if (typeof value === "boolean") {
+                formData.append(key, value.toString());
+            } else if (value !== undefined && value !== null) {
+                formData.append(key, value.toString());
+            }
+        });
+
+        if (resumeFile) {
+            formData.append("resume", resumeFile);
+        }
+
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        };
+
+        const response = await applicationClient.post(
+            "/applications/submit",
+            formData,
+            config
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error submitting application:", error);
+        throw error;
+    }
+}
+
 export async function getAllApplications(
     page: number = 1,
     limit: number = 10,
