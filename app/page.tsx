@@ -7,8 +7,7 @@ import {
 } from "@/lib/colors";
 import Image from "next/image";
 
-import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
-import NavBar, { Render_MobileNav } from "./components/NavBar/NavBar";
+import NewNavBar from "./components/NavBar/NewNavBar";
 import SectionBase from "./components/SectionBase/SectionBase";
 import HeroHeader from "./components/HeroHeader/HeroHeader";
 import TrifectaGraphic from "./components/TrifectaGraphic/TrifectaGraphic";
@@ -31,10 +30,6 @@ import { MESA, team_email } from "@/lib/link_base";
 import { useEffect } from "react";
 import { initScrollReveal, addRevealClasses } from "./scrollReveal";
 import Sponsors from "./components/Sponsors/Sponsors";
-import SocialBrick from "./components/SocialBrick";
-
-
-
 
 function App() {
     const { width } = useWindowSize();
@@ -77,12 +72,12 @@ function App() {
                     id="mlh-trust-badge"
                     style={{
                         display: "block",
-                        maxWidth: "15%",
-                        minWidth: "60px",
+                        maxWidth: "12%",
+                        minWidth: "50px",
                         position: "fixed",
-                        right: "2%",
+                        right: "0.5%",
                         top: "0",
-                        width: "10%",
+                        width: "8%",
                         zIndex: "101",
                     }}
                     href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white"
@@ -91,9 +86,9 @@ function App() {
                     <Image
                         src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg"
                         alt="Major League Hacking 2025 Hackathon Season"
-                        width={200}
-                        height={200}
-                        style={{ width: "100%" }}
+                        width={150}
+                        height={150}
+                        style={{ width: "70%" }}
                     />
                 </a>
             )}
@@ -102,12 +97,12 @@ function App() {
                     id="mlh-trust-badge"
                     style={{
                         display: "block",
-                        maxWidth: "20%",
-                        minWidth: "80px",
+                        maxWidth: "16%",
+                        minWidth: "70px",
                         position: "fixed",
-                        right: "3%",
+                        right: "0.5%",
                         top: "0",
-                        width: "10%",
+                        width: "8%",
                         zIndex: "101",
                     }}
                     href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2025-season&utm_content=white"
@@ -116,9 +111,9 @@ function App() {
                     <Image
                         src="https://s3.amazonaws.com/logged-assets/trust-badge/2025/mlh-trust-badge-2025-white.svg"
                         alt="Major League Hacking 2025 Hackathon Season"
-                        width={200}
-                        height={200}
-                        style={{ width: "100%" }}
+                        width={150}
+                        height={150}
+                        style={{ width: "70%" }}
                     />
                 </a>
             )}
@@ -128,16 +123,14 @@ function App() {
                 style={{ backgroundColor: backgroundColor }}
                 id="page-backdrop"
             >
-
-
                 {/* Contains the hero SVG component */}
 
                 {width > mobile_size_reference && <SVG_Window />}
-                {width <= mobile_size_reference &&
+                {width <= mobile_size_reference && (
                     <div className="">
                         <Mobile_SVG_Window />
-                    </div>}
-
+                    </div>
+                )}
 
                 {/* This is the jumbotron */}
                 {width > mobile_size_reference && (
@@ -159,13 +152,15 @@ function App() {
                     </div>
                 )}
 
-                <SocialBrick />
-
                 {/* This container will render either the NavBar or the mobile NavBar */}
                 <div
                     id="nav-bar__sticky-container"
-                    className="fixed w-[85%] top-0 z-103 h-[14%] min-h-22 flex"
+                    className="fixed w-[85%] top-0 md:left-1/2 md:-translate-x-1/2 left-4 z-103 flex justify-center items-center mt-5"
                 >
+                    <div className="w-full mx-auto px-4">
+                        <NewNavBar />
+                    </div>
+                    {/* Keep the old NavBar commented out but available if needed
                     {width > mobile_size_reference && <NavBar />}
                     {width <= mobile_size_reference && (
                         <>
@@ -174,25 +169,38 @@ function App() {
                             </nav>
                         </>
                     )}
+                    */}
+                </div>
+
+                <div className="w-full bg-white py-8">
+                    <style jsx>{`
+                        .black-svg-section :global(.invert) {
+                            filter: invert(
+                                0
+                            ); /* Prevent inversion to keep SVGs black */
+                            opacity: 1 !important; /* Override opacity */
+                        }
+                    `}</style>
+                    <div className="black-svg-section">
+                        {width > mobile_size_reference && (
+                            <div className="mt-4">
+                                <TrifectaGraphic width={20} />
+                            </div>
+                        )}
+                        {width <= mobile_size_reference && (
+                            <div className="-mb-2">
+                                <TrifectaGraphic width={40} />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* This container renders everything below the hero area */}
 
                 <div className={"w-full"}>
-                    <div className="animate-fadeIn">
+                    {/* <div className="animate-fadeIn">
                         <CountdownTimer />
-                    </div>
-
-                    {width > mobile_size_reference && (
-                        <div className="mt-4">
-                            <TrifectaGraphic width={20} />
-                        </div>
-                    )}
-                    {width <= mobile_size_reference && (
-                        <div className="-mb-2">
-                            <TrifectaGraphic width={40} />
-                        </div>
-                    )}
+                    </div> */}
 
                     {/* About section Desktop */}
                     <SectionBase
@@ -203,15 +211,11 @@ function App() {
                     >
                         {width > mobile_size_reference && (
                             <>
-
                                 <div className="flex justify-center">
-                                    <div className="rounded-xl p-3 pl-6 mb-10 pb-12 transition-all max-w-7xl hover:scale-[1.01] duration-300 hover-glow">
+                                    <div className="rounded-xl p-3 pl-6 mb-10 pb-12 transition-all max-w-7xl duration-300">
                                         <SectionBase_HeroText text="About MESA" />
 
-                                        <div
-                                            id="about_grid"
-
-                                        >
+                                        <div id="about_grid">
                                             <div id="about_image_elem">
                                                 <Image_Overlay
                                                     source="/MESA_student_overlay1.webp"
@@ -234,13 +238,10 @@ function App() {
                                                     className="transition-transform hover:scale-105 duration-200"
                                                 >
                                                     <div className="bg-white p-[2vw] pt-[1vw] inline-block rounded-xl shadow-xl hover:shadow-2xl">
-                                                        <MESA_Color_Graphic
-                                                        />
+                                                        <MESA_Color_Graphic />
                                                     </div>
                                                 </a>
                                             </span>
-
-
 
                                             <span id="about_mesa_gr_elem_3">
                                                 <div className="text-white p-6 m-2 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg">
@@ -248,14 +249,12 @@ function App() {
                                                 </div>
                                             </span>
                                         </div>
-
                                     </div>
                                 </div>
 
-
                                 <SectionBase_HeroText text="About the Hackathon" />
 
-                                <div className="text-white p-6 m-2 mb-10 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg max-w-4xl mx-auto transition-all hover:shadow-xl hover:scale-[1.01] duration-300 hover-glow">
+                                <div className="text-white p-6 m-2 mb-10 text-xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] rounded-xl shadow-lg max-w-4xl mx-auto transition-all hover:shadow-xl hover:scale-[1.01] duration-300">
                                     <AboutHackathonText />
                                 </div>
                             </>
@@ -278,11 +277,7 @@ function App() {
                                 </h2>
 
                                 <section className="relative">
-                                    <a
-                                        href={MESA}
-                                        target="new"
-                                        className="transition-transform hover:scale-105 duration-200"
-                                    >
+                                    <a href={MESA} target="new">
                                         <div className="z-10 w-[50%] bg-white inline-block p-5 rounded-xl shadow-xl absolute top-10 left-6">
                                             <MESA_Color_Graphic />
                                         </div>
@@ -297,10 +292,8 @@ function App() {
                                         height="90vh"
                                         margin="5%"
                                     />
-
-
                                 </section>
-                                <div className="border-solid border-0 text-white p-6 m-4 text-xl rounded-2xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] shadow-lg hover-glow">
+                                <div className="border-solid border-0 text-white p-6 m-4 text-xl rounded-2xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] shadow-lg">
                                     <AboutMesaText />
                                 </div>
                                 <h3
@@ -314,7 +307,11 @@ function App() {
                                 >
                                     About Our Hackathon
                                 </h3>
+<<<<<<< HEAD
                                 <div className="border-solid border-0 text-white p-6 m-4 text-xl rounded-2xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] shadow-lg hover-glow">
+=======
+                                <div className="border-solid border-0 text-white p-6 m-4 text-xl rounded-2xl bg-opacity-80 backdrop-blur-sm bg-[#564b79] shadow-lg">
+>>>>>>> 991ab62 (reused navbar and converted it to pill-rounded corner navbar. Fixed Application duplication issue, Fixed Faq, Added animations to hero header, removed hover-glow and inconsistent animations)
                                     <AboutHackathonText />
                                 </div>
                             </>
@@ -329,7 +326,7 @@ function App() {
                     >
                         <SectionBase_HeroText text="Location" />
                         <div className="max-w-5xl mx-auto p-6 ">
-                            <div className="bg-opacity-80 backdrop-blur-sm bg-[#564b79] flex justify-center rounded-xl shadow-xl p-6 mb-8 transform transition-all hover:scale-[1.01] duration-300">
+                            <div className="bg-opacity-80 backdrop-blur-sm bg-[#564b79] flex justify-center rounded-xl shadow-xl p-6 mb-8 transform transition-all duration-300">
                                 <div className="flex flex-col md:flex-row items-center justify-between">
                                     <div className="md:w-1/2 p-4">
                                         <h3 className="text-2xl font-bold text-[#FFE550] mb-2">
@@ -412,7 +409,6 @@ function App() {
 
                         <Sponsors />
 
-
                         <div className="flex justify-center p-10">
                             <a
                                 href={`mailto:${team_email}`}
@@ -443,7 +439,7 @@ function App() {
                         alt_text_color={PRIMARY_COLORS.GREY_432.hex}
                     >
                         <SectionBase_HeroText text="Team" />
-                        <div className="hover-scale">
+                        <div>
                             <TheTeam />
                         </div>
                     </SectionBase>

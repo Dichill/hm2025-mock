@@ -26,6 +26,7 @@ function VerificationContent() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
+    const [resendCooldown, setResendCooldown] = useState<number>(120);
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -56,6 +57,7 @@ function VerificationContent() {
                 if (isClient && typeof window !== "undefined") {
                     sessionStorage.removeItem("registrationToken");
                 }
+                router.push("/login?verified=true");
             }
         } catch (error) {
             console.error("Code verification error:", error);
@@ -86,6 +88,7 @@ function VerificationContent() {
                         "Verification code sent successfully! Please check your email for the verification link or code."
                 );
                 setVerificationCode("");
+                setResendCooldown(120); // Set 2 minutes cooldown
             } else {
                 setErrorMessage(
                     response.message || "Failed to resend verification code."
@@ -100,6 +103,21 @@ function VerificationContent() {
             setVerificationStatus("pending");
         }
     };
+
+    // Add effect for cooldown timer
+    useEffect(() => {
+        let interval: NodeJS.Timeout | null = null;
+
+        if (resendCooldown > 0) {
+            interval = setInterval(() => {
+                setResendCooldown((prevCooldown) => prevCooldown - 1);
+            }, 1000);
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [resendCooldown]);
 
     useEffect(() => {
         setIsClient(true);
@@ -313,46 +331,6 @@ function VerificationContent() {
                         </p>
                     </div>
                 );
-            case "verified":
-                return (
-                    <div className="flex flex-col items-center justify-center space-y-4">
-                        <motion.div
-                            className="w-20 h-20 bg-[rgb(var(--mesa-green))]/20 rounded-full flex items-center justify-center"
-                            variants={iconVariants}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-12 w-12 text-[rgb(var(--mesa-green))]"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 13l4 4L19 7"
-                                />
-                            </svg>
-                        </motion.div>
-                        <h2 className="text-2xl font-semibold text-[rgb(var(--mesa-green))]">
-                            Email Verified
-                        </h2>
-                        <p className="text-center text-[rgb(var(--mesa-grey))]">
-                            Your email has been successfully verified. You now
-                            have full access to your account.
-                        </p>
-                        <motion.button
-                            variants={buttonVariants}
-                            whileHover="hover"
-                            whileTap="tap"
-                            className="mt-4 px-6 py-2.5 bg-[rgb(var(--mesa-orange))] text-white rounded-md font-medium shadow-md"
-                            onClick={() => router.push("/dashboard")}
-                        >
-                            Go to Dashboard
-                        </motion.button>
-                    </div>
-                );
             case "resending":
                 return (
                     <div className="flex flex-col items-center justify-center space-y-4">
@@ -461,7 +439,7 @@ function VerificationContent() {
                                     variants={buttonVariants}
                                     whileHover="hover"
                                     whileTap="tap"
-                                    className={`w-full py-3 px-4 bg-[rgb(var(--mesa-warm-red))] text-white rounded-md font-medium shadow-md transition-all duration-200 ${
+                                    className={`cursor-pointer w-full py-3 px-4 bg-[rgb(var(--mesa-warm-red))] text-white rounded-md font-medium shadow-md transition-all duration-200 ${
                                         isSubmitting
                                             ? "opacity-70 cursor-not-allowed"
                                             : ""
@@ -505,16 +483,23 @@ function VerificationContent() {
                                     variants={buttonVariants}
                                     whileHover="hover"
                                     whileTap="tap"
-                                    className="w-full py-2 text-sm text-[rgb(var(--mesa-orange))] hover:text-[rgb(var(--mesa-orange))]/80 font-medium transition-colors"
+                                    className={`w-full py-2 text-sm ${
+                                        resendCooldown > 0
+                                            ? "text-gray-400 cursor-not-allowed"
+                                            : "text-[rgb(var(--mesa-orange))] hover:text-[rgb(var(--mesa-orange))]/80"
+                                    } font-medium transition-colors`}
                                     onClick={handleResendCode}
                                     disabled={
                                         verificationStatus ===
-                                        ("resending" as VerificationStatusType)
+                                            ("resending" as VerificationStatusType) ||
+                                        resendCooldown > 0
                                     }
                                 >
                                     {verificationStatus ===
                                     ("resending" as VerificationStatusType)
                                         ? "Sending..."
+                                        : resendCooldown > 0
+                                        ? `Resend available in ${resendCooldown}s`
                                         : "Resend verification email"}
                                 </motion.button>
                             </div>
