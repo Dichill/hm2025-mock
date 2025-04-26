@@ -51,9 +51,9 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
                             height={96}
                             alt={`portrait of ${member.name}`}
                         />
-                        <h6 className="mb-1 text-xl text-center font-bold text-gray-900 dark:text-white">
+                        <p className="mb-1 text-xl text-center font-bold text-gray-900 dark:text-white">
                             {member.name}
-                        </h6>
+                        </p>
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                             {member.role}
                         </span>
@@ -69,9 +69,9 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
                     style={{ backfaceVisibility: "hidden" }}
                 >
                     <div className="flex flex-col">
-                        <h6 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+                        <p className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
                             {member.name}
-                        </h6>
+                        </p>
                         <p className="text-gray-600 dark:text-gray-300">
                             {member.description}
                         </p>
