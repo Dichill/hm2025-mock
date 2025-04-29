@@ -2,11 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     images: {
-        domains: [
-            "localhost",
-            "s3.amazonaws.com",
-            "dev.hackmesa.com",
-            "hackmesa.com",
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**",
+            },
+            {
+                protocol: "http",
+                hostname: "**",
+            },
         ],
         dangerouslyAllowSVG: true,
         contentDispositionType: "attachment",

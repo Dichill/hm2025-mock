@@ -17,6 +17,7 @@ export default function ClientLayout({
     const [loading, setLoading] = useState(true);
     const [dashboardStatus, setDashboardStatus] =
         useState<DashboardStatus>("loading");
+    const [userRoles, setUserRoles] = useState<string[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -70,6 +71,9 @@ export default function ClientLayout({
                         ) {
                             router.push("/admin");
                         }
+
+                        // Set all user roles
+                        setUserRoles(userRoleData.roles || []);
                     } catch (roleError) {
                         console.error("Error fetching user roles:", roleError);
                     }
@@ -125,7 +129,11 @@ export default function ClientLayout({
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <DashboardNavBar user={user} onSignOut={handleSignOut} />
+            <DashboardNavBar
+                user={user}
+                onSignOut={handleSignOut}
+                userRoles={userRoles}
+            />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {children}
             </main>

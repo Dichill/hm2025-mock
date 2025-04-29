@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 interface DashboardNavBarProps {
     user: User | null;
     onSignOut: () => Promise<void>;
+    userRoles: string[];
 }
 
 export default function DashboardNavBar({
     user,
     onSignOut,
+    userRoles,
 }: DashboardNavBarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -35,6 +37,100 @@ export default function DashboardNavBar({
     const menuVariants = {
         closed: { opacity: 0, y: -20, display: "none" },
         open: { opacity: 1, y: 0, display: "block" },
+    };
+
+    const renderNavigationLinks = () => {
+        console.log(userRoles);
+        if (userRoles.includes("HACKER")) {
+            return (
+                <>
+                    <Link
+                        href="/dashboard/events"
+                        className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                    >
+                        Events
+                    </Link>
+                    <Link
+                        href="/dashboard/teams"
+                        className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                    >
+                        Teams
+                    </Link>
+                    <Link
+                        href="/dashboard/profile"
+                        className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                    >
+                        Profile
+                    </Link>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <Link
+                    href="/dashboard"
+                    className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                >
+                    Home
+                </Link>
+                <Link
+                    href="/dashboard/apply"
+                    className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                >
+                    Apply
+                </Link>
+            </>
+        );
+    };
+
+    const renderMobileNavigationLinks = () => {
+        if (userRoles.includes("HACKER")) {
+            return (
+                <>
+                    <Link
+                        href="/dashboard/events"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Events
+                    </Link>
+                    <Link
+                        href="/dashboard/teams"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Teams
+                    </Link>
+                    <Link
+                        href="/dashboard/profile"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Profile
+                    </Link>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <Link
+                    href="/dashboard"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                >
+                    Home
+                </Link>
+                <Link
+                    href="/dashboard/apply"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                >
+                    Apply
+                </Link>
+            </>
+        );
     };
 
     return (
@@ -70,24 +166,7 @@ export default function DashboardNavBar({
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-6">
-                        <Link
-                            href="/dashboard"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
-                        >
-                            Home
-                        </Link>
-                        <Link
-                            href="/dashboard/apply"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
-                        >
-                            Apply
-                        </Link>
-                        <Link
-                            href="/dashboard/resources"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
-                        >
-                            Resources
-                        </Link>
+                        {renderNavigationLinks()}
 
                         {/* User info and sign out button */}
                         <div className="flex items-center ml-6 pl-6 border-l border-gray-200">
@@ -174,27 +253,7 @@ export default function DashboardNavBar({
                 className="md:hidden"
             >
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
-                    <Link
-                        href="/dashboard"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        href="/dashboard/apply"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Apply
-                    </Link>
-                    <Link
-                        href="/dashboard/resources"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Resources
-                    </Link>
+                    {renderMobileNavigationLinks()}
                     <div className="pt-4 pb-3 border-t border-gray-200">
                         <motion.button
                             whileHover="hover"
