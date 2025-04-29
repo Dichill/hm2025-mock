@@ -27,7 +27,7 @@ export default function DiscordCard() {
     return (
         <motion.div
             variants={cardVariants}
-            className="bg-white rounded-lg shadow-sm p-6 border border-gray-100"
+            className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 flex flex-col h-full"
         >
             <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-[#7289DA]/20 rounded-full flex items-center justify-center">
@@ -44,7 +44,7 @@ export default function DiscordCard() {
                     Join Our Discord Community
                 </h3>
             </div>
-            <div className="text-gray-600 mb-4">
+            <div className="text-gray-600 mb-4 flex-grow">
                 <p>
                     Connect with fellow hackers, mentors, and organizers. Get
                     real-time updates, find team members, and ask questions in

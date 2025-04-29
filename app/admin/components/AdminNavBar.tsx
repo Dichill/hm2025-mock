@@ -82,6 +82,12 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                             Users
                         </Link>
                         <Link
+                            href="/admin/events"
+                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
+                        >
+                            Events
+                        </Link>
+                        <Link
                             href="/admin/applications"
                             className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
                         >
@@ -199,6 +205,13 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Applications
+                    </Link>
+                    <Link
+                        href="/admin/events"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Events
                     </Link>
                     <Link
                         href="/admin/settings"

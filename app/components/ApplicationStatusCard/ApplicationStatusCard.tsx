@@ -139,10 +139,9 @@ export default function ApplicationStatusCard({
                 </svg>
             ),
             bgColor: "bg-[rgb(var(--mesa-green))]/20",
-            buttonText: "Confirm Attendance",
-            buttonColor:
-                "bg-[rgb(var(--mesa-green))]/10 text-[rgb(var(--mesa-green))]",
-            action: () => (window.location.href = "/dashboard/confirm"),
+            buttonText: "",
+            buttonColor: "",
+            action: () => {},
         },
         [ApplicationStatus.REJECTED]: {
             title: "Application Status",
@@ -165,10 +164,9 @@ export default function ApplicationStatusCard({
                 </svg>
             ),
             bgColor: "bg-[rgb(var(--mesa-grey))]/20",
-            buttonText: "View Other Events",
-            buttonColor:
-                "bg-[rgb(var(--mesa-grey))]/10 text-[rgb(var(--mesa-grey))]",
-            action: () => (window.location.href = "/events"),
+            buttonText: "",
+            buttonColor: "",
+            action: () => {},
         },
         [ApplicationStatus.WAITLISTED]: {
             title: "You're on the Waitlist",
@@ -275,7 +273,7 @@ export default function ApplicationStatusCard({
     return (
         <motion.div
             variants={cardVariants}
-            className="bg-white rounded-lg shadow-sm p-6 border border-gray-100"
+            className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 flex flex-col h-full"
         >
             <div className="flex items-center mb-4">
                 <div
@@ -285,17 +283,19 @@ export default function ApplicationStatusCard({
                 </div>
                 <h3 className="ml-3 text-lg font-medium">{config.title}</h3>
             </div>
-            <div className="text-gray-600 mb-4">
+            <div className="text-gray-600 mb-4 flex-grow">
                 <p>{config.description}</p>
+
                 {renderApplicationDate()}
             </div>
+
             {config.buttonText && (
                 <motion.button
+                    onClick={config.action}
                     whileHover="hover"
                     whileTap="tap"
                     variants={buttonVariants}
-                    onClick={config.action}
-                    className={`w-full py-2 ${config.buttonColor} rounded-md font-medium mt-2 cursor-pointer`}
+                    className={`cursor-pointer w-full py-2 ${config.buttonColor} rounded-md font-medium mt-2 block text-center`}
                 >
                     {config.buttonText}
                 </motion.button>

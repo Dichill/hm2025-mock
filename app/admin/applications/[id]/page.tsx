@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getApplicationById, updateApplication } from "@/core/apply/api/apply";
+import { getApplicationById } from "@/core/apply/api/apply";
+import { updateApplicationStatus } from "@/core/apply/api/admin";
 import {
     ApplicationDto,
     ApplicationResponseDto,
@@ -47,8 +48,13 @@ export default function ApplicationDetailPage() {
 
         try {
             setUpdating(true);
-            const updatedApplication = { ...application, status };
-            await updateApplication(params.id as string, updatedApplication);
+            await updateApplicationStatus({
+                applicationId: params.id as string,
+                status,
+            });
+            const updatedApplication = await getApplicationById(
+                params.id as string
+            );
             setApplication(updatedApplication);
         } catch (error) {
             console.error("Error updating application status:", error);
