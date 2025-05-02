@@ -244,6 +244,24 @@ export default function TracksPage() {
             {/* Page Header */}
             <div className="border-b pb-5 mb-8">
                 <h1 className="text-3xl font-bold">HACKMESA 2025 Tracks</h1>
+
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex flex-wrap gap-4 mt-3 mb-4"
+                >
+                    <div className="bg-gradient-to-r from-[rgb(var(--mesa-orange))] to-[rgb(var(--mesa-rhodamine))] text-white px-4 py-2 rounded-lg shadow-md">
+                        <span className="font-bold">1st Place:</span> $1,500
+                    </div>
+                    <div className="bg-gradient-to-r from-[rgb(var(--mesa-purple))] to-[rgb(var(--mesa-rhodamine))] text-white px-4 py-2 rounded-lg shadow-md">
+                        <span className="font-bold">2nd Place:</span> $1,000
+                    </div>
+                    <div className="bg-gradient-to-r from-[rgb(var(--mesa-green))] to-[rgb(var(--mesa-yellow-116))] text-white px-4 py-2 rounded-lg shadow-md">
+                        <span className="font-bold">3rd Place:</span> $500
+                    </div>
+                </motion.div>
+
                 <p className="text-gray-600 mt-2">
                     Choose from our main quest tracks or take on sponsor
                     challenges to win prizes!
