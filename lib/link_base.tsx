@@ -14,6 +14,8 @@ export const lavc = "https://www.lavc.edu/";
 
 export const WSS_link = "https://www.shopwss.com/";
 export const EC_Council_Link = "https://www.eccouncil.org/";
+export const hologramLabs = "https://www.hologram.xyz/";
+export const kickpost = "https://www.kickpost.io/";
 
 export const register = "https://www.hackmesa.com/register";
 
