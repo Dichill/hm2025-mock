@@ -1,31 +1,47 @@
 "use client";
 import { useState, useEffect } from "react";
 
+/**
+ * Custom hook to track window dimensions
+ * Safely handles server-side rendering and client-side hydration
+ * @returns Current window dimensions {width, height}
+ */
 const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState({
-    width: 0,  // Initialize with 0 to avoid SSR issues
-    height: 0,
-  });
+    // Default to reasonable values for desktop-first rendering approach
+    // This helps prevent layout shifts during hydration
+    const [windowSize, setWindowSize] = useState({
+        width: typeof window !== "undefined" ? window.innerWidth : 1200,
+        height: typeof window !== "undefined" ? window.innerHeight : 800,
+    });
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {  // Ensure window is accessed on client
-      const handleResize = () => {
-        setWindowSize({
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-      };
+    const [isClient, setIsClient] = useState(false);
 
-      // Set size on mount
-      handleResize();
+    useEffect(() => {
+        // Mark as client-side once mounted
+        setIsClient(true);
 
-      window.addEventListener("resize", handleResize);
+        if (typeof window !== "undefined") {
+            const handleResize = () => {
+                setWindowSize({
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                });
+            };
 
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
+            // Set initial size
+            handleResize();
 
-  return windowSize;
+            // Add event listener
+            window.addEventListener("resize", handleResize);
+
+            // Cleanup
+            return () => window.removeEventListener("resize", handleResize);
+        }
+    }, []);
+
+    // For SSR, return a default size that assumes desktop
+    // This will be updated once the component mounts on the client
+    return isClient ? windowSize : { width: 1200, height: 800 };
 };
 
 export default useWindowSize;
