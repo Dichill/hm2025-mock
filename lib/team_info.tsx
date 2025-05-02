@@ -105,7 +105,7 @@ export const teamMembers: TeamMember[] = [
     },
     {
         name: "Jay Crawford",
-        role: "Frontend Lead",
+        role: "Frontend",
         description:
             "Artist, programmer, and full time engineering student. Passionate about learning. CS Tutor for MESA.",
         image: "/jay_WR.jpg",
