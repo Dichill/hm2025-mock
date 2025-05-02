@@ -260,6 +260,50 @@ export default function DashboardPage() {
                             Edit Profile
                         </motion.button>
                     </motion.div>
+
+                    {/* Tracks Card */}
+                    <motion.div
+                        variants={cardVariants}
+                        className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 flex flex-col h-full md:col-span-2 lg:col-span-3"
+                    >
+                        <div className="flex items-center mb-4">
+                            <div className="w-12 h-12 bg-[rgb(var(--mesa-purple))]/20 rounded-full flex items-center justify-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6 text-[rgb(var(--mesa-purple))]"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 className="ml-3 text-lg font-medium">
+                                Hackathon Tracks
+                            </h3>
+                        </div>
+                        <div className="text-gray-600 mb-4 flex-grow">
+                            <p>
+                                Explore the available tracks and sponsor
+                                challenges for HackMESA 2025. Choose your
+                                project direction!
+                            </p>
+                        </div>
+                        <motion.button
+                            onClick={() => router.push("/dashboard/tracks")}
+                            whileHover="hover"
+                            whileTap="tap"
+                            variants={buttonVariants}
+                            className="cursor-pointer w-full py-2 bg-[rgb(var(--mesa-purple))]/10 text-[rgb(var(--mesa-purple))] rounded-md font-medium mt-2 block text-center"
+                        >
+                            View Tracks
+                        </motion.button>
+                    </motion.div>
                 </>
             )}
 

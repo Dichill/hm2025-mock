@@ -57,6 +57,12 @@ export default function DashboardNavBar({
                         Teams
                     </Link>
                     <Link
+                        href="/dashboard/tracks"
+                        className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
+                    >
+                        Tracks
+                    </Link>
+                    <Link
                         href="/dashboard/profile"
                         className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-orange))] transition-colors duration-200"
                     >
@@ -101,6 +107,13 @@ export default function DashboardNavBar({
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Teams
+                    </Link>
+                    <Link
+                        href="/dashboard/tracks"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Tracks
                     </Link>
                     <Link
                         href="/dashboard/profile"
