@@ -1,7 +1,7 @@
 "use client";
 
 import { mobile_size_reference } from "@/lib/colors";
-import { EC_Council_Link, elac, lacc, laccd, lahc, lamc, lavc, MESA, WSS_link } from "@/lib/link_base";
+import { EC_Council_Link, elac, hologramLabs, kickpost, lacc, laccd, lahc, lamc, lavc, MESA, WSS_link } from "@/lib/link_base";
 import useWindowSize from "@/lib/useWindowSize";
 import Image from "next/image";
 
@@ -41,6 +41,8 @@ const Sponsors = () => {
     { src: "/sponsor_graphics/lahc.webp", alt: "Los Angeles Harbor College Logo", url: lahc },
     { src: "/sponsor_graphics/lamc.webp", alt: "Los Angeles Mission College Logo", url: lamc },
     { src: "/sponsor_graphics/lavc.webp", alt: "Los Angeles Valley College Logo", url: lavc },
+    { src: "/sponsor_graphics/hologram_labs.webp", alt: "Hologram Labs Logo", url: hologramLabs },
+    { src: "/sponsor_graphics/kickpost.webp", alt: "Kickpost Logo", url: kickpost },
   ]
 
   return (
@@ -63,7 +65,11 @@ const Sponsors = () => {
             <SponsorCard image={sponsorImages[1].src} alt={sponsorImages[1].alt} url={sponsorImages[1].url} />
             <SponsorCard image={sponsorImages[2].src} alt={sponsorImages[2].alt} url={sponsorImages[2].url} />
           </div>
-          <div id="third_row_of_sponsors" className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sponsorCard">
+          <div id="third_row_of_sponsors" className="w-full grid grid-cols-2 gap-4 sponsorCard">
+            <SponsorCard image={sponsorImages[9].src} alt={sponsorImages[9].alt} url={sponsorImages[9].url} />
+            <SponsorCard image={sponsorImages[10].src} alt={sponsorImages[10].alt} url={sponsorImages[10].url} />
+          </div>
+          <div id="fourth_row_of_sponsors" className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sponsorCard">
             <SponsorCard image={sponsorImages[3].src} alt={sponsorImages[3].alt} url={sponsorImages[3].url} />
             <SponsorCard image={sponsorImages[4].src} alt={sponsorImages[4].alt} url={sponsorImages[4].url} />
             <SponsorCard image={sponsorImages[5].src} alt={sponsorImages[5].alt} url={sponsorImages[5].url} />
