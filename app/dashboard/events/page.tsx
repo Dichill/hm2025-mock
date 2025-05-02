@@ -216,7 +216,7 @@ export default function EventsPage() {
                                     {event.event_type}
                                 </span>
                             </div>
-                            <p className="text-sm text-gray-600 mb-5 line-clamp-3 flex-grow">
+                            <p className="text-sm text-gray-600 mb-5 flex-grow whitespace-pre-line">
                                 {event.description}
                             </p>
                             <motion.button

@@ -29,6 +29,7 @@ export default function SchoolsPieChart({
     applications,
 }: SchoolsPieChartProps) {
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [schoolsData, setSchoolsData] = useState<SchoolData[]>([]);
     const [conicGradient, setConicGradient] = useState<string>("");
 
@@ -36,6 +37,15 @@ export default function SchoolsPieChart({
         const processData = () => {
             try {
                 setLoading(true);
+                setError(null);
+
+                // Validate applications input
+                if (!applications || !Array.isArray(applications)) {
+                    setSchoolsData([]);
+                    setConicGradient("");
+                    setError("Invalid applications data");
+                    return;
+                }
 
                 // Count applications by school
                 const schoolCounts: Record<School, number> = Object.values(
@@ -45,20 +55,20 @@ export default function SchoolsPieChart({
                     return acc;
                 }, {} as Record<School, number>);
 
-                // Count applications by school
                 applications.forEach((app) => {
-                    if (app.school) {
-                        schoolCounts[app.school] =
-                            (schoolCounts[app.school] || 0) + 1;
+                    if (app && app.school) {
+                        if (Object.values(School).includes(app.school)) {
+                            schoolCounts[app.school] =
+                                (schoolCounts[app.school] || 0) + 1;
+                        }
                     }
                 });
 
-                // Convert to array and filter out schools with 0 applications
                 const schoolsArray: SchoolData[] = Object.entries(schoolCounts)
                     .map(([school, count]) => ({
                         school: school as School,
                         count,
-                        color: SCHOOL_COLORS[school as School],
+                        color: SCHOOL_COLORS[school as School] || "gray",
                     }))
                     .filter((item) => item.count > 0)
                     .sort((a, b) => b.count - a.count);
@@ -72,26 +82,41 @@ export default function SchoolsPieChart({
                         0
                     );
 
+                    if (total <= 0) {
+                        setConicGradient("");
+                        return;
+                    }
+
                     let gradient = "";
                     let currentAngle = 0;
 
-                    schoolsArray.forEach((school) => {
+                    schoolsArray.forEach((school, index) => {
                         const startAngle = currentAngle;
                         const percentage = (school.count / total) * 100;
                         const degrees = (percentage / 100) * 360;
                         currentAngle += degrees;
 
+                        const endAngle =
+                            index === schoolsArray.length - 1
+                                ? 360
+                                : currentAngle;
+
                         gradient += `${
                             school.color
-                        } ${startAngle}deg ${currentAngle}deg${
-                            currentAngle < 360 ? ", " : ""
+                        } ${startAngle}deg ${endAngle}deg${
+                            index < schoolsArray.length - 1 ? ", " : ""
                         }`;
                     });
 
                     setConicGradient(gradient);
+                } else {
+                    setConicGradient("");
                 }
             } catch (error) {
                 console.error("Error processing schools data:", error);
+                setError("Error processing data");
+                setSchoolsData([]);
+                setConicGradient("");
             } finally {
                 setLoading(false);
             }
@@ -113,6 +138,10 @@ export default function SchoolsPieChart({
                         <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-10 h-10 border-4 border-t-[rgb(var(--mesa-orange))] border-r-[rgb(var(--mesa-orange))] border-b-[rgb(var(--mesa-orange))] border-l-transparent rounded-full animate-spin"></div>
                         </div>
+                    ) : error ? (
+                        <div className="absolute inset-0 flex items-center justify-center text-center text-gray-500">
+                            Error loading data
+                        </div>
                     ) : schoolsData.length === 0 ? (
                         <div className="absolute inset-0 flex items-center justify-center text-center text-gray-500">
                             No application data available
@@ -121,7 +150,9 @@ export default function SchoolsPieChart({
                         <div
                             className="w-full h-full rounded-full shadow-inner"
                             style={{
-                                background: `conic-gradient(${conicGradient})`,
+                                background: conicGradient
+                                    ? `conic-gradient(${conicGradient})`
+                                    : "#f5f5f5",
                             }}
                         >
                             <div className="absolute inset-0 flex items-center justify-center">

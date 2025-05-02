@@ -117,7 +117,7 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                                 whileTap="tap"
                                 variants={buttonVariants}
                                 onClick={onSignOut}
-                                className="px-4 py-2 bg-[rgb(var(--mesa-warm-red))] text-white rounded-md shadow-sm text-sm font-medium"
+                                className="cursor-pointer px-4 py-2 bg-[rgb(var(--mesa-warm-red))] text-white rounded-md shadow-sm text-sm font-medium"
                             >
                                 Sign Out
                             </motion.button>
@@ -219,13 +219,6 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Settings
-                    </Link>
-                    <Link
-                        href="/dashboard"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        User Dashboard
                     </Link>
                     <div className="pt-4 pb-3 border-t border-gray-200">
                         <motion.button
