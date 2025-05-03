@@ -266,6 +266,11 @@ export default function TracksPage() {
                     Choose from our main quest tracks or take on sponsor
                     challenges to win prizes!
                 </p>
+                <p className="text-gray-600 mt-2">
+                    You can combine sponsor challenges with main quest tracks to
+                    maximize your chances of winning. Feel free to participate
+                    in multiple challenges simultaneously!
+                </p>
             </div>
 
             {/* Main Quest Tracks Section */}
