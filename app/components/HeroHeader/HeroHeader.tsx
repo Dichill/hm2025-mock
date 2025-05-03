@@ -205,8 +205,8 @@ function HeroHeader({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ ...optimizedTransition, delay: 0.1 }}
                     >
-                        For an extraordinary hackathon experience at Los Angeles
-                        City College!
+                        LACCD’s First-Ever Hackathon — Open to All Students 18
+                        and Over!
                     </motion.p>
 
                     <motion.div
