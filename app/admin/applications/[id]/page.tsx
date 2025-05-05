@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { getApplicationById } from "@/core/apply/api/apply";
 import { updateApplicationStatus } from "@/core/apply/api/admin";
 import {
@@ -15,6 +15,9 @@ type ApplicationDetail = ApplicationDto & Partial<ApplicationResponseDto>;
 export default function ApplicationDetailPage() {
     const router = useRouter();
     const params = useParams();
+    const searchParams = useSearchParams();
+    const returnUrl = searchParams.get("returnTo");
+
     const [application, setApplication] = useState<ApplicationDetail | null>(
         null
     );
@@ -40,7 +43,13 @@ export default function ApplicationDetailPage() {
     }, [params.id]);
 
     const handleBack = () => {
-        router.back();
+        if (returnUrl) {
+            // Navigate back to the previous page with filters preserved
+            router.push(returnUrl);
+        } else {
+            // Fallback to the default behavior
+            router.back();
+        }
     };
 
     const handleStatusUpdate = async (status: ApplicationStatus) => {

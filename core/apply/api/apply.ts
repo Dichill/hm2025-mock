@@ -192,7 +192,8 @@ export async function getAllApplications(
     page: number = 1,
     limit: number = 10,
     status?: ApplicationStatus,
-    school?: School
+    school?: School,
+    search?: string
 ): Promise<ApplicationsPageDto> {
     try {
         const params: Record<string, string | number> = {
@@ -206,6 +207,10 @@ export async function getAllApplications(
 
         if (school) {
             params.school = school;
+        }
+
+        if (search) {
+            params.search = search;
         }
 
         const response = await applicationClient.get("/applications", {
@@ -228,6 +233,18 @@ export async function getApplicationById(
         return response.data;
     } catch (error) {
         console.error(`Error fetching application ${applicationId}:`, error);
+        throw error;
+    }
+}
+
+export async function unregisterFromHackathon(): Promise<{ message: string }> {
+    try {
+        const response = await applicationClient.post(
+            "/applications/unregister"
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error unregistering from hackathon:", error);
         throw error;
     }
 }

@@ -40,3 +40,28 @@ export interface EventRegistrationResponseDto {
     registered_at: Date;
     event: EventResponseDto;
 }
+
+export interface CreateStudentDto {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+}
+
+export interface CreateStudentResponseDto {
+    userId: string;
+    email: string;
+    token: string;
+    role: string;
+    message: string;
+}
+
+export interface DeleteUserDto {
+    userId: string;
+}
+
+export interface DeleteUserResponseDto {
+    success: boolean;
+    message: string;
+}

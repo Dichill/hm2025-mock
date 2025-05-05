@@ -5,11 +5,13 @@ import { ApplicationStatus } from "@/core/apply/types/apply.dto";
 interface ApplicationStatusCardProps {
     application: Application | null;
     onApplyNow: () => void;
+    onUnregister?: () => void;
 }
 
 export default function ApplicationStatusCard({
     application,
     onApplyNow,
+    onUnregister,
 }: ApplicationStatusCardProps) {
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -223,6 +225,20 @@ export default function ApplicationStatusCard({
         tap: { scale: 0.97 },
     };
 
+    // Define unregister button variants with matching red shadow
+    const unregisterButtonVariants = {
+        hover: {
+            scale: 1.03,
+            boxShadow: "0 10px 25px rgba(239, 68, 68, 0.2)", // Red shadow
+            transition: {
+                type: "spring",
+                stiffness: 400,
+                damping: 10,
+            },
+        },
+        tap: { scale: 0.97 },
+    };
+
     const renderApplicationDate = () => {
         if (!application) return null;
 
@@ -270,6 +286,12 @@ export default function ApplicationStatusCard({
         );
     };
 
+    // Determine if we can show the unregister button
+    const showUnregisterButton =
+        onUnregister &&
+        (mappedStatus === ApplicationStatus.PENDING ||
+            mappedStatus === ApplicationStatus.APPROVED);
+
     return (
         <motion.div
             variants={cardVariants}
@@ -289,17 +311,31 @@ export default function ApplicationStatusCard({
                 {renderApplicationDate()}
             </div>
 
-            {config.buttonText && (
-                <motion.button
-                    onClick={config.action}
-                    whileHover="hover"
-                    whileTap="tap"
-                    variants={buttonVariants}
-                    className={`cursor-pointer w-full py-2 ${config.buttonColor} rounded-md font-medium mt-2 block text-center`}
-                >
-                    {config.buttonText}
-                </motion.button>
-            )}
+            <div className="flex flex-col space-y-2">
+                {config.buttonText && (
+                    <motion.button
+                        onClick={config.action}
+                        whileHover="hover"
+                        whileTap="tap"
+                        variants={buttonVariants}
+                        className={`cursor-pointer w-full py-2 ${config.buttonColor} rounded-md font-medium block text-center`}
+                    >
+                        {config.buttonText}
+                    </motion.button>
+                )}
+
+                {showUnregisterButton && (
+                    <motion.button
+                        onClick={onUnregister}
+                        whileHover="hover"
+                        whileTap="tap"
+                        variants={unregisterButtonVariants}
+                        className="cursor-pointer w-full py-2 bg-red-50 text-red-500 rounded-md font-medium block text-center"
+                    >
+                        Unregister from Hackathon
+                    </motion.button>
+                )}
+            </div>
         </motion.div>
     );
 }

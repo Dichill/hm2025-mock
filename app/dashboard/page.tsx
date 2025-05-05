@@ -6,12 +6,16 @@ import { motion } from "framer-motion";
 import { Application, ApplicationStatus } from "./types";
 import ApplicationStatusCard from "@/app/components/ApplicationStatusCard/ApplicationStatusCard";
 import DiscordCard from "@/app/components/DiscordCard/DiscordCard";
-import { getCurrentApplication } from "@/core/apply/api/apply";
+import {
+    getCurrentApplication,
+    unregisterFromHackathon,
+} from "@/core/apply/api/apply";
 import { getUserData } from "@/core/user/api/user";
 
 export default function DashboardPage() {
     const [isClient, setIsClient] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [unregistering, setUnregistering] = useState(false);
     const [application, setApplication] = useState<Application | null>(null);
     const [userRoles, setUserRoles] = useState<string[]>([]);
     const router = useRouter();
@@ -102,9 +106,45 @@ export default function DashboardPage() {
         router.push("/dashboard/apply");
     };
 
+    // Handle unregister button click
+    const handleUnregister = async () => {
+        if (
+            window.confirm(
+                "Are you sure you want to unregister from HackMESA? This action cannot be undone."
+            )
+        ) {
+            try {
+                setUnregistering(true);
+                await unregisterFromHackathon();
+
+                // Update application status to reflect changes
+                setApplication((prev) =>
+                    prev
+                        ? {
+                              ...prev,
+                              status: "REJECTED" as ApplicationStatus,
+                          }
+                        : null
+                );
+
+                // Remove HACKER role
+                setUserRoles((prev) =>
+                    prev.filter((role) => role !== "HACKER")
+                );
+
+                alert("You have successfully unregistered from HackMESA 2025.");
+            } catch (error) {
+                console.error("Failed to unregister:", error);
+                alert("Failed to unregister. Please try again later.");
+            } finally {
+                setUnregistering(false);
+            }
+        }
+    };
+
     const isHacker = userRoles.includes("HACKER");
 
-    if (loading) {
+    if (loading || unregistering) {
         return (
             <div className="flex items-center justify-center h-full">
                 <div className="w-16 h-16 border-4 border-t-[rgb(var(--mesa-orange))] border-r-[rgb(var(--mesa-orange))] border-b-[rgb(var(--mesa-orange))] border-l-transparent rounded-full animate-spin"></div>
@@ -167,6 +207,7 @@ export default function DashboardPage() {
                 <ApplicationStatusCard
                     application={application}
                     onApplyNow={handleApplyNow}
+                    onUnregister={handleUnregister}
                 />
             </div>
 
