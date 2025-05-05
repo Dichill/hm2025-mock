@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { getAllApplications } from "@/core/apply/api/apply";
 import {
@@ -12,19 +12,58 @@ import {
 
 export default function ApplicationsPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Parse URL parameters
+    const initialPage = Number(searchParams.get("page") || "1");
+    const initialStatus = searchParams.get("status") as
+        | ApplicationStatus
+        | undefined;
+    const initialSchool = searchParams.get("school") as School | undefined;
+    const initialSearch = searchParams.get("search") || "";
+
     const [applications, setApplications] = useState<ApplicationSummaryDto[]>(
         []
     );
     const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(initialPage);
     const [itemsPerPage] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
     const [statusFilter, setStatusFilter] = useState<
         ApplicationStatus | undefined
-    >(undefined);
+    >(initialStatus);
     const [schoolFilter, setSchoolFilter] = useState<School | undefined>(
-        undefined
+        initialSchool
     );
+    const [searchQuery, setSearchQuery] = useState(initialSearch);
+    const [debouncedSearchQuery, setDebouncedSearchQuery] =
+        useState(initialSearch);
+
+    // Update URL when filters change
+    const updateUrlParams = (params: Record<string, string | undefined>) => {
+        const url = new URL(window.location.href);
+
+        // Update or remove each parameter
+        Object.entries(params).forEach(([key, value]) => {
+            if (value) {
+                url.searchParams.set(key, value);
+            } else {
+                url.searchParams.delete(key);
+            }
+        });
+
+        // Update the URL without refreshing the page
+        window.history.pushState({}, "", url);
+    };
+
+    // Debounce search query
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
     useEffect(() => {
         const fetchApplications = async () => {
@@ -34,7 +73,8 @@ export default function ApplicationsPage() {
                     currentPage,
                     itemsPerPage,
                     statusFilter,
-                    schoolFilter
+                    schoolFilter,
+                    debouncedSearchQuery
                 );
 
                 setApplications(result.applications);
@@ -47,7 +87,21 @@ export default function ApplicationsPage() {
         };
 
         fetchApplications();
-    }, [currentPage, itemsPerPage, statusFilter, schoolFilter]);
+
+        // Update URL parameters whenever filters change
+        updateUrlParams({
+            page: currentPage > 1 ? currentPage.toString() : undefined,
+            status: statusFilter,
+            school: schoolFilter,
+            search: debouncedSearchQuery || undefined,
+        });
+    }, [
+        currentPage,
+        itemsPerPage,
+        statusFilter,
+        schoolFilter,
+        debouncedSearchQuery,
+    ]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -69,8 +123,18 @@ export default function ApplicationsPage() {
         setCurrentPage(1);
     };
 
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+        setCurrentPage(1);
+    };
+
     const handleViewApplication = (id: string) => {
-        router.push(`/admin/applications/${id}`);
+        // Include current filters in the URL when navigating to detail page
+        router.push(
+            `/admin/applications/${id}?returnTo=${encodeURIComponent(
+                window.location.href
+            )}`
+        );
     };
 
     const getStatusBadgeColor = (status: ApplicationStatus) => {
@@ -92,11 +156,45 @@ export default function ApplicationsPage() {
 
     return (
         <div className="py-6">
-            <div className="mb-6 flex justify-between items-center">
+            <div className="mb-6 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
                 <h1 className="text-2xl font-bold text-[rgb(var(--mesa-grey))]">
                     Applications
                 </h1>
-                <div className="flex gap-4">
+                <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:gap-4">
+                    {/* Search input */}
+                    <div className="w-full md:w-64">
+                        <label
+                            htmlFor="searchQuery"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Search
+                        </label>
+                        <div className="relative rounded-md shadow-sm">
+                            <input
+                                type="text"
+                                id="searchQuery"
+                                className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[rgb(var(--mesa-orange))] focus:border-[rgb(var(--mesa-orange))] sm:text-sm rounded-md"
+                                placeholder="Name, email, or student ID"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                            />
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                <svg
+                                    className="h-5 w-5 text-gray-400"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                     <div>
                         <label
                             htmlFor="statusFilter"

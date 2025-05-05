@@ -1,5 +1,12 @@
 import { userClient } from "@/api/user-client";
-import { NotifyNonApplicantsResponse, StudentData } from "../types/admin.dto";
+import {
+    NotifyNonApplicantsResponse,
+    StudentData,
+    CreateStudentDto,
+    CreateStudentResponseDto,
+    DeleteUserDto,
+    DeleteUserResponseDto,
+} from "../types/admin.dto";
 import {
     CreateEventDto,
     UpdateEventDto,
@@ -151,6 +158,74 @@ export async function getEventRegistrations(
             throw new Error(`Event with ID ${eventId} not found`);
         }
         console.error("Error fetching event registrations:", error);
+        throw error;
+    }
+}
+
+/**
+ * Creates a new student account with automatic email verification.
+ *
+ * @param {CreateStudentDto} studentData - The data for creating the new student
+ * @returns {Promise<CreateStudentResponseDto>} The created student data
+ * @throws {Error} If the request fails or returns an error status
+ */
+export async function createStudent(
+    studentData: CreateStudentDto
+): Promise<CreateStudentResponseDto> {
+    try {
+        const response = await userClient.post(
+            "/auth/create-student",
+            studentData
+        );
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            if (error.response?.status === 400) {
+                throw new Error(
+                    error.response.data.message ||
+                        "Invalid student data provided"
+                );
+            } else if (error.response?.status === 401) {
+                throw new Error("Unauthorized access");
+            } else if (error.response?.status === 403) {
+                throw new Error("Forbidden: Insufficient permissions");
+            }
+        }
+        console.error("Error creating student:", error);
+        throw error;
+    }
+}
+
+/**
+ * Deletes a user and all associated data from the system.
+ *
+ * @param {string} userId - The ID of the user to delete
+ * @returns {Promise<DeleteUserResponseDto>} Response indicating success or failure
+ * @throws {Error} If the request fails or returns an error status
+ */
+export async function deleteUser(
+    userId: string
+): Promise<DeleteUserResponseDto> {
+    try {
+        const response = await userClient.delete("/auth/users", {
+            data: { userId } as DeleteUserDto,
+        });
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            if (error.response?.status === 404) {
+                throw new Error(`User with ID ${userId} not found`);
+            } else if (error.response?.status === 400) {
+                throw new Error(
+                    error.response.data.message || "Failed to delete user"
+                );
+            } else if (error.response?.status === 401) {
+                throw new Error("Unauthorized access");
+            } else if (error.response?.status === 403) {
+                throw new Error("Forbidden: Insufficient permissions");
+            }
+        }
+        console.error("Error deleting user:", error);
         throw error;
     }
 }

@@ -1,5 +1,14 @@
 import { graceClient } from "@/api/grace-client";
-import { Team, TeamMemberPublic, TeamWithMembers } from "../types/team.dto";
+import {
+    CreateTeamDto,
+    JoinTeamByCodeDto,
+    MessageResponse,
+    RemoveTeamMemberDto,
+    Team,
+    TeamMemberPublic,
+    TeamWithMembers,
+    UpdateTeamMemberDto,
+} from "../types/team.dto";
 
 /**
  * Retrieves all teams
@@ -31,11 +40,13 @@ export const getTeamById = async (id: string): Promise<TeamWithMembers> => {
 /**
  * Creates a new team and adds the creator as a member
  * @param name - Team name
- * @returns Promise containing the created Team object
+ * @returns Promise containing the created Team object with auto-generated code
  */
 export const createTeam = async (name: string): Promise<Team> => {
     try {
-        const response = await graceClient.post<Team>("/teams", { name });
+        const response = await graceClient.post<Team>("/teams", {
+            name,
+        } as CreateTeamDto);
         return response.data;
     } catch (error) {
         throw error;
@@ -43,14 +54,32 @@ export const createTeam = async (name: string): Promise<Team> => {
 };
 
 /**
- * Allows a user to join an existing team
- * @param id - Team ID to join
- * @returns Promise containing the TeamMember object
+ * Joins a team using the provided join code
+ * @param code - The team join code
+ * @returns Promise containing the team membership object
  */
-export const joinTeam = async (id: string): Promise<TeamMemberPublic> => {
+export const joinTeamByCode = async (
+    code: string
+): Promise<TeamMemberPublic> => {
     try {
         const response = await graceClient.post<TeamMemberPublic>(
-            `/teams/join/${id}`
+            "/teams/join-by-code",
+            { code } as JoinTeamByCodeDto
+        );
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * Retrieves the current user's team with members
+ * @returns Promise containing the user's team with members, or null if not in a team
+ */
+export const getMyTeam = async (): Promise<TeamWithMembers | null> => {
+    try {
+        const response = await graceClient.get<TeamWithMembers | null>(
+            "/teams/my-team"
         );
         return response.data;
     } catch (error) {
@@ -63,10 +92,33 @@ export const joinTeam = async (id: string): Promise<TeamMemberPublic> => {
  * @param id - Team ID to leave
  * @returns Promise containing success message
  */
-export const leaveTeam = async (id: string): Promise<{ message: string }> => {
+export const leaveTeam = async (id: string): Promise<MessageResponse> => {
     try {
-        const response = await graceClient.post<{ message: string }>(
+        const response = await graceClient.post<MessageResponse>(
             `/teams/leave/${id}`
+        );
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * Removes a team member
+ * @param teamId - Team ID
+ * @param userId - User ID of the member to remove
+ * @returns Promise containing success message
+ */
+export const removeTeamMember = async (
+    teamId: string,
+    userId: string
+): Promise<MessageResponse> => {
+    try {
+        const response = await graceClient.delete<MessageResponse>(
+            `/teams/members/${teamId}`,
+            {
+                data: { userId } as RemoveTeamMemberDto,
+            }
         );
         return response.data;
     } catch (error) {
@@ -107,7 +159,7 @@ export const updateTeamMember = async (
     try {
         const response = await graceClient.patch<TeamMemberPublic>(
             `/teams/members/${teamId}`,
-            { userId, role }
+            { userId, role } as UpdateTeamMemberDto
         );
         return response.data;
     } catch (error) {

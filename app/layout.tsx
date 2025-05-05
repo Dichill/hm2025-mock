@@ -31,7 +31,7 @@ const kievitSans = localFont({
 
 export const metadata: Metadata = {
     title: "HACKMESA 2025",
-    description: "HackMESA 2025",
+    description: "HACKMESA 2025",
 };
 
 export default function RootLayout({

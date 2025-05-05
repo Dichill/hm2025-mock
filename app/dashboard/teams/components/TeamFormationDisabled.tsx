@@ -34,8 +34,7 @@ const TeamFormationDisabled: React.FC = () => {
                 </div>
                 <h1 className="text-2xl font-semibold mb-3">Team Formation</h1>
                 <p className="text-gray-600 mb-6">
-                    Team formation is currently disabled. Details will be
-                    revealed during the Hackathon.
+                    Team formation is currently disabled.
                 </p>
                 <div className="w-20 h-1 bg-emerald-200 rounded-full mx-auto"></div>
             </div>

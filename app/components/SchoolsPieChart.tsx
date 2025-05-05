@@ -101,9 +101,9 @@ export default function SchoolsPieChart({
                                 ? 360
                                 : currentAngle;
 
-                        gradient += `${
+                        gradient += `${school.color} ${startAngle}deg, ${
                             school.color
-                        } ${startAngle}deg ${endAngle}deg${
+                        } ${endAngle}deg${
                             index < schoolsArray.length - 1 ? ", " : ""
                         }`;
                     });

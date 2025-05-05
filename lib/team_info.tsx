@@ -4,9 +4,9 @@ export interface TeamMember {
     image: string;
     description: string;
     linked_in: {
-        hasLink: boolean,
-        url: string,
-    },
+        hasLink: boolean;
+        url: string;
+    };
     school: string;
 }
 
@@ -19,7 +19,7 @@ export const teamMembers: TeamMember[] = [
             "Software Engineer and aspiring entrepreneur. CEO of DashTech. Created Dash Software for LACC MESA's student sign-in system.",
         linked_in: {
             hasLink: true,
-            url: "https://www.linkedin.com/in/dichill-tomarong-883b9729b/"
+            url: "https://www.linkedin.com/in/dichill-tomarong-883b9729b/",
         },
 
         school: "LACC",
@@ -31,7 +31,7 @@ export const teamMembers: TeamMember[] = [
         image: "/fajat_WR.jpg",
         linked_in: {
             hasLink: true,
-            url: "https://www.linkedin.com/in/fahatyousuf/"
+            url: "https://www.linkedin.com/in/fahatyousuf/",
         },
         school: "LACC",
     },
@@ -43,18 +43,19 @@ export const teamMembers: TeamMember[] = [
         image: "/evelyn_WR.jpg",
         linked_in: {
             hasLink: false,
-            url: ""
+            url: "",
         },
         school: "ELAC",
     },
     {
         name: "Cash Webb",
-        role: "Backend Lead",
-        description: "Computer Science major. CS lead for MESA Skills Lab at LAVC. CS and Math tutor for MESA",
+        role: "Tech Team/Backend",
+        description:
+            "Computer Science major. CS lead for MESA Skills Lab at LAVC. CS and Math tutor for MESA",
         image: "/cash_WR.jpg",
         linked_in: {
             hasLink: false,
-            url: ""
+            url: "",
         },
         school: "LAVC",
     },
@@ -65,19 +66,19 @@ export const teamMembers: TeamMember[] = [
         image: "",
         linked_in: {
             hasLink: false,
-            url: ""
+            url: "",
         },
         school: "CSULB",
     },
     {
         name: "Diego Cea",
-        role: "Tech/Frontend Teams",
+        role: "Tech/Frontend Team",
         description:
             "Designer, mechanical engineering undergrad, former NASA & Caltech intern, currently tutoring STEM for MESA.",
         image: "/diego_WR.jpg",
         linked_in: {
             hasLink: true,
-            url: "https://www.linkedin.com/in/ceadiego/"
+            url: "https://www.linkedin.com/in/ceadiego/",
         },
         school: "ELAC",
     },
@@ -88,18 +89,19 @@ export const teamMembers: TeamMember[] = [
         image: "",
         linked_in: {
             hasLink: false,
-            url: ""
+            url: "",
         },
         school: "ELAC",
     },
     {
         name: "Bendiel Passos",
-        role: "Logistics/Social Media Teams",
-        description: "About info coming soon!",
-        image: "",
+        role: "Logistics/Social Media Team",
+        description:
+            "I'm a Computer Engineering student at LACC who loves tech, creativity, and problem-solving. Excited to build, learn, and connect at this hackathon.",
+        image: "/Ben_WR.jpg",
         linked_in: {
             hasLink: true,
-            url: "https://www.linkedin.com/in/bendiel-passos-85173450/"
+            url: "https://www.linkedin.com/in/bendiel-passos-85173450/",
         },
         school: "LACC",
     },
@@ -111,7 +113,7 @@ export const teamMembers: TeamMember[] = [
         image: "/jay_WR.jpg",
         linked_in: {
             hasLink: true,
-            url: "https://www.linkedin.com/in/jay-crawford-prod/"
+            url: "https://www.linkedin.com/in/jay-crawford-prod/",
         },
         school: "LACC",
     },
@@ -122,9 +124,9 @@ export const teamMembers: TeamMember[] = [
         image: "",
         linked_in: {
             hasLink: true,
-            url: "https://www.linkedin.com/in/andrcas/"
+            url: "https://www.linkedin.com/in/andrcas/",
         },
-        school: "CSULB",
+        school: "ELAC - CSULB",
     },
     {
         name: "Serena Kaldawi",
@@ -134,7 +136,7 @@ export const teamMembers: TeamMember[] = [
         image: "/serena_WR.jpg",
         linked_in: {
             hasLink: false,
-            url: ""
+            url: "",
         },
         school: "LAVC",
     },
