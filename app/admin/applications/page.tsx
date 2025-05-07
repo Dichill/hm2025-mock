@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { getAllApplications } from "@/core/apply/api/apply";
+import { searchApplications } from "@/core/apply/api/apply";
 import {
     ApplicationStatus,
     ApplicationSummaryDto,
-    School,
 } from "@/core/apply/types/apply.dto";
 
 export default function ApplicationsPage() {
@@ -16,45 +15,39 @@ export default function ApplicationsPage() {
 
     // Parse URL parameters
     const initialPage = Number(searchParams.get("page") || "1");
-    const initialStatus = searchParams.get("status") as
-        | ApplicationStatus
-        | undefined;
-    const initialSchool = searchParams.get("school") as School | undefined;
-    const initialSearch = searchParams.get("search") || "";
+    const initialSearch = searchParams.get("q") || "";
 
     const [applications, setApplications] = useState<ApplicationSummaryDto[]>(
         []
     );
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(initialPage);
     const [itemsPerPage] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const [statusFilter, setStatusFilter] = useState<
-        ApplicationStatus | undefined
-    >(initialStatus);
-    const [schoolFilter, setSchoolFilter] = useState<School | undefined>(
-        initialSchool
-    );
     const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [debouncedSearchQuery, setDebouncedSearchQuery] =
         useState(initialSearch);
 
-    // Update URL when filters change
-    const updateUrlParams = (params: Record<string, string | undefined>) => {
-        const url = new URL(window.location.href);
+    // Update URL when search changes
+    const updateUrlParams = useCallback(
+        (params: Record<string, string | undefined>) => {
+            const url = new URL(window.location.href);
 
-        // Update or remove each parameter
-        Object.entries(params).forEach(([key, value]) => {
-            if (value) {
-                url.searchParams.set(key, value);
-            } else {
-                url.searchParams.delete(key);
-            }
-        });
+            // Update or remove each parameter
+            Object.entries(params).forEach(([key, value]) => {
+                if (value) {
+                    url.searchParams.set(key, value);
+                } else {
+                    url.searchParams.delete(key);
+                }
+            });
 
-        // Update the URL without refreshing the page
-        window.history.pushState({}, "", url);
-    };
+            // Update the URL without refreshing the page
+            window.history.pushState({}, "", url);
+        },
+        []
+    );
 
     // Debounce search query
     useEffect(() => {
@@ -69,58 +62,35 @@ export default function ApplicationsPage() {
         const fetchApplications = async () => {
             try {
                 setLoading(true);
-                const result = await getAllApplications(
+                setError(null);
+                const result = await searchApplications(
+                    debouncedSearchQuery,
                     currentPage,
-                    itemsPerPage,
-                    statusFilter,
-                    schoolFilter,
-                    debouncedSearchQuery
+                    itemsPerPage
                 );
 
                 setApplications(result.applications);
                 setTotalItems(result.total);
             } catch (error) {
-                console.error("Error fetching applications:", error);
+                console.error("Error searching applications:", error);
+                setError("Failed to search applications. Please try again.");
             } finally {
                 setLoading(false);
             }
         };
 
+        // Always fetch applications, even if there's no search query
         fetchApplications();
 
-        // Update URL parameters whenever filters change
+        // Update URL parameters whenever search changes
         updateUrlParams({
             page: currentPage > 1 ? currentPage.toString() : undefined,
-            status: statusFilter,
-            school: schoolFilter,
-            search: debouncedSearchQuery || undefined,
+            q: debouncedSearchQuery || undefined,
         });
-    }, [
-        currentPage,
-        itemsPerPage,
-        statusFilter,
-        schoolFilter,
-        debouncedSearchQuery,
-    ]);
+    }, [currentPage, itemsPerPage, debouncedSearchQuery, updateUrlParams]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-    };
-
-    const handleStatusFilterChange = (
-        event: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        const value = event.target.value;
-        setStatusFilter(value ? (value as ApplicationStatus) : undefined);
-        setCurrentPage(1);
-    };
-
-    const handleSchoolFilterChange = (
-        event: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        const value = event.target.value;
-        setSchoolFilter(value ? (value as School) : undefined);
-        setCurrentPage(1);
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,7 +99,6 @@ export default function ApplicationsPage() {
     };
 
     const handleViewApplication = (id: string) => {
-        // Include current filters in the URL when navigating to detail page
         router.push(
             `/admin/applications/${id}?returnTo=${encodeURIComponent(
                 window.location.href
@@ -195,50 +164,14 @@ export default function ApplicationsPage() {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <label
-                            htmlFor="statusFilter"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Status
-                        </label>
-                        <select
-                            id="statusFilter"
-                            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[rgb(var(--mesa-orange))] focus:border-[rgb(var(--mesa-orange))] sm:text-sm rounded-md"
-                            value={statusFilter || ""}
-                            onChange={handleStatusFilterChange}
-                        >
-                            <option value="">All Statuses</option>
-                            {Object.values(ApplicationStatus).map((status) => (
-                                <option key={status} value={status}>
-                                    {status}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="schoolFilter"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            School
-                        </label>
-                        <select
-                            id="schoolFilter"
-                            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[rgb(var(--mesa-orange))] focus:border-[rgb(var(--mesa-orange))] sm:text-sm rounded-md"
-                            value={schoolFilter || ""}
-                            onChange={handleSchoolFilterChange}
-                        >
-                            <option value="">All Schools</option>
-                            {Object.values(School).map((school) => (
-                                <option key={school} value={school}>
-                                    {school}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                 </div>
             </div>
+
+            {error && (
+                <div className="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                    {error}
+                </div>
+            )}
 
             {loading ? (
                 <div className="flex justify-center items-center h-64">
@@ -283,11 +216,6 @@ export default function ApplicationsPage() {
                                                             {application.status}
                                                         </span>
                                                     </div>
-                                                    <div className="ml-2 flex-shrink-0 flex">
-                                                        <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                            {application.school}
-                                                        </p>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -295,7 +223,9 @@ export default function ApplicationsPage() {
                                 ))
                             ) : (
                                 <div className="px-4 py-8 text-center text-gray-500">
-                                    No applications found matching your filters.
+                                    {searchQuery
+                                        ? "No applications found matching your search."
+                                        : "Enter a search term to find applications."}
                                 </div>
                             )}
                         </ul>
@@ -393,8 +323,6 @@ export default function ApplicationsPage() {
                                                 />
                                             </svg>
                                         </button>
-
-                                        {/* Add page numbers here if needed */}
 
                                         <button
                                             onClick={() =>

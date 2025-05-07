@@ -248,3 +248,23 @@ export async function unregisterFromHackathon(): Promise<{ message: string }> {
         throw error;
     }
 }
+
+export async function searchApplications(
+    searchTerm: string,
+    page: number = 1,
+    limit: number = 10
+): Promise<ApplicationsPageDto> {
+    try {
+        const response = await applicationClient.get("/applications/search", {
+            params: {
+                q: searchTerm,
+                page,
+                limit,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error searching applications:", error);
+        throw error;
+    }
+}

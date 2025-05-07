@@ -160,7 +160,7 @@ const DesktopNavbar = ({
                 transition={{ duration: 0.3 }}
                 onClick={() => router.push("/dashboard")}
             >
-                Apply Now
+                Dashboard
             </motion.button>
         </motion.div>
     );
@@ -218,7 +218,7 @@ const MobileNavbar = ({
                     transition={{ duration: 0.3 }}
                     onClick={() => router.push("/dashboard")}
                 >
-                    Apply
+                    Dashboard
                 </motion.button>
             </motion.div>
 
@@ -308,7 +308,7 @@ const MobileMenu = ({
                         setIsOpen(false);
                     }}
                 >
-                    Apply Now
+                    Dashboard
                 </motion.button>
             </div>
         </motion.div>

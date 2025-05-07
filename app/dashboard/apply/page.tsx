@@ -3,11 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ApplicationForm } from "./components/ApplicationForm";
 
 export default function ApplicationPage() {
     const [isClient, setIsClient] = useState(false);
-    const [showWarning, setShowWarning] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -15,15 +13,7 @@ export default function ApplicationPage() {
     }, []);
 
     const handleBackClick = () => {
-        setShowWarning(true);
-    };
-
-    const confirmNavigation = () => {
         router.push("/dashboard");
-    };
-
-    const cancelNavigation = () => {
-        setShowWarning(false);
     };
 
     const containerVariants = {
@@ -111,54 +101,28 @@ export default function ApplicationPage() {
                         HACKMESA 2025
                     </h1>
                     <p className="mt-2 text-lg text-[rgb(var(--mesa-grey))]">
-                        Apply to attend our first-ever hackathon hosted by the
-                        MESA program across LACCD.
+                        Registration is now closed
                     </p>
                 </motion.div>
 
-                {isClient && <ApplicationForm />}
-            </div>
-
-            {/* Warning Modal */}
-            {showWarning && (
-                <div
-                    className="fixed inset-0 bg-transparent flex items-center justify-center z-50"
-                    style={{ backgroundColor: "rgba(0, 0, 0, 0.15)" }}
-                >
+                {isClient && (
                     <motion.div
-                        className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl"
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 25,
-                        }}
+                        className="bg-white rounded-lg p-8 shadow-lg text-center"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <h3 className="text-xl font-semibold text-[rgb(var(--mesa-warm-red))] mb-3">
-                            Warning
-                        </h3>
+                        <h2 className="text-2xl font-semibold text-[rgb(var(--mesa-warm-red))] mb-4">
+                            Registration Period Has Ended
+                        </h2>
                         <p className="text-[rgb(var(--mesa-grey))] mb-6">
-                            Any unsaved changes to your application will be
-                            lost. Are you sure you want to go back?
+                            Thank you for your interest in HACKMESA 2025. The
+                            registration period has ended. We look forward to
+                            seeing you at future events!
                         </p>
-                        <div className="flex justify-end space-x-3">
-                            <button
-                                onClick={cancelNavigation}
-                                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors cursor-pointer"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={confirmNavigation}
-                                className="px-4 py-2 bg-[rgb(var(--mesa-warm-red))] text-white rounded-md hover:bg-[rgb(var(--mesa-warm-red))]/90 transition-colors cursor-pointer"
-                            >
-                                Go Back
-                            </button>
-                        </div>
                     </motion.div>
-                </div>
-            )}
+                )}
+            </div>
         </motion.div>
     );
 }

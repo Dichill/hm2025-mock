@@ -281,18 +281,8 @@ export function LoginForm() {
                 variants={formItemVariants}
             >
                 <p className="text-[rgb(var(--mesa-grey))]">
-                    Don&apos;t have an account yet?{" "}
-                    <motion.a
-                        href="/register"
-                        className="text-[rgb(var(--mesa-orange))] hover:text-[rgb(var(--mesa-yellow-116))] font-medium transition-colors"
-                        whileHover={{
-                            scale: 1.05,
-                            color: "rgb(255, 182, 10)",
-                            transition: { duration: 0.2 },
-                        }}
-                    >
-                        Register
-                    </motion.a>
+                    Registration is currently closed. Please contact the
+                    organizers for more information.
                 </p>
                 <p className="text-[rgb(var(--mesa-grey))] mt-2">
                     <motion.a

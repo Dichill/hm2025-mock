@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useCallback, memo } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import SocialBrick from "../SocialBrick";
 
 interface HeroHeaderProps {
     eventStartDate?: string;
     eventEndDate?: string;
-    registrationDeadline?: string;
-    applyUrl?: string;
 }
 
 interface Particle {
@@ -24,31 +21,25 @@ const optimizedTransition = {
     duration: 0.5,
 };
 
-const MemoizedButton = memo(({ applyUrl }: { applyUrl: string }) => {
+const MemoizedButton = memo(() => {
     const buttonVariants = {
         hover: {
-            scale: 1.03,
-            boxShadow: "0 10px 25px rgba(255, 137, 62, 0.2)",
-            transition: {
-                type: "spring",
-                stiffness: 400,
-                damping: 10,
-            },
+            scale: 1,
+            boxShadow: "none",
         },
-        tap: { scale: 0.97 },
+        tap: { scale: 1 },
     };
 
     return (
-        <Link href={applyUrl}>
+        <div className="relative">
             <motion.button
                 variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                className="cursor-pointer px-8 py-3 bg-[rgb(var(--mesa-orange))] hover:bg-[rgb(var(--mesa-orange))]/90 text-white font-bold rounded-md shadow-lg transition-colors duration-200 text-lg will-change-transform"
+                className="cursor-not-allowed px-8 py-3 bg-gray-500 text-white font-bold rounded-md shadow-lg text-lg will-change-transform"
+                disabled
             >
-                Apply Now
+                Registration Closed
             </motion.button>
-        </Link>
+        </div>
     );
 });
 
@@ -84,8 +75,6 @@ MemoizedBuzzwords.displayName = "MemoizedBuzzwords";
 function HeroHeader({
     eventStartDate = "May 9th",
     eventEndDate = "May 10th",
-    registrationDeadline = "May 7th",
-    applyUrl = "/dashboard",
 }: HeroHeaderProps): React.ReactElement {
     const [particles, setParticles] = useState<Particle[]>([]);
     const [isMounted, setIsMounted] = useState(false);
@@ -205,8 +194,8 @@ function HeroHeader({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ ...optimizedTransition, delay: 0.1 }}
                     >
-                        LACCD’s First-Ever Hackathon — Open to All Students 18
-                        and Over!
+                        LACCD&apos;s First-Ever Hackathon — Registration is now
+                        closed
                     </motion.p>
 
                     <motion.div
@@ -219,10 +208,29 @@ function HeroHeader({
                             {eventStartDate} - {eventEndDate}, 2025
                         </p>
                         <p className="text-[rgb(var(--mesa-yellow-116))] drop-shadow-md">
-                            <span className="font-bold">
-                                Registration Deadline:
-                            </span>{" "}
-                            {registrationDeadline}, 2025
+                            <span className="font-bold">Event Status:</span>{" "}
+                            Registration Closed
+                        </p>
+                    </motion.div>
+
+                    <motion.div
+                        className="text-lg md:text-xl mb-8 bg-[rgba(43,36,77,0.5)] backdrop-filter backdrop-blur-sm p-4 rounded-lg border border-[rgba(255,255,255,0.05)]"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ ...optimizedTransition, delay: 0.12 }}
+                    >
+                        <p className="text-white/90">
+                            Looking for another opportunity? Check out{" "}
+                            <a
+                                href="https://hackcc.net"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[rgb(var(--mesa-yellow-116))] hover:text-[rgb(var(--mesa-orange))] underline transition-colors"
+                            >
+                                HackCC
+                            </a>{" "}
+                            — California&apos;s statewide hackathon for
+                            community college students!
                         </p>
                     </motion.div>
 
@@ -240,7 +248,7 @@ function HeroHeader({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ ...optimizedTransition, delay: 0.2 }}
                     >
-                        <MemoizedButton applyUrl={applyUrl} />
+                        <MemoizedButton />
                     </motion.div>
 
                     <motion.div
