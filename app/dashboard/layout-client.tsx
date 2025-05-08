@@ -63,6 +63,15 @@ export default function ClientLayout({
                     try {
                         const userRoleData = await getUserData();
                         const adminRoles = ["SPONSORS", "ORGANIZER"];
+                        const judgeRoles = ["JUDGE"];
+
+                        if (
+                            userRoleData.roles.some((role) =>
+                                judgeRoles.includes(role)
+                            )
+                        ) {
+                            router.push("/grace");
+                        }
 
                         if (
                             userRoleData.roles.some((role) =>

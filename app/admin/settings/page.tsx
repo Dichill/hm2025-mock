@@ -24,8 +24,12 @@ export default function AdminSettingsPage(): React.ReactElement {
         useState<boolean>(false);
     const [mainJudgingEnabled, setMainJudgingEnabled] =
         useState<boolean>(false);
-    const [sponsorJudgingEnabled, setSponsorJudgingEnabled] =
+
+    const [round2JudgingEnabled, setRound2JudgingEnabled] =
         useState<boolean>(false);
+    const [submissionsEnabled, setSubmissionsEnabled] =
+        useState<boolean>(false);
+    const [hackathonStarted, setHackathonStarted] = useState<boolean>(false);
     const [registrationDeadline, setRegistrationDeadline] =
         useState<string>("");
     const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
@@ -51,11 +55,25 @@ export default function AdminSettingsPage(): React.ReactElement {
                     setMainJudgingEnabled(!!mainJudging.value.enabled);
                 }
 
-                const sponsorJudging = settingsData.find(
-                    (s) => s.name === "sponsor_judging_enabled"
+                const round2Judging = settingsData.find(
+                    (s) => s.name === "round2_judging_enabled"
                 );
-                if (sponsorJudging) {
-                    setSponsorJudgingEnabled(!!sponsorJudging.value.enabled);
+                if (round2Judging) {
+                    setRound2JudgingEnabled(!!round2Judging.value.enabled);
+                }
+
+                const submissions = settingsData.find(
+                    (s) => s.name === "submissions_enabled"
+                );
+                if (submissions) {
+                    setSubmissionsEnabled(!!submissions.value.enabled);
+                }
+
+                const hackathon = settingsData.find(
+                    (s) => s.name === "hackathon_started"
+                );
+                if (hackathon) {
+                    setHackathonStarted(!!hackathon.value.enabled);
                 }
 
                 const regDeadline = settingsData.find(
@@ -184,13 +202,33 @@ export default function AdminSettingsPage(): React.ReactElement {
         );
     };
 
-    const toggleSponsorJudging = async (): Promise<void> => {
-        const newValue = !sponsorJudgingEnabled;
-        setSponsorJudgingEnabled(newValue);
+    const toggleRound2Judging = async (): Promise<void> => {
+        const newValue = !round2JudgingEnabled;
+        setRound2JudgingEnabled(newValue);
         await toggleSetting(
-            "sponsor_judging_enabled",
+            "round2_judging_enabled",
             { enabled: newValue },
-            "Controls whether sponsor judging is currently enabled"
+            "Controls whether round 2 judging is currently enabled"
+        );
+    };
+
+    const toggleSubmissions = async (): Promise<void> => {
+        const newValue = !submissionsEnabled;
+        setSubmissionsEnabled(newValue);
+        await toggleSetting(
+            "submissions_enabled",
+            { enabled: newValue },
+            "Controls whether project submissions are currently enabled"
+        );
+    };
+
+    const toggleHackathonStarted = async (): Promise<void> => {
+        const newValue = !hackathonStarted;
+        setHackathonStarted(newValue);
+        await toggleSetting(
+            "hackathon_started",
+            { enabled: newValue },
+            "Controls whether the HACKMESA event has officially started"
         );
     };
 
@@ -247,6 +285,53 @@ export default function AdminSettingsPage(): React.ReactElement {
                             </h2>
 
                             <div className="space-y-4">
+                                {/* Start HACKMESA Toggle */}
+                                <div className="bg-gray-50 p-4 rounded-lg">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <h3 className="font-medium text-gray-900">
+                                                Start HACKMESA
+                                            </h3>
+                                            <p className="text-sm text-gray-500 mt-1">
+                                                Officially start the HACKMESA
+                                                event. When enabled, the event
+                                                is considered active.
+                                            </p>
+                                        </div>
+                                        <div className="relative inline-block w-12 align-middle select-none">
+                                            <input
+                                                type="checkbox"
+                                                name="toggle"
+                                                id="toggle-hackathon-started"
+                                                className="sr-only peer"
+                                                checked={hackathonStarted}
+                                                onChange={
+                                                    toggleHackathonStarted
+                                                }
+                                                disabled={
+                                                    isSaving.hackathon_started
+                                                }
+                                            />
+                                            <label
+                                                htmlFor="toggle-hackathon-started"
+                                                className={`block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer peer-checked:bg-[rgb(var(--mesa-green))] ${
+                                                    isSaving.hackathon_started
+                                                        ? "opacity-50"
+                                                        : ""
+                                                }`}
+                                            >
+                                                <span
+                                                    className={`absolute inset-y-0 left-0 w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
+                                                        hackathonStarted
+                                                            ? "translate-x-6"
+                                                            : "translate-x-0"
+                                                    }`}
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {/* Team Formation Toggle */}
                                 <div className="bg-gray-50 p-4 rounded-lg">
                                     <div className="flex justify-between items-center">
@@ -284,6 +369,52 @@ export default function AdminSettingsPage(): React.ReactElement {
                                                 <span
                                                     className={`absolute inset-y-0 left-0 w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
                                                         teamFormationEnabled
+                                                            ? "translate-x-6"
+                                                            : "translate-x-0"
+                                                    }`}
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Submissions Toggle */}
+                                <div className="bg-gray-50 p-4 rounded-lg">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <h3 className="font-medium text-gray-900">
+                                                Enable Project Submissions
+                                            </h3>
+                                            <p className="text-sm text-gray-500 mt-1">
+                                                Allow teams to submit their
+                                                hackathon projects. When
+                                                disabled, submissions are
+                                                locked.
+                                            </p>
+                                        </div>
+                                        <div className="relative inline-block w-12 align-middle select-none">
+                                            <input
+                                                type="checkbox"
+                                                name="toggle"
+                                                id="toggle-submissions"
+                                                className="sr-only peer"
+                                                checked={submissionsEnabled}
+                                                onChange={toggleSubmissions}
+                                                disabled={
+                                                    isSaving.submissions_enabled
+                                                }
+                                            />
+                                            <label
+                                                htmlFor="toggle-submissions"
+                                                className={`block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer peer-checked:bg-[rgb(var(--mesa-green))] ${
+                                                    isSaving.submissions_enabled
+                                                        ? "opacity-50"
+                                                        : ""
+                                                }`}
+                                            >
+                                                <span
+                                                    className={`absolute inset-y-0 left-0 w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
+                                                        submissionsEnabled
                                                             ? "translate-x-6"
                                                             : "translate-x-0"
                                                     }`}
@@ -384,42 +515,41 @@ export default function AdminSettingsPage(): React.ReactElement {
                                     </div>
                                 </div>
 
-                                {/* Sponsor Judging Toggle */}
+                                {/* Round 2 Judging Toggle */}
                                 <div className="bg-gray-50 p-4 rounded-lg">
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <h3 className="font-medium text-gray-900">
-                                                Enable Sponsor Judging
+                                                Begin Round 2 Judging
                                             </h3>
                                             <p className="text-sm text-gray-500 mt-1">
-                                                Allow sponsors to evaluate
-                                                submissions for their specific
-                                                prize categories.
+                                                Enable the second round of
+                                                judging for finalist projects.
                                             </p>
                                         </div>
                                         <div className="relative inline-block w-12 align-middle select-none">
                                             <input
                                                 type="checkbox"
                                                 name="toggle"
-                                                id="toggle-sponsor-judging"
+                                                id="toggle-round2-judging"
                                                 className="sr-only peer"
-                                                checked={sponsorJudgingEnabled}
-                                                onChange={toggleSponsorJudging}
+                                                checked={round2JudgingEnabled}
+                                                onChange={toggleRound2Judging}
                                                 disabled={
-                                                    isSaving.sponsor_judging_enabled
+                                                    isSaving.round2_judging_enabled
                                                 }
                                             />
                                             <label
-                                                htmlFor="toggle-sponsor-judging"
+                                                htmlFor="toggle-round2-judging"
                                                 className={`block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer peer-checked:bg-[rgb(var(--mesa-green))] ${
-                                                    isSaving.sponsor_judging_enabled
+                                                    isSaving.round2_judging_enabled
                                                         ? "opacity-50"
                                                         : ""
                                                 }`}
                                             >
                                                 <span
                                                     className={`absolute inset-y-0 left-0 w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
-                                                        sponsorJudgingEnabled
+                                                        round2JudgingEnabled
                                                             ? "translate-x-6"
                                                             : "translate-x-0"
                                                     }`}

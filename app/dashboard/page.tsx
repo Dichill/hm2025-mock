@@ -11,6 +11,7 @@ import {
     unregisterFromHackathon,
 } from "@/core/apply/api/apply";
 import { getUserData } from "@/core/user/api/user";
+import { publicSettingsApi } from "@/core/grace/api/settings";
 
 export default function DashboardPage() {
     const [isClient, setIsClient] = useState(false);
@@ -18,6 +19,7 @@ export default function DashboardPage() {
     const [unregistering, setUnregistering] = useState(false);
     const [application, setApplication] = useState<Application | null>(null);
     const [userRoles, setUserRoles] = useState<string[]>([]);
+    const [hackathonStarted, setHackathonStarted] = useState(false);
     const router = useRouter();
 
     const containerVariants = {
@@ -90,6 +92,28 @@ export default function DashboardPage() {
                 } catch (error) {
                     console.error("Error fetching user roles:", error);
                     setUserRoles([]);
+                }
+
+                // Fetch hackathon_started setting
+                try {
+                    const setting = await publicSettingsApi.getByName(
+                        "hackathon_started"
+                    );
+                    // Check if the value contains a boolean or string representation of 'true'
+                    const settingValue =
+                        typeof setting.value === "object" &&
+                        setting.value !== null
+                            ? setting.value.enabled
+                            : setting.value;
+                    setHackathonStarted(
+                        settingValue === true || settingValue === "true"
+                    );
+                } catch (error) {
+                    console.error(
+                        "Error fetching hackathon_started setting:",
+                        error
+                    );
+                    setHackathonStarted(false);
                 }
             } finally {
                 setLoading(false);
@@ -202,13 +226,58 @@ export default function DashboardPage() {
                 </div>
             )}
 
-            {/* Application Status Card - Full width on all screen sizes */}
+            {/* Conditional rendering based on hackathon_started setting and isHacker */}
             <div className={isHacker ? "md:col-span-2 lg:col-span-3" : ""}>
-                <ApplicationStatusCard
-                    application={application}
-                    onApplyNow={handleApplyNow}
-                    onUnregister={handleUnregister}
-                />
+                {isHacker && hackathonStarted ? (
+                    <motion.div
+                        variants={cardVariants}
+                        className="bg-white rounded-lg shadow-sm p-6 border border-gray-100"
+                    >
+                        <div className="flex items-center mb-4">
+                            <div className="w-12 h-12 bg-[rgb(var(--mesa-blue))]/20 rounded-full flex items-center justify-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6 text-[rgb(var(--mesa-blue))]"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 className="ml-3 text-xl font-semibold">
+                                Project Submission
+                            </h3>
+                        </div>
+                        <div className="mb-6">
+                            <p className="text-gray-600">
+                                The hackathon has started! Submit your project
+                                and showcase what you&apos;ve built to win
+                                prizes and recognition.
+                            </p>
+                        </div>
+                        <motion.button
+                            onClick={() => router.push("/dashboard/submit")}
+                            whileHover="hover"
+                            whileTap="tap"
+                            variants={buttonVariants}
+                            className="cursor-pointer w-full py-2 bg-blue-100 text-blue-600 rounded-md font-medium mt-2 block text-center"
+                        >
+                            Submit Project
+                        </motion.button>
+                    </motion.div>
+                ) : (
+                    <ApplicationStatusCard
+                        application={application}
+                        onApplyNow={handleApplyNow}
+                        onUnregister={handleUnregister}
+                    />
+                )}
             </div>
 
             {/* Quick Navigation Cards - Only shown to users with HACKER role */}

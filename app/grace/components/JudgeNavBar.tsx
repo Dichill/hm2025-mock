@@ -47,14 +47,14 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                 <div className="flex justify-between items-center">
                     {/* Logo and admin label */}
                     <div className="flex items-center justify-center">
-                        <Link href="/admin" className="flex items-center">
+                        <Link href="/grace" className="flex items-center">
                             <motion.div
                                 className="flex items-center"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <span className="text-[rgb(var(--mesa-warm-red))] font-bold text-xl mb-1.5">
-                                    ADMIN
+                                    JUDGE
                                 </span>
                                 <Image
                                     src="/MESA_logo.svg"
@@ -70,49 +70,18 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-6">
                         <Link
-                            href="/admin"
+                            href="/grace"
                             className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
                         >
                             Dashboard
                         </Link>
                         <Link
-                            href="/admin/users"
+                            href="/grace/evaluated"
                             className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
                         >
-                            Users
-                        </Link>
-                        <Link
-                            href="/admin/events"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
-                        >
-                            Events
-                        </Link>
-                        <Link
-                            href="/admin/applications"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
-                        >
-                            Applications
-                        </Link>
-                        <Link
-                            href="/admin/grace"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
-                        >
-                            Grace
-                        </Link>
-                        <Link
-                            href="/admin/ranking"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
-                        >
-                            Ranking
-                        </Link>
-                        <Link
-                            href="/admin/settings"
-                            className="text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] transition-colors duration-200"
-                        >
-                            Settings
+                            My Evaluated
                         </Link>
 
-                        {/* Admin info and sign out button */}
                         <div className="flex items-center ml-6 pl-6 border-l border-gray-200">
                             <div className="text-right mr-4">
                                 <p className="text-sm text-gray-500">
@@ -140,7 +109,7 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
                     <div className="md:hidden flex items-center">
                         <div className="flex items-center space-x-3 mr-4">
                             <div className="text-right">
-                                <p className="text-xs text-gray-500">Admin</p>
+                                <p className="text-xs text-gray-500">Judge</p>
                                 <p className="font-medium text-sm truncate max-w-[100px]">
                                     {user?.user_metadata?.first_name}
                                 </p>
@@ -198,53 +167,18 @@ export default function AdminNavBar({ user, onSignOut }: AdminNavBarProps) {
             >
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
                     <Link
-                        href="/admin"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        href="/grace"
+                        className="block px-3 py-2 text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] hover:bg-gray-100 rounded-md transition-colors duration-200"
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Dashboard
                     </Link>
                     <Link
-                        href="/admin/users"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
+                        href="/grace/evaluated"
+                        className="block px-3 py-2 text-[rgb(var(--mesa-grey))] hover:text-[rgb(var(--mesa-warm-red))] hover:bg-gray-100 rounded-md transition-colors duration-200"
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        Users
-                    </Link>
-                    <Link
-                        href="/admin/applications"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Applications
-                    </Link>
-                    <Link
-                        href="/admin/events"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Events
-                    </Link>
-                    <Link
-                        href="/admin/grace"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Grace
-                    </Link>
-                    <Link
-                        href="/admin/ranking"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Ranking
-                    </Link>
-                    <Link
-                        href="/admin/settings"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-[rgb(var(--mesa-grey))] hover:bg-gray-100"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Settings
+                        My Evaluated
                     </Link>
                     <div className="pt-4 pb-3 border-t border-gray-200">
                         <motion.button

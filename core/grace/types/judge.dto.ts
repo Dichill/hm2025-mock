@@ -1,86 +1,111 @@
-export interface VerifyJudgeCodeDto {
-    judgeCode: string;
+// Types for request and response objects
+
+export interface SubmitScoreRequest {
+    judge_id: string;
+    project_id: string;
+    round: number;
+    technical_complexity: number;
+    potential_impact: number;
+    design_implementation: number;
+    presentation: number;
+    bonus_scalability: boolean;
+    bonus_all_participated: boolean;
+    bonus_task_division: boolean;
 }
 
-export interface AuthResponse {
-    token: string;
-    userId: string;
-    type: string;
-    sponsorTag?: string;
-}
-
-export interface Project {
-    projectId: string;
-    name: string;
-    description: string;
-    tableNumber: number;
-    track?: string;
-    teamMembers?: string[];
-    githubUrl?: string;
-    demoUrl?: string;
-    technologies?: string[];
-}
-
-export interface CreateScoreDto {
-    projectId: string;
-    tableNumber: number;
-    technicalComplexity: number;
-    userExperience: number;
-    originality: number;
-    overallImpression: number;
-    comments?: string;
-}
-
-export interface ScoreResponse {
-    id: string;
-    projectId: string;
-    judgeId: string;
-    judgeType: string;
-    sponsorTag?: string;
-    technicalComplexity: number;
-    userExperience: number;
-    originality: number;
-    overallImpression: number;
-    average: number;
-    comments?: string;
-    createdAt: string;
-}
-
-export interface RankedProject {
-    projectId: string;
-    name: string;
-    description: string;
-    tableNumber: number;
-    track?: string;
-    averageScore: number;
-    rank: number;
-}
-
-export interface ProjectRanking {
-    rank: number;
-    totalProjects: number;
-}
-
-export interface RequestWaitlistDto {
-    tableNumber: number;
-    projectId?: string;
+export interface SubmitAwardScoreRequest {
+    judge_id: string;
+    project_id: string;
+    award_category: string;
+    score: number;
     notes?: string;
 }
 
-export interface MarkDoneDto {
-    tableNumber: number;
-    sponsorTag: string;
-    feedback?: string;
+export interface Score {
+    id: string;
+    judge_id: string;
+    project_id: string;
+    round: number;
+    technical_complexity: number;
+    potential_impact: number;
+    design_implementation: number;
+    presentation: number;
+    bonus_scalability: boolean;
+    bonus_all_participated: boolean;
+    bonus_task_division: boolean;
+    created_at: string;
 }
 
-export interface WaitlistEntry {
+export interface AwardScore {
     id: string;
-    tableNumber: number;
-    projectId?: string;
-    sponsorTag: string;
+    judge_id: string;
+    project_id: string;
+    award_category: string;
+    score: number;
     notes?: string;
-    isJudged: boolean;
-    feedback?: string;
-    requestedAt: string;
-    judgedAt?: string;
+    created_at: string;
+}
+
+export interface AwardCategory {
+    id: string;
+    name: string;
+    description: string;
+    created_at: string;
+}
+
+export interface RoundResult {
+    project_id: string;
+    table_number: string;
+    project_name: string;
+    track: string | null;
+    avg_technical: number;
+    avg_impact: number;
+    avg_design: number;
+    avg_presentation: number;
+    bonus_points: number;
+    total_score: number;
+    judge_count: number;
+}
+
+export interface TopProject {
+    project_id: string;
+    table_number: string;
+    project_name: string;
+    total_score: number;
+}
+
+export interface TrackWinner {
+    track: string;
+    project_id: string;
+    project_name: string;
+    table_number: string;
+    total_score: number;
+}
+
+export interface AwardWinner {
+    award_category: string;
+    project_id: string;
+    project_name: string;
+    table_number: string;
+    avg_score: number;
+    judge_count: number;
+}
+
+/**
+ * Represents a project scored by a specific judge
+ */
+export interface ScoredProject {
+    score_id: string;
+    project_id: string;
+    project_name: string;
+    table_number: string;
+    track: string | null;
+    technical_complexity: number;
+    potential_impact: number;
+    design_implementation: number;
+    presentation: number;
+    bonus_scalability: boolean;
+    bonus_all_participated: boolean;
+    bonus_task_division: boolean;
+    created_at: string;
 }

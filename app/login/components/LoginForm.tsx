@@ -39,7 +39,11 @@ export function LoginForm() {
                         ) {
                             router.push("/admin");
                         } else {
-                            router.push("/dashboard");
+                            if (userData.roles.includes("JUDGE")) {
+                                router.push("/grace");
+                            } else {
+                                router.push("/dashboard");
+                            }
                         }
                     } catch (error) {
                         console.error("Error getting user data:", error);

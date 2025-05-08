@@ -8,7 +8,7 @@ import { StudentData, CreateStudentDto } from "@/core/user/types/admin.dto";
 /**
  * Available user roles
  */
-const USER_ROLES = ["SPONSOR", "HACKER", "JUDGES", "ORGANIZER", "USER"];
+const USER_ROLES = ["SPONSOR", "HACKER", "JUDGE", "ORGANIZER", "USER"];
 
 /**
  * Admin Users Management Page - Students only view
@@ -157,7 +157,7 @@ export default function AdminUsersPage() {
                     className="cursor-pointer px-4 py-2 bg-[rgb(var(--mesa-warm-red))] text-white rounded-md"
                     onClick={() => setIsModalOpen(true)}
                 >
-                    Add New Student
+                    Add New User
                 </motion.button>
             </div>
 
@@ -267,7 +267,7 @@ export default function AdminUsersPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-6 w-full max-w-md">
                         <h2 className="text-2xl font-bold mb-4 text-[rgb(var(--mesa-warm-red))]">
-                            Add New Student
+                            Add New User
                         </h2>
 
                         {modalError && (

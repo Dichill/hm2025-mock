@@ -7,6 +7,7 @@ interface SchoolData {
     school: School;
     count: number;
     color: string;
+    percentage: number;
 }
 
 interface SchoolsPieChartProps {
@@ -32,6 +33,7 @@ export default function SchoolsPieChart({
     const [error, setError] = useState<string | null>(null);
     const [schoolsData, setSchoolsData] = useState<SchoolData[]>([]);
     const [conicGradient, setConicGradient] = useState<string>("");
+    const [totalApplications, setTotalApplications] = useState<number>(0);
 
     useEffect(() => {
         const processData = () => {
@@ -55,6 +57,7 @@ export default function SchoolsPieChart({
                     return acc;
                 }, {} as Record<School, number>);
 
+                // Count applications by school
                 applications.forEach((app) => {
                     if (app && app.school) {
                         if (Object.values(School).includes(app.school)) {
@@ -64,51 +67,73 @@ export default function SchoolsPieChart({
                     }
                 });
 
+                // Calculate total applications
+                const total = Object.values(schoolCounts).reduce(
+                    (sum, count) => sum + count,
+                    0
+                );
+
+                setTotalApplications(total);
+
+                if (total <= 0) {
+                    setSchoolsData([]);
+                    setConicGradient("");
+                    return;
+                }
+
+                // Create and sort schools array
                 const schoolsArray: SchoolData[] = Object.entries(schoolCounts)
-                    .map(([school, count]) => ({
-                        school: school as School,
-                        count,
-                        color: SCHOOL_COLORS[school as School] || "gray",
-                    }))
+                    .map(([school, count]) => {
+                        const percentage = (count / total) * 100;
+                        return {
+                            school: school as School,
+                            count,
+                            color: SCHOOL_COLORS[school as School] || "gray",
+                            percentage,
+                        };
+                    })
                     .filter((item) => item.count > 0)
                     .sort((a, b) => b.count - a.count);
 
                 setSchoolsData(schoolsArray);
 
-                // Calculate conic gradient
+                // Generate conic gradient
                 if (schoolsArray.length > 0) {
-                    const total = schoolsArray.reduce(
-                        (acc, school) => acc + school.count,
-                        0
-                    );
+                    try {
+                        let gradient = "";
+                        let currentAngle = 0;
 
-                    if (total <= 0) {
-                        setConicGradient("");
-                        return;
+                        for (let i = 0; i < schoolsArray.length; i++) {
+                            const school = schoolsArray[i];
+                            const startAngle = currentAngle;
+                            const degrees = (school.percentage / 100) * 360;
+
+                            // Ensure we have valid degrees value
+                            const safeEndAngle =
+                                i === schoolsArray.length - 1
+                                    ? 360
+                                    : currentAngle + Math.max(0.1, degrees);
+
+                            currentAngle = safeEndAngle;
+
+                            gradient += `${school.color} ${startAngle.toFixed(
+                                1
+                            )}deg, ${school.color} ${safeEndAngle.toFixed(
+                                1
+                            )}deg${i < schoolsArray.length - 1 ? ", " : ""}`;
+                        }
+
+                        setConicGradient(gradient);
+                    } catch (gradientError) {
+                        console.error(
+                            "Error generating gradient:",
+                            gradientError
+                        );
+                        // Fallback to a simple gradient with fewer segments
+                        const simplifiedGradient =
+                            generateSimplifiedGradient(schoolsArray);
+                        setConicGradient(simplifiedGradient);
                     }
-
-                    let gradient = "";
-                    let currentAngle = 0;
-
-                    schoolsArray.forEach((school, index) => {
-                        const startAngle = currentAngle;
-                        const percentage = (school.count / total) * 100;
-                        const degrees = (percentage / 100) * 360;
-                        currentAngle += degrees;
-
-                        const endAngle =
-                            index === schoolsArray.length - 1
-                                ? 360
-                                : currentAngle;
-
-                        gradient += `${school.color} ${startAngle}deg, ${
-                            school.color
-                        } ${endAngle}deg${
-                            index < schoolsArray.length - 1 ? ", " : ""
-                        }`;
-                    });
-
-                    setConicGradient(gradient);
                 } else {
                     setConicGradient("");
                 }
@@ -125,6 +150,40 @@ export default function SchoolsPieChart({
         processData();
     }, [applications]);
 
+    // Fallback gradient generator for when there are too many schools or precision issues
+    const generateSimplifiedGradient = (schools: SchoolData[]): string => {
+        // If we have too many schools, simplify by taking top 5
+        const topSchools = schools.length > 5 ? schools.slice(0, 5) : schools;
+
+        let gradient = "";
+        let currentAngle = 0;
+        let remainingPercentage = 100;
+
+        // For the top schools, calculate exact angles
+        for (let i = 0; i < topSchools.length; i++) {
+            const school = topSchools[i];
+            const startAngle = currentAngle;
+
+            // Last school gets remainder to ensure we reach 360 degrees
+            const percentage =
+                i === topSchools.length - 1
+                    ? remainingPercentage
+                    : school.percentage;
+
+            remainingPercentage -= percentage;
+            const degrees = (percentage / 100) * 360;
+            currentAngle += degrees;
+
+            gradient += `${school.color} ${startAngle.toFixed(1)}deg, ${
+                school.color
+            } ${currentAngle.toFixed(1)}deg${
+                i < topSchools.length - 1 ? ", " : ""
+            }`;
+        }
+
+        return gradient;
+    };
+
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-bold text-[rgb(var(--mesa-grey))] mb-4">
@@ -140,7 +199,7 @@ export default function SchoolsPieChart({
                         </div>
                     ) : error ? (
                         <div className="absolute inset-0 flex items-center justify-center text-center text-gray-500">
-                            Error loading data
+                            {error}
                         </div>
                     ) : schoolsData.length === 0 ? (
                         <div className="absolute inset-0 flex items-center justify-center text-center text-gray-500">
@@ -156,7 +215,11 @@ export default function SchoolsPieChart({
                             }}
                         >
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-24 h-24 bg-white rounded-full"></div>
+                                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                                    <span className="text-sm font-semibold">
+                                        {totalApplications}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -177,7 +240,10 @@ export default function SchoolsPieChart({
                                 <span className="font-medium">
                                     {school.school}:{" "}
                                 </span>
-                                <span>{school.count} applications</span>
+                                <span>
+                                    {school.count} (
+                                    {school.percentage.toFixed(1)}%)
+                                </span>
                             </div>
                         </div>
                     ))}

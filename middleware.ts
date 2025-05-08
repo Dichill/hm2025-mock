@@ -8,23 +8,18 @@ import type { NextRequest } from "next/server";
  */
 export function middleware(request: NextRequest) {
     const isGracePath = request.nextUrl.pathname.startsWith("/grace");
-    const isLoginPage = request.nextUrl.pathname === "/grace";
+    const isGraceRoot = request.nextUrl.pathname === "/grace";
 
     const token = request.cookies.get("grace_auth_token")?.value;
 
-    if (isGracePath && !isLoginPage && !token) {
+    if (isGracePath && !isGraceRoot && !token) {
         const loginUrl = new URL("/grace", request.url);
-
         return NextResponse.redirect(loginUrl);
-    }
-
-    if (isLoginPage && token) {
-        const dashboardUrl = new URL("/grace/dashboard", request.url);
-        return NextResponse.redirect(dashboardUrl);
     }
 
     return NextResponse.next();
 }
+
 export const config = {
     matcher: ["/grace/:path*"],
 };
