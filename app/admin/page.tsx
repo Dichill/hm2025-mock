@@ -207,6 +207,19 @@ export default function AdminDashboard() {
                             Quick Actions
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <Link href="/admin/checkin">
+                                <motion.div
+                                    whileHover="hover"
+                                    whileTap="tap"
+                                    variants={buttonVariants}
+                                    className="flex items-center justify-center p-4 bg-[rgb(var(--mesa-green))] bg-opacity-20 rounded-lg cursor-pointer"
+                                >
+                                    <span className="font-medium">
+                                        Event Check-in
+                                    </span>
+                                </motion.div>
+                            </Link>
+
                             <Link href="/admin/applications">
                                 <motion.div
                                     whileHover="hover"
