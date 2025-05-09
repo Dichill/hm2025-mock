@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Application } from "@/app/dashboard/types";
 import { ApplicationStatus } from "@/core/apply/types/apply.dto";
+import { useRouter } from "next/navigation";
 
 interface ApplicationStatusCardProps {
     application: Application | null;
@@ -11,8 +12,9 @@ interface ApplicationStatusCardProps {
 export default function ApplicationStatusCard({
     application,
     onApplyNow,
-    onUnregister,
-}: ApplicationStatusCardProps) {
+}: // onUnregister,
+ApplicationStatusCardProps) {
+    const router = useRouter();
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -123,7 +125,7 @@ export default function ApplicationStatusCard({
         [ApplicationStatus.APPROVED]: {
             title: "Application Accepted!",
             description:
-                "Congratulations! Your application has been accepted. We're excited to see you on May 9th!",
+                "Congratulations! You are among the selected participants for our first-ever HACKMESA event!",
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -141,9 +143,10 @@ export default function ApplicationStatusCard({
                 </svg>
             ),
             bgColor: "bg-[rgb(var(--mesa-green))]/20",
-            buttonText: "",
-            buttonColor: "",
-            action: () => {},
+            buttonText: "View QR Code",
+            buttonColor:
+                "bg-[rgb(var(--mesa-green))]/10 text-[rgb(var(--mesa-green))]",
+            action: () => router.push("/dashboard/attendance"),
         },
         [ApplicationStatus.REJECTED]: {
             title: "Application Status",
@@ -226,18 +229,18 @@ export default function ApplicationStatusCard({
     };
 
     // Define unregister button variants with matching red shadow
-    const unregisterButtonVariants = {
-        hover: {
-            scale: 1.03,
-            boxShadow: "0 10px 25px rgba(239, 68, 68, 0.2)", // Red shadow
-            transition: {
-                type: "spring",
-                stiffness: 400,
-                damping: 10,
-            },
-        },
-        tap: { scale: 0.97 },
-    };
+    // const unregisterButtonVariants = {
+    //     hover: {
+    //         scale: 1.03,
+    //         boxShadow: "0 10px 25px rgba(239, 68, 68, 0.2)", // Red shadow
+    //         transition: {
+    //             type: "spring",
+    //             stiffness: 400,
+    //             damping: 10,
+    //         },
+    //     },
+    //     tap: { scale: 0.97 },
+    // };
 
     const renderApplicationDate = () => {
         if (!application) return null;
@@ -287,10 +290,10 @@ export default function ApplicationStatusCard({
     };
 
     // Determine if we can show the unregister button
-    const showUnregisterButton =
-        onUnregister &&
-        (mappedStatus === ApplicationStatus.PENDING ||
-            mappedStatus === ApplicationStatus.APPROVED);
+    // const showUnregisterButton =
+    //     onUnregister &&
+    //     (mappedStatus === ApplicationStatus.PENDING ||
+    //         mappedStatus === ApplicationStatus.APPROVED);
 
     return (
         <motion.div
@@ -324,7 +327,7 @@ export default function ApplicationStatusCard({
                     </motion.button>
                 )}
 
-                {showUnregisterButton && (
+                {/* {showUnregisterButton && (
                     <motion.button
                         onClick={onUnregister}
                         whileHover="hover"
@@ -334,7 +337,7 @@ export default function ApplicationStatusCard({
                     >
                         Unregister from Hackathon
                     </motion.button>
-                )}
+                )} */}
             </div>
         </motion.div>
     );

@@ -1,11 +1,9 @@
 import { userClient } from "@/api/user-client";
-import { UserProfileDto } from "../types/profile.dto";
-
-export interface ProfileResponseDto {
-    success: boolean;
-    message: string;
-    profile?: UserProfileDto;
-}
+import {
+    UserProfileDto,
+    ProfileResponseDto,
+    QrCodeResponseDto,
+} from "../types/profile.dto";
 
 /**
  * Get the authenticated user's own profile
@@ -72,6 +70,23 @@ export async function deleteUserProfile(
         return response.data;
     } catch (error) {
         console.error("Error deleting user profile:", error);
+        throw error;
+    }
+}
+
+/**
+ * Get a signed URL for a user's QR code image
+ * @param userId - ID of the user to retrieve QR code for
+ * @returns A response containing the signed URL or null
+ */
+export async function getUserQrCode(
+    userId: string
+): Promise<QrCodeResponseDto> {
+    try {
+        const response = await userClient.get(`/profile/${userId}/qr-code`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user QR code:", error);
         throw error;
     }
 }

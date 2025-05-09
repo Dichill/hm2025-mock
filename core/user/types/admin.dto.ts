@@ -65,3 +65,20 @@ export interface DeleteUserResponseDto {
     success: boolean;
     message: string;
 }
+
+export interface UserCheckinStatusDto {
+    id: string;
+    user_id: string;
+    full_name: string;
+    avatar_url: string;
+    school: string;
+    major: string;
+    year: string;
+    dietary_restrictions: string;
+    t_shirt_size: string;
+    is_approved: boolean;
+    day_one: boolean;
+    day_two: boolean;
+    created_at: string;
+    updated_at: string;
+}

@@ -6,6 +6,7 @@ import {
     CreateStudentResponseDto,
     DeleteUserDto,
     DeleteUserResponseDto,
+    UserCheckinStatusDto,
 } from "../types/admin.dto";
 import {
     CreateEventDto,
@@ -226,6 +227,39 @@ export async function deleteUser(
             }
         }
         console.error("Error deleting user:", error);
+        throw error;
+    }
+}
+
+/**
+ * Retrieves a user's profile information and approval status while simultaneously
+ * recording their attendance for a specific event day.
+ *
+ * @param {string} userId - The unique identifier of the user
+ * @param {string} [day="day_one"] - The event day to record attendance for (valid values: "day_one" or "day_two")
+ * @returns {Promise<UserCheckinStatusDto>} The user's check-in status, profile information, and attendance record
+ * @throws {Error} If the user is not found or the request fails
+ */
+export async function getUserCheckinStatus(
+    userId: string,
+    day: "day_one" | "day_two" = "day_one"
+): Promise<UserCheckinStatusDto> {
+    try {
+        const response = await userClient.get(`/checkin/user/${userId}`, {
+            params: { day },
+        });
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            if (error.response?.status === 404) {
+                throw new Error(`User profile with ID ${userId} not found`);
+            } else if (error.response?.status === 401) {
+                throw new Error("Unauthorized access");
+            } else if (error.response?.status === 403) {
+                throw new Error("Forbidden: Insufficient permissions");
+            }
+        }
+        console.error("Error fetching user check-in status:", error);
         throw error;
     }
 }
