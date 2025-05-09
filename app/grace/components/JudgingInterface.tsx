@@ -221,6 +221,13 @@ const JudgingInterface: React.FC = () => {
                         bonus_task_division: false,
                     });
 
+                    // Reset award scores for new project
+                    const resetScores: Record<string, number> = {};
+                    awardCategories.forEach((cat) => {
+                        resetScores[cat.name] = 0;
+                    });
+                    setAwardScores(resetScores);
+
                     setIsEditing(false);
                     showMessage(`Found: ${projectData.name}`, "success");
                 }
@@ -268,10 +275,9 @@ const JudgingInterface: React.FC = () => {
 
             // Submit award scores if project opted for awards
             if (project.awards_opt_in && project.awards_opt_in.length > 0) {
-                // Only submit for awards with scores > 0
-                const awardPromises = Object.entries(awardScores)
-                    .filter(([, score]) => score > 0)
-                    .map(([categoryName, score]) => {
+                // Submit all award scores for eligible categories
+                const awardPromises = Object.entries(awardScores).map(
+                    ([categoryName, score]) => {
                         const awardRequest: SubmitAwardScoreRequest = {
                             judge_id: judgeId,
                             project_id: project.id,
@@ -279,7 +285,8 @@ const JudgingInterface: React.FC = () => {
                             score,
                         };
                         return submitAwardScore(awardRequest);
-                    });
+                    }
+                );
 
                 if (awardPromises.length > 0) {
                     await Promise.all(awardPromises);
