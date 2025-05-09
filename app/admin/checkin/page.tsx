@@ -20,6 +20,16 @@ export default function CheckinPage() {
     );
     const [userData, setUserData] = useState<UserCheckinStatusDto | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [facingMode, setFacingMode] = useState<"environment" | "user">(
+        "environment"
+    );
+    const [availableCameras, setAvailableCameras] = useState<
+        QrScanner.Camera[]
+    >([]);
+    const [currentCamera, setCurrentCamera] = useState<QrScanner.Camera | null>(
+        null
+    );
+    const [isFlipped, setIsFlipped] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
 
     const daySelectionRef = useRef(daySelection);
@@ -28,6 +38,37 @@ export default function CheckinPage() {
         daySelectionRef.current = daySelection;
         console.log("Day selection changed to:", daySelection);
     }, [daySelection]);
+
+    useEffect(() => {
+        const loadCameras = async () => {
+            try {
+                const cameras = await QrScanner.listCameras();
+                setAvailableCameras(cameras);
+
+                // Find back camera by default
+                const backCamera = cameras.find((camera) =>
+                    camera.label.toLowerCase().includes("back")
+                );
+                const defaultCamera =
+                    backCamera || (cameras.length > 0 ? cameras[0] : null);
+
+                if (defaultCamera) {
+                    setCurrentCamera(defaultCamera);
+                    setFacingMode(
+                        defaultCamera.label.toLowerCase().includes("front")
+                            ? "user"
+                            : "environment"
+                    );
+                }
+
+                console.log("Available cameras:", cameras);
+            } catch (err) {
+                console.error("Error listing cameras:", err);
+            }
+        };
+
+        loadCameras();
+    }, []);
 
     useEffect(() => {
         const checkCamera = async () => {
@@ -56,7 +97,7 @@ export default function CheckinPage() {
                 qrScanner.destroy();
             }
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /**
@@ -102,20 +143,21 @@ export default function CheckinPage() {
                             if (newScanner) {
                                 newScanner.start();
                             }
-                        }, 3000); 
+                        }, 3000);
                     }
                 },
                 {
                     highlightScanRegion: true,
                     highlightCodeOutline: true,
                     returnDetailedScanResult: true,
+                    preferredCamera: currentCamera?.id || facingMode,
                 }
             );
 
             setQrScanner(newScanner);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [videoRef.current, hasCamera, handleUserCheckin]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [videoRef.current, hasCamera, handleUserCheckin, currentCamera]);
 
     /**
      * Starts QR code scanning
@@ -148,6 +190,43 @@ export default function CheckinPage() {
         setUserData(null);
         setScanResult(null);
         setError(null);
+    };
+
+    /**
+     * Switches between front and back cameras
+     */
+    const switchCamera = async () => {
+        if (!qrScanner || availableCameras.length <= 1) return;
+
+        // Stop current scanner
+        qrScanner.stop();
+
+        // Find next camera
+        let nextCameraIndex = 0;
+        if (currentCamera) {
+            const currentIndex = availableCameras.findIndex(
+                (c) => c.id === currentCamera.id
+            );
+            nextCameraIndex = (currentIndex + 1) % availableCameras.length;
+        }
+
+        const nextCamera = availableCameras[nextCameraIndex];
+        setCurrentCamera(nextCamera);
+
+        const isFrontCamera = nextCamera.label.toLowerCase().includes("front");
+        setFacingMode(isFrontCamera ? "user" : "environment");
+
+        console.log(`Switching to camera: ${nextCamera.label}`);
+
+        try {
+            await qrScanner.setCamera(nextCamera.id);
+            if (isScanning) {
+                qrScanner.start();
+            }
+        } catch (err) {
+            console.error("Error switching camera:", err);
+            setError("Failed to switch camera. Try again.");
+        }
     };
 
     /**
@@ -215,10 +294,10 @@ export default function CheckinPage() {
                             className={`px-2 py-1 rounded-full text-xs font-medium ${
                                 userData.is_approved
                                     ? "bg-green-100 text-green-800"
-                                    : "bg-red-100 text-red-800"
+                                    : "bg-yellow-100 text-yellow-800"
                             }`}
                         >
-                            {userData.is_approved ? "Approved" : "REJECTED"}
+                            {userData.is_approved ? "Approved" : "Pending"}
                         </span>
                     </div>
 
@@ -355,9 +434,14 @@ export default function CheckinPage() {
                                       })...`
                                     : "Click 'Start Scanning' to begin"}
                             </p>
+                            {currentCamera && (
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Using camera: {currentCamera.label}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="flex justify-center mb-6">
+                        <div className="flex justify-center mb-6 space-x-4">
                             {isScanning ? (
                                 <button
                                     onClick={stopScanning}
@@ -373,6 +457,51 @@ export default function CheckinPage() {
                                     Start Scanning
                                 </button>
                             )}
+
+                            {availableCameras.length > 1 && (
+                                <button
+                                    onClick={switchCamera}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center"
+                                >
+                                    <svg
+                                        className="w-5 h-5 mr-1"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M3 4v16M16 4v16M3 12h13m-1-3l3 3-3 3"
+                                        ></path>
+                                    </svg>
+                                    Switch Camera
+                                </button>
+                            )}
+
+                            <button
+                                onClick={() => setIsFlipped((prev) => !prev)}
+                                className="px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors flex items-center"
+                                title="Flip camera view horizontally"
+                            >
+                                <svg
+                                    className="w-5 h-5 mr-1"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                                    ></path>
+                                </svg>
+                                Flip View
+                            </button>
                         </div>
 
                         <div
@@ -383,7 +512,9 @@ export default function CheckinPage() {
                             <div className="aspect-video max-w-lg mx-auto overflow-hidden rounded-lg bg-black">
                                 <video
                                     ref={videoRef}
-                                    className="w-full h-full object-cover"
+                                    className={`w-full h-full object-cover ${
+                                        isFlipped ? "scale-x-[-1]" : ""
+                                    }`}
                                 ></video>
                             </div>
                             <div className="absolute inset-0 border-2 border-[rgb(var(--mesa-orange))] border-dashed pointer-events-none rounded-lg opacity-50"></div>
