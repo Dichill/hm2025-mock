@@ -165,6 +165,15 @@ export const sponsorChallenges: SponsorChallenge[] = [
         color: "mesa-purple",
     },
     {
+        id: "wss",
+        sponsor: "WSS",
+        title: "Shop the Future Challenge",
+        description:
+            "WSS wants to better understand and serve their customers—whether they're online, in-store, or on social media. Your mission is to build a prototype that helps WSS gather insights from customer feedback across different channels or predict future product trends using AI modeling. You can approach this challenge from one of these angles: Voice of the Customer (design a dashboard that pulls customer sentiment from sources like social media, surveys, or reviews), Trend Prediction (use AI to analyze product data, social buzz, or mock purchase histories to forecast popular items or styles), or Retail Intelligence (create a tool that helps WSS spot and respond to shifts in consumer behavior or economic pressures).",
+        prizes: ["To be announced"],
+        color: "mesa-warm-red",
+    },
+    {
         id: "mlh-gemini",
         sponsor: "Major League Hacking",
         title: "Best Use of Gemini API",
@@ -193,14 +202,5 @@ export const sponsorChallenges: SponsorChallenge[] = [
             "MongoDB Atlas takes the leading modern database and makes it accessible in the cloud! Get started with a $50 credit for students or sign up for the Atlas free forever tier.",
         prizes: ["M5GO IoT Starter Kit for you and each member of your team"],
         color: "mesa-green",
-    },
-    {
-        id: "wss",
-        sponsor: "WSS",
-        title: "Shop the Future Challenge",
-        description:
-            "WSS wants to better understand and serve their customers—whether they're online, in-store, or on social media. Your mission is to build a prototype that helps WSS gather insights from customer feedback across different channels or predict future product trends using AI modeling. You can approach this challenge from one of these angles: Voice of the Customer (design a dashboard that pulls customer sentiment from sources like social media, surveys, or reviews), Trend Prediction (use AI to analyze product data, social buzz, or mock purchase histories to forecast popular items or styles), or Retail Intelligence (create a tool that helps WSS spot and respond to shifts in consumer behavior or economic pressures).",
-        prizes: ["To be announced"],
-        color: "mesa-warm-red",
     },
 ];

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clipboard, Edit, ExternalLink } from "lucide-react";
 import { toast } from "react-hot-toast";
+import DevPostInfo from "@/app/dashboard/submit/component/devPostInfo";
 
 type ProjectSubmittedProps = {
     project: Project;
@@ -79,6 +80,9 @@ export default function ProjectSubmitted({
             animate="visible"
             className="container mx-auto p-6 max-w-4xl"
         >
+            <div className="md:col-span-2 lg:col-span-3">
+                <DevPostInfo />
+            </div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Project Submission</h1>
                 {allowEdit && (

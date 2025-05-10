@@ -53,6 +53,15 @@ export interface AwardCategory {
     created_at: string;
 }
 
+/**
+ * Represents a judge with basic identification information
+ */
+export interface Judge {
+    id: string;
+    display_name: string;
+    email: string;
+}
+
 export interface RoundResult {
     project_id: string;
     table_number: string;
@@ -65,6 +74,7 @@ export interface RoundResult {
     bonus_points: number;
     total_score: number;
     judge_count: number;
+    judges: Judge[];
 }
 
 export interface TopProject {

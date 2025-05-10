@@ -36,6 +36,8 @@ export interface JudgeTabProps {
     handleAwardScoreChange: (awardId: string, score: number) => void;
     /** Function to submit scores */
     handleSubmit: () => void;
+    /** Whether to hide the award categories section */
+    hideAwards?: boolean;
 }
 
 /**
@@ -56,6 +58,7 @@ const JudgeTab: React.FC<JudgeTabProps> = ({
     handleCheckboxChange,
     handleAwardScoreChange,
     handleSubmit,
+    hideAwards = false,
 }) => {
     // Combined loading state
     const isLoading = findingProject || submitting;
@@ -114,12 +117,14 @@ const JudgeTab: React.FC<JudgeTabProps> = ({
                         onCheckboxChange={handleCheckboxChange}
                     />
 
-                    <AwardScoreForm
-                        project={project}
-                        awardCategories={awardCategories}
-                        awardScores={awardScores}
-                        onAwardScoreChange={handleAwardScoreChange}
-                    />
+                    {!hideAwards && (
+                        <AwardScoreForm
+                            project={project}
+                            awardCategories={awardCategories}
+                            awardScores={awardScores}
+                            onAwardScoreChange={handleAwardScoreChange}
+                        />
+                    )}
 
                     <button
                         onClick={handleSubmit}

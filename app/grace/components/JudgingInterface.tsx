@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ProjectApi } from "@/core/grace/api/project";
 import {
     submitProjectScore,
@@ -21,12 +21,13 @@ import {
     MessageAlert,
     JudgeTab,
     HistoryTab,
+    SponsorTab,
     MainScoreState,
 } from "./judging";
 import { useSettings } from "@/app/context/SettingsContext";
 
 // Tab type definition
-type Tab = "judge" | "history";
+type Tab = "judge" | "history" | "sponsors";
 
 /**
  * Main judging interface component for scoring hackathon projects
@@ -73,6 +74,16 @@ const JudgingInterface: React.FC = () => {
     // Derived from award categories data
     const [awardScores, setAwardScores] = useState<Record<string, number>>({});
 
+    // Sponsor data state
+    const [completeSponsorProjects, setCompleteSponsorProjects] = useState<
+        Record<string, Project[]>
+    >({});
+    const [expandedSponsors, setExpandedSponsors] = useState<
+        Record<string, boolean>
+    >({});
+    const [sponsorsLoading, setSponsorsLoading] = useState<boolean>(false);
+    const [sponsorsError, setSponsorsError] = useState<string | null>(null);
+
     // Update award scores when categories change
     useEffect(() => {
         if (awardCategories.length > 0) {
@@ -111,13 +122,16 @@ const JudgingInterface: React.FC = () => {
 
         Promise.all([
             ProjectApi.getProjectById(scoredProject.project_id),
-            getProjectAwardScores(scoredProject.project_id),
+            // Only load award scores for round 1
+            round === 1
+                ? getProjectAwardScores(scoredProject.project_id)
+                : Promise.resolve([]),
         ])
             .then(([projectData, awardScoresData]) => {
                 setProject(projectData);
 
-                // Set award scores from previously submitted data
-                if (awardScoresData.length > 0) {
+                // Set award scores from previously submitted data for round 1
+                if (round === 1 && awardScoresData.length > 0) {
                     const previousAwardScores: Record<string, number> = {};
                     awardScoresData.forEach((awardScore) => {
                         // Use the award category ID directly since that's what's in the response
@@ -183,26 +197,31 @@ const JudgingInterface: React.FC = () => {
                         bonus_task_division: alreadyJudged.bonus_task_division,
                     });
 
-                    // Load previously submitted award scores
-                    getProjectAwardScores(projectData.id)
-                        .then((awardScoresData) => {
-                            if (awardScoresData.length > 0) {
-                                const previousAwardScores: Record<
-                                    string,
-                                    number
-                                > = {};
-                                awardScoresData.forEach((awardScore) => {
-                                    // Use the award category ID directly since that's what's in the response
-                                    previousAwardScores[
-                                        awardScore.award_category
-                                    ] = awardScore.score;
-                                });
-                                setAwardScores(previousAwardScores);
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("Error loading award scores:", error);
-                        });
+                    // Load previously submitted award scores only for round 1
+                    if (round === 1) {
+                        getProjectAwardScores(projectData.id)
+                            .then((awardScoresData) => {
+                                if (awardScoresData.length > 0) {
+                                    const previousAwardScores: Record<
+                                        string,
+                                        number
+                                    > = {};
+                                    awardScoresData.forEach((awardScore) => {
+                                        // Use the award category ID directly since that's what's in the response
+                                        previousAwardScores[
+                                            awardScore.award_category
+                                        ] = awardScore.score;
+                                    });
+                                    setAwardScores(previousAwardScores);
+                                }
+                            })
+                            .catch((error) => {
+                                console.error(
+                                    "Error loading award scores:",
+                                    error
+                                );
+                            });
+                    }
 
                     setIsEditing(true);
                     showMessage(
@@ -221,12 +240,14 @@ const JudgingInterface: React.FC = () => {
                         bonus_task_division: false,
                     });
 
-                    // Reset award scores for new project
-                    const resetScores: Record<string, number> = {};
-                    awardCategories.forEach((cat) => {
-                        resetScores[cat.name] = 0;
-                    });
-                    setAwardScores(resetScores);
+                    // Reset award scores for new project only for round 1
+                    if (round === 1) {
+                        const resetScores: Record<string, number> = {};
+                        awardCategories.forEach((cat) => {
+                            resetScores[cat.name] = 0;
+                        });
+                        setAwardScores(resetScores);
+                    }
 
                     setIsEditing(false);
                     showMessage(`Found: ${projectData.name}`, "success");
@@ -273,8 +294,12 @@ const JudgingInterface: React.FC = () => {
             };
             await submitProjectScore(scoreRequest);
 
-            // Submit award scores if project opted for awards
-            if (project.awards_opt_in && project.awards_opt_in.length > 0) {
+            // Submit award scores only for round 1
+            if (
+                round === 1 &&
+                project.awards_opt_in &&
+                project.awards_opt_in.length > 0
+            ) {
                 // Submit all award scores for eligible categories
                 const awardPromises = Object.entries(awardScores).map(
                     ([categoryName, score]) => {
@@ -331,9 +356,48 @@ const JudgingInterface: React.FC = () => {
         }
     };
 
+    // Toggle expanded state for a sponsor
+    const toggleSponsorExpanded = (sponsor: string): void => {
+        setExpandedSponsors((prev) => ({
+            ...prev,
+            [sponsor]: !prev[sponsor],
+        }));
+    };
+
+    // Function to fetch sponsor data
+    const fetchSponsorData = useCallback(async (): Promise<void> => {
+        if (Object.keys(completeSponsorProjects).length > 0) {
+            return; // Data already loaded
+        }
+
+        try {
+            setSponsorsLoading(true);
+            setSponsorsError(null);
+
+            const completeData =
+                await ProjectApi.getCompleteProjectsBySponsor();
+            setCompleteSponsorProjects(completeData);
+        } catch (err) {
+            console.error("Failed to fetch sponsor data:", err);
+            setSponsorsError("Failed to load sponsor data. Please try again.");
+        } finally {
+            setSponsorsLoading(false);
+        }
+    }, [completeSponsorProjects]);
+
+    // Fetch sponsor data when tab changes to sponsors
+    useEffect(() => {
+        if (activeTab === "sponsors") {
+            fetchSponsorData();
+        }
+    }, [activeTab, fetchSponsorData]);
+
     // UI helper to show loading state
     const isLoading =
-        dataLoading.projects || dataLoading.categories || findingProject;
+        dataLoading.projects ||
+        dataLoading.categories ||
+        findingProject ||
+        sponsorsLoading;
 
     return (
         <div className="container mx-auto px-4 py-6 max-w-4xl">
@@ -343,13 +407,14 @@ const JudgingInterface: React.FC = () => {
                 </h1>
                 <p className="text-gray-600 mt-2">
                     {round === 2
-                        ? "Final Round: Score and Review HACKMESA Finalist Projects!"
+                        ? "2nd Round: Score and Review HACKMESA Top 10 Projects!"
                         : "Score and Review HACKMESA Projects!"}
                 </p>
                 {round === 2 && (
                     <p className="text-sm text-[rgb(var(--mesa-purple))] mt-2">
-                        You are now judging the final round. Only the top
-                        projects from round 1 are available.
+                        You are now judging the 2nd round. Only the top projects
+                        from round 1 are available. If you have any questions or
+                        concerns, please reach out to a HACKMESA Organizer
                     </p>
                 )}
             </div>
@@ -386,6 +451,16 @@ const JudgingInterface: React.FC = () => {
                 >
                     Judging History
                 </button>
+                <button
+                    className={`px-4 py-2 font-medium text-sm ${
+                        activeTab === "sponsors"
+                            ? "text-[rgb(var(--mesa-purple))] border-b-2 border-[rgb(var(--mesa-purple))]"
+                            : "text-gray-500 hover:text-gray-700"
+                    }`}
+                    onClick={() => setActiveTab("sponsors")}
+                >
+                    Sponsors
+                </button>
             </div>
 
             {/* Judge Tab Content */}
@@ -405,6 +480,7 @@ const JudgingInterface: React.FC = () => {
                     handleCheckboxChange={handleCheckboxChange}
                     handleAwardScoreChange={handleAwardScoreChange}
                     handleSubmit={handleSubmit}
+                    hideAwards={round === 2}
                 />
             )}
 
@@ -416,6 +492,17 @@ const JudgingInterface: React.FC = () => {
                     error={dataError}
                     round={round}
                     onEditScore={loadProjectScores}
+                />
+            )}
+
+            {/* Sponsors Tab Content */}
+            {activeTab === "sponsors" && (
+                <SponsorTab
+                    completeSponsorProjects={completeSponsorProjects}
+                    expandedSponsors={expandedSponsors}
+                    toggleSponsorExpanded={toggleSponsorExpanded}
+                    isLoading={sponsorsLoading}
+                    error={sponsorsError}
                 />
             )}
         </div>

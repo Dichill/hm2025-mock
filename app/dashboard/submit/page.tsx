@@ -17,6 +17,7 @@ import {
     SPONSOR_OPTIONS,
 } from "@/core/constants/project-options";
 import { publicSettingsApi } from "@/core/grace/api/settings";
+import { AxiosError } from "axios";
 
 // Import Shadcn components
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
-
+import DevPostInfo from "@/app/dashboard/submit/component/devPostInfo";
 export default function SubmitProjectPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -214,6 +215,9 @@ export default function SubmitProjectPage() {
             data.team_id = userTeam.id;
             data.created_by = userId;
 
+            // Ensure whitespace is trimmed from table number
+            data.table_number = data.table_number.trim();
+
             const createdProject = await ProjectApi.createProject(data);
             toast.success("Project submitted successfully!");
 
@@ -223,8 +227,30 @@ export default function SubmitProjectPage() {
         } catch (error: unknown) {
             console.error("Failed to submit project:", error);
 
-            // Check for forbidden error (submissions closed)
+            // Check for specific validation errors
             if (
+                typeof error === "object" &&
+                error !== null &&
+                "response" in error &&
+                (error as AxiosError)?.response?.status === 400 &&
+                (
+                    error as AxiosError<{ message: string }>
+                )?.response?.data?.message?.includes("Table number")
+            ) {
+                // Handle duplicate table number error
+                const errorMessage =
+                    (error as AxiosError<{ message: string }>)?.response?.data
+                        ?.message ||
+                    "This table number is already assigned to another project";
+                toast.error(errorMessage);
+                form.setError("table_number", {
+                    type: "manual",
+                    message:
+                        "This table number is already taken. Please choose a different one.",
+                });
+            }
+            // Check for forbidden error (submissions closed)
+            else if (
                 typeof error === "object" &&
                 error !== null &&
                 (("status" in error && error.status === 403) ||
@@ -263,7 +289,9 @@ export default function SubmitProjectPage() {
                 animate="visible"
                 className="container mx-auto p-6 max-w-4xl"
             >
+                <DevPostInfo />
                 <h1 className="text-2xl font-bold mb-6">Submit Your Project</h1>
+
                 <motion.div variants={cardVariants}>
                     <Card>
                         <CardHeader>
@@ -318,6 +346,7 @@ export default function SubmitProjectPage() {
                 animate="visible"
                 className="container mx-auto p-6 max-w-4xl"
             >
+                <DevPostInfo />
                 <h1 className="text-2xl font-bold mb-6">Submit Your Project</h1>
                 <motion.div variants={cardVariants}>
                     <Card>
@@ -361,6 +390,7 @@ export default function SubmitProjectPage() {
                 animate="visible"
                 className="container mx-auto p-6 max-w-4xl"
             >
+                <DevPostInfo />
                 <h1 className="text-2xl font-bold mb-6">Submit Your Project</h1>
                 <motion.div variants={cardVariants}>
                     <Card>
@@ -404,6 +434,7 @@ export default function SubmitProjectPage() {
             animate="visible"
             className="container mx-auto p-6 max-w-4xl"
         >
+            <DevPostInfo />
             <h1 className="text-2xl font-bold mb-6">Submit Your Project</h1>
 
             <motion.div variants={cardVariants}>
