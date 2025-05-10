@@ -559,11 +559,6 @@ export default function SubmitProjectPage() {
                                         name="devpost_url"
                                         rules={{
                                             required: "Devpost URL is required",
-                                            pattern: {
-                                                value: /^(https?:\/\/)?(www\.)?devpost\.com\/software\/.+/i,
-                                                message:
-                                                    "Please enter a valid Devpost project URL",
-                                            },
                                         }}
                                         render={({ field }) => (
                                             <FormItem>

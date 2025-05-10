@@ -19,17 +19,29 @@ export default function DevPostInfo() {
             </svg>
             <div className="flex-grow">
                 <p className="text-[rgb(var(--mesa-blue))] font-medium">
-                    Make sure to start filling up on{" "}
+                    Make sure to start filling out your{" "}
                     <a
-                        href="https://docs.google.com/document/d/1a7KOAm6B1cKJa9QXpj4i9IDYc-YBGx5cVnA8a5_MhEs/edit?usp=sharing"
+                        href="https://hackmesa.devpost.com/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="underline hover:text-[rgb(var(--mesa-blue))]"
                     >
-                        DevPost
+                        DevPost Project
+                    </a>
+                    {", "}
+                    as you&apos;ll need the link to complete your submission.
+                </p>
+                <p className="text-[rgb(var(--mesa-blue))] mt-2">
+                    <a
+                        href="https://help.devpost.com/category/20-submitting-to-a-hackathon"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-[rgb(var(--mesa-blue))]"
+                    >
+                        View the DevPost Submission Guide
                     </a>{" "}
-                    as you need the link to your project to complete your
-                    submission.
+                    for detailed instructions and tips on submitting your
+                    project.
                 </p>
             </div>
         </motion.div>
