@@ -83,6 +83,8 @@ const JudgingInterface: React.FC = () => {
     >({});
     const [sponsorsLoading, setSponsorsLoading] = useState<boolean>(false);
     const [sponsorsError, setSponsorsError] = useState<string | null>(null);
+    const [hasFetchedSponsors, setHasFetchedSponsors] =
+        useState<boolean>(false);
 
     // Update award scores when categories change
     useEffect(() => {
@@ -366,8 +368,9 @@ const JudgingInterface: React.FC = () => {
 
     // Function to fetch sponsor data
     const fetchSponsorData = useCallback(async (): Promise<void> => {
-        if (Object.keys(completeSponsorProjects).length > 0) {
-            return; // Data already loaded
+        // Check if we've already attempted to fetch the data, regardless of result
+        if (hasFetchedSponsors) {
+            return; // Data fetch already attempted
         }
 
         try {
@@ -382,8 +385,9 @@ const JudgingInterface: React.FC = () => {
             setSponsorsError("Failed to load sponsor data. Please try again.");
         } finally {
             setSponsorsLoading(false);
+            setHasFetchedSponsors(true); // Mark as fetched even if there was an error
         }
-    }, [completeSponsorProjects]);
+    }, [hasFetchedSponsors]);
 
     // Fetch sponsor data when tab changes to sponsors
     useEffect(() => {

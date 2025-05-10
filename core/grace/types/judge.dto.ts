@@ -90,6 +90,8 @@ export interface TrackWinner {
     project_name: string;
     table_number: string;
     total_score: number;
+    from_round?: number;
+    judges?: Judge[];
 }
 
 export interface AwardWinner {
@@ -99,6 +101,7 @@ export interface AwardWinner {
     table_number: string;
     avg_score: number;
     judge_count: number;
+    judges?: Judge[];
 }
 
 /**

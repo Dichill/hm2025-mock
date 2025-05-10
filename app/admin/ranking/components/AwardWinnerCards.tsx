@@ -1,7 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AwardWinner } from "@/core/grace/types/judge.dto";
-import { JSX } from "react";
+import { JSX, useMemo } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 /**
  * Component for displaying award winners as cards
@@ -12,9 +19,14 @@ export interface AwardWinnerCardsProps {
 }
 
 export function AwardWinnerCards({ data }: AwardWinnerCardsProps): JSX.Element {
+    // Sort winners by highest score first
+    const sortedData = useMemo(() => {
+        return [...data].sort((a, b) => b.avg_score - a.avg_score);
+    }, [data]);
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {data.map((winner) => (
+        <div className="space-y-6">
+            {sortedData.map((winner) => (
                 <Card
                     key={`${winner.award_category}-${winner.project_id}`}
                     className="relative overflow-hidden border-2 border-purple-200 hover:border-purple-300 transition-all duration-300"
@@ -58,17 +70,56 @@ export function AwardWinnerCards({ data }: AwardWinnerCardsProps): JSX.Element {
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-between px-4 py-2 bg-purple-50 rounded-lg">
-                                <span className="text-sm text-gray-600">
-                                    Judges
-                                </span>
-                                <span className="text-sm font-medium text-purple-700">
-                                    {winner.judge_count}{" "}
-                                    {winner.judge_count === 1
-                                        ? "Judge"
-                                        : "Judges"}
-                                </span>
-                            </div>
+
+                            {winner.judges && winner.judges.length > 0 ? (
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-medium text-gray-700">
+                                        Judges ({winner.judge_count})
+                                    </h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        <TooltipProvider>
+                                            {winner.judges.map((judge) => (
+                                                <Tooltip key={judge.id}>
+                                                    <TooltipTrigger asChild>
+                                                        <Avatar className="h-8 w-8 cursor-pointer">
+                                                            <AvatarFallback className="bg-purple-100 text-purple-700 text-xs">
+                                                                {judge.display_name
+                                                                    .split(" ")
+                                                                    .map(
+                                                                        (n) =>
+                                                                            n[0]
+                                                                    )
+                                                                    .join("")
+                                                                    .toUpperCase()}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>
+                                                            {judge.display_name}
+                                                        </p>
+                                                        <p className="text-xs text-gray-500">
+                                                            {judge.email}
+                                                        </p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            ))}
+                                        </TooltipProvider>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-between px-4 py-2 bg-purple-50 rounded-lg">
+                                    <span className="text-sm text-gray-600">
+                                        Judges
+                                    </span>
+                                    <span className="text-sm font-medium text-purple-700">
+                                        {winner.judge_count}{" "}
+                                        {winner.judge_count === 1
+                                            ? "Judge"
+                                            : "Judges"}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </CardContent>
                 </Card>
