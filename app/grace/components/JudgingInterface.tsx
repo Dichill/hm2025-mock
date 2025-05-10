@@ -303,8 +303,11 @@ const JudgingInterface: React.FC = () => {
                 project.awards_opt_in.length > 0
             ) {
                 // Submit all award scores for eligible categories
-                const awardPromises = Object.entries(awardScores).map(
-                    ([categoryName, score]) => {
+                const awardPromises = Object.entries(awardScores)
+                    .filter(([categoryName]) =>
+                        project.awards_opt_in.includes(categoryName)
+                    )
+                    .map(([categoryName, score]) => {
                         const awardRequest: SubmitAwardScoreRequest = {
                             judge_id: judgeId,
                             project_id: project.id,
@@ -312,8 +315,7 @@ const JudgingInterface: React.FC = () => {
                             score,
                         };
                         return submitAwardScore(awardRequest);
-                    }
-                );
+                    });
 
                 if (awardPromises.length > 0) {
                     await Promise.all(awardPromises);
