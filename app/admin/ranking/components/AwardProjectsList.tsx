@@ -80,7 +80,7 @@ export function AwardProjectsList({
         });
 
         // Create projects with average scores
-        Object.entries(projectScores).forEach(([key, categoryScores]) => {
+        Object.entries(projectScores).forEach(([, categoryScores]) => {
             Object.entries(categoryScores).forEach(([category, scores]) => {
                 if (!scores.length) return;
 
@@ -297,11 +297,9 @@ export function AwardProjectsList({
                                                                                             </p>
                                                                                             {score.notes && (
                                                                                                 <p className="text-xs italic mt-1">
-                                                                                                    "
                                                                                                     {
                                                                                                         score.notes
                                                                                                     }
-                                                                                                    "
                                                                                                 </p>
                                                                                             )}
                                                                                         </TooltipContent>
