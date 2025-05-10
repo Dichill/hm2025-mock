@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, JSX } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AwardWinner } from "@/core/grace/types/judge.dto";
 import { getAwardWinners } from "@/core/grace/api/judge";

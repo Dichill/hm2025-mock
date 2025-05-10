@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AwardWinner } from "@/core/grace/types/judge.dto";
+import { JSX } from "react";
 
 /**
  * Component for displaying award winners as cards

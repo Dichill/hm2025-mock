@@ -7,6 +7,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { TopProject } from "@/core/grace/types/judge.dto";
+import { JSX } from "react";
 
 /**
  * Table component for displaying top projects
