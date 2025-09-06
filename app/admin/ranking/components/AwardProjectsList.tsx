@@ -9,7 +9,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AwardScore, AwardCategory } from "@/core/grace/types/judge.dto";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -18,6 +17,12 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 /**
  * Project with award scores and judge information
@@ -121,81 +126,79 @@ export function AwardProjectsList({
         return groupedProjects;
     }, [data, categories, projectMap]);
 
-    // Award categories
-    const awardCategories = useMemo(
-        () => categories.map((c) => c.name),
-        [categories]
-    );
+    // Track expanded state for each category
+    const [expandedCategories, setExpandedCategories] = useState<
+        Record<string, boolean>
+    >(Object.fromEntries(categories.map((category) => [category.name, true])));
 
-    const [selectedCategory, setSelectedCategory] = useState<string>(
-        awardCategories[0] || ""
-    );
+    const toggleCategory = (category: string) => {
+        setExpandedCategories((prev) => ({
+            ...prev,
+            [category]: !prev[category],
+        }));
+    };
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Projects by Award Category</CardTitle>
+                <CardTitle>All Projects by Award Category</CardTitle>
             </CardHeader>
             <CardContent>
-                <Tabs
-                    defaultValue={selectedCategory}
-                    onValueChange={setSelectedCategory}
-                    className="space-y-4"
-                >
-                    <TabsList className="flex flex-wrap">
-                        {awardCategories.map((category) => (
-                            <TabsTrigger
-                                key={category}
-                                value={category}
-                                className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700"
-                            >
-                                {category}
-                                <Badge className="ml-2 bg-purple-100 text-purple-700">
-                                    {projectsByAward[category]?.length || 0}
-                                </Badge>
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-
-                    {awardCategories.map((category) => (
-                        <TabsContent
-                            key={category}
-                            value={category}
-                            className="space-y-4"
+                <div className="space-y-6">
+                    {categories.map((category) => (
+                        <Collapsible
+                            key={category.name}
+                            open={expandedCategories[category.name]}
+                            className="border rounded-lg overflow-hidden"
                         >
-                            <div className="bg-purple-50 p-4 rounded-lg mb-4">
-                                <h3 className="font-medium text-purple-800">
-                                    {category}
-                                </h3>
-                                <p className="text-sm text-purple-700">
-                                    {projectsByAward[category]?.length || 0}{" "}
-                                    projects participating
-                                </p>
-                            </div>
+                            <CollapsibleTrigger
+                                onClick={() => toggleCategory(category.name)}
+                                className="w-full flex items-center justify-between p-4 bg-purple-50 hover:bg-purple-100 transition-colors"
+                            >
+                                <div className="flex items-center">
+                                    <h3 className="font-medium text-purple-800 text-lg">
+                                        {category.name}
+                                    </h3>
+                                    <Badge className="ml-2 bg-purple-100 text-purple-700">
+                                        {projectsByAward[category.name]
+                                            ?.length || 0}{" "}
+                                        projects
+                                    </Badge>
+                                </div>
+                                {expandedCategories[category.name] ? (
+                                    <ChevronUp className="h-5 w-5 text-purple-700" />
+                                ) : (
+                                    <ChevronDown className="h-5 w-5 text-purple-700" />
+                                )}
+                            </CollapsibleTrigger>
 
-                            {projectsByAward[category]?.length > 0 ? (
-                                <div className="rounded-md border">
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead className="w-12 text-center">
-                                                    Rank
-                                                </TableHead>
-                                                <TableHead className="w-16">
-                                                    Table
-                                                </TableHead>
-                                                <TableHead>Project</TableHead>
-                                                <TableHead className="w-24 text-right">
-                                                    Avg Score
-                                                </TableHead>
-                                                <TableHead className="w-48">
-                                                    Judges
-                                                </TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {projectsByAward[category].map(
-                                                (project, index) => (
+                            <CollapsibleContent>
+                                {projectsByAward[category.name]?.length > 0 ? (
+                                    <div className="border-t">
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead className="w-12 text-center">
+                                                        Rank
+                                                    </TableHead>
+                                                    <TableHead className="w-16">
+                                                        Table
+                                                    </TableHead>
+                                                    <TableHead>
+                                                        Project
+                                                    </TableHead>
+                                                    <TableHead className="w-24 text-right">
+                                                        Avg Score
+                                                    </TableHead>
+                                                    <TableHead className="w-48">
+                                                        Judges
+                                                    </TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {projectsByAward[
+                                                    category.name
+                                                ].map((project, index) => (
                                                     <TableRow
                                                         key={project.project_id}
                                                         className={
@@ -325,20 +328,20 @@ export function AwardProjectsList({
                                                             </div>
                                                         </TableCell>
                                                     </TableRow>
-                                                )
-                                            )}
-                                        </TableBody>
-                                    </Table>
-                                </div>
-                            ) : (
-                                <div className="text-center py-8 text-muted-foreground">
-                                    No projects have been scored for this award
-                                    category yet.
-                                </div>
-                            )}
-                        </TabsContent>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 text-muted-foreground">
+                                        No projects have been scored for this
+                                        award category yet.
+                                    </div>
+                                )}
+                            </CollapsibleContent>
+                        </Collapsible>
                     ))}
-                </Tabs>
+                </div>
             </CardContent>
         </Card>
     );
