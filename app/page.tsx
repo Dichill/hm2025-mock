@@ -655,10 +655,10 @@ export default function App() {
                                                 2nd Place
                                             </h3>
                                             <p className="text-xl font-semibold text-gray-700 mb-2">
-                                                Team Beta
+                                                Noobs
                                             </p>
                                             <p className="text-gray-600 mb-4">
-                                                AI-Powered Study Assistant
+                                                Livi
                                             </p>
                                             <div className="bg-white/50 rounded-lg py-2 px-4">
                                                 <p className="text-2xl font-bold text-gray-800">
@@ -692,10 +692,10 @@ export default function App() {
                                                 1st Place
                                             </h3>
                                             <p className="text-2xl font-semibold text-white mb-2">
-                                                Team Alpha
+                                                Hack Pierce
                                             </p>
                                             <p className="text-white/90 mb-4">
-                                                Sustainable Campus Navigator
+                                                Startumn.tech
                                             </p>
                                             <div className="bg-white/20 backdrop-blur rounded-lg py-3 px-4">
                                                 <p className="text-3xl font-bold text-white">
@@ -722,10 +722,10 @@ export default function App() {
                                                 3rd Place
                                             </h3>
                                             <p className="text-xl font-semibold text-white mb-2">
-                                                Team Gamma
+                                                Web Nerds
                                             </p>
                                             <p className="text-white/90 mb-4">
-                                                Community Resource Hub
+                                                Fitrise
                                             </p>
                                             <div className="bg-white/20 backdrop-blur rounded-lg py-2 px-4">
                                                 <p className="text-2xl font-bold text-white">
