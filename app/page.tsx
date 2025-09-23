@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 // import NewNavBar from "./components/NavBar/NewNavBar";
 import Footer from "./components/Footer/Footer";
 import Sponsors from "./components/Sponsors/Sponsors";
@@ -13,6 +14,26 @@ export default function App() {
     const circuitRef = useRef<HTMLDivElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+    // HACKMESA event images
+    const eventImages = [
+        "1F1FBBBA-B0AC-4325-991D-8D6F678F6CA1_1_105_c.jpeg",
+        "8E82934D-A333-4828-BB97-84A2E92BB3DB_1_105_c.jpeg",
+        "52643B7A-5FF2-487B-837B-1F919936C580_1_105_c.jpeg",
+        "21332DEE-FA63-4BF4-86F9-772600E201FF_1_105_c.jpeg",
+        "A4546F24-23D3-4724-8C25-AE2D1BE2024E_1_105_c.jpeg",
+        "AAEE99FD-2CD8-41EA-96DE-D799939077A1_1_105_c.jpeg",
+        "BB0A37EA-CE7D-4476-9E75-A90CBC705807_1_102_a.jpeg",
+        "D0D9DA15-CA52-4FD7-B12E-BA4D9870F20A_1_102_a.jpeg",
+        "FA245A8B-051C-4BDC-905E-3661B3E070D1_1_105_c.jpeg",
+        "DFF56D04-2ED1-4B59-8851-CDE75FADEEF1_1_102_o.jpeg",
+        "IMG_3328.jpeg",
+        "IMG_3331.jpeg",
+        "20250510_161147.jpg",
+        "20250510_161259.jpg",
+        "20250510_161414.jpg",
+        "2FAE4930-0EB3-4A49-83B2-DFEC1D6BBF12_4_5005_c.jpeg",
+    ];
 
     // Parallax effects for circuit background
     const circuitY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
@@ -50,7 +71,7 @@ export default function App() {
                     break;
                 case "ArrowRight":
                     e.preventDefault();
-                    if (selectedImage < 15) {
+                    if (selectedImage < eventImages.length - 1) {
                         setSelectedImage(selectedImage + 1);
                     }
                     break;
@@ -68,7 +89,7 @@ export default function App() {
             document.removeEventListener("keydown", handleKeyDown);
             document.body.style.overflow = "unset";
         };
-    }, [selectedImage]);
+    }, [selectedImage, eventImages.length]);
 
     // Animation variants
     const containerVariants = {
@@ -378,7 +399,7 @@ export default function App() {
                         variants={containerVariants}
                     >
                         <div className="mb-8">
-                            {"HACKMESA 2".split("").map((letter, index) => (
+                            {"HACKMESA 2.0".split("").map((letter, index) => (
                                 <motion.span
                                     key={index}
                                     custom={index}
@@ -538,17 +559,20 @@ export default function App() {
                             variants={itemVariants}
                             className="grid grid-cols-1 md:grid-cols-3 gap-6"
                         >
-                            {[1, 2, 3].map((index) => (
+                            {eventImages.slice(0, 3).map((imageName, index) => (
                                 <div
                                     key={index}
                                     className="relative h-64 rounded-xl overflow-hidden group"
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-80" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <p className="text-white text-xl font-semibold">
-                                            Event Photo {index}
-                                        </p>
-                                    </div>
+                                    <Image
+                                        src={`/images/${imageName}`}
+                                        alt={`HACKMESA event photo ${
+                                            index + 1
+                                        }`}
+                                        fill
+                                        className="object-cover transition-all duration-300 group-hover:scale-105"
+                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                    />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-300" />
                                 </div>
                             ))}
@@ -775,7 +799,7 @@ export default function App() {
                             variants={containerVariants}
                             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                         >
-                            {[...Array(16)].map((_, index) => (
+                            {eventImages.map((imageName, index) => (
                                 <motion.div
                                     key={index}
                                     variants={itemVariants}
@@ -784,12 +808,15 @@ export default function App() {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-80" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <p className="text-white text-sm font-medium">
-                                            Photo {index + 1}
-                                        </p>
-                                    </div>
+                                    <Image
+                                        src={`/images/${imageName}`}
+                                        alt={`HACKMESA event memory ${
+                                            index + 1
+                                        }`}
+                                        fill
+                                        className="object-cover transition-all duration-300 group-hover:scale-105"
+                                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                    />
                                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
 
                                     {/* Click indicator */}
@@ -1167,7 +1194,7 @@ export default function App() {
                             </button>
                         )}
 
-                        {selectedImage < 15 && (
+                        {selectedImage < eventImages.length - 1 && (
                             <button
                                 onClick={() =>
                                     setSelectedImage(selectedImage + 1)
@@ -1191,27 +1218,17 @@ export default function App() {
                         )}
 
                         {/* Image container */}
-                        <div className="w-full h-full bg-gradient-to-b from-[#1a1a2e]/90 to-[#0f0f1e]/90 backdrop-blur-md rounded-2xl border border-white/10 flex items-center justify-center">
-                            {/* Placeholder for actual image */}
-                            <div className="w-full h-full flex items-center justify-center">
-                                <div className="text-center">
-                                    <div className="text-8xl mb-4">📸</div>
-                                    <h3
-                                        className="text-4xl font-bold mb-2"
-                                        style={{
-                                            background:
-                                                "linear-gradient(135deg, #FFE550 0%, #FF6B6B 50%, #8B5CF6 100%)",
-                                            WebkitBackgroundClip: "text",
-                                            WebkitTextFillColor: "transparent",
-                                        }}
-                                    >
-                                        Photo {selectedImage + 1}
-                                    </h3>
-                                    <p className="text-gray-400 text-xl">
-                                        HACKMESA Event Memory
-                                    </p>
-                                </div>
-                            </div>
+                        <div className="w-full h-full bg-gradient-to-b from-[#1a1a2e]/90 to-[#0f0f1e]/90 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
+                            <Image
+                                src={`/images/${eventImages[selectedImage]}`}
+                                alt={`HACKMESA event photo ${
+                                    selectedImage + 1
+                                }`}
+                                fill
+                                className="object-contain"
+                                sizes="(max-width: 768px) 100vw, 80vw"
+                                priority
+                            />
                         </div>
 
                         {/* Image info */}
@@ -1219,7 +1236,8 @@ export default function App() {
                             <div className="flex justify-between items-center">
                                 <div>
                                     <p className="text-white font-semibold">
-                                        Photo {selectedImage + 1} of 16
+                                        Photo {selectedImage + 1} of{" "}
+                                        {eventImages.length}
                                     </p>
                                     <p className="text-gray-300 text-sm">
                                         HACKMESA Event Gallery
