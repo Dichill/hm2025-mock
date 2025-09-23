@@ -1113,7 +1113,9 @@ export default function App() {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <a
-                                    href="mailto:team@hackmesa.com?subject=Volunteer Application - HACKMESA 2025"
+                                    href="https://forms.office.com/r/JVUqj3DZ8U"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="inline-block bg-gradient-to-r from-[#FFE550] to-[#FFB607] text-black font-bold py-4 px-8 rounded-full hover:from-[#FFB607] hover:to-[#FF8C00] transition-all duration-300 transform hover:scale-105 shadow-lg"
                                 >
                                     Apply to Volunteer
