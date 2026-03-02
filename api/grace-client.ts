@@ -1,5 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import supabase from "@/lib/supabase/supabase-client";
+import { createMockAdapter } from "@/api/mock-adapter";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 if (!process.env.NEXT_PUBLIC_GRACE_SERVICE_URL) {
     console.warn(
@@ -8,11 +10,11 @@ if (!process.env.NEXT_PUBLIC_GRACE_SERVICE_URL) {
 }
 
 export const graceClient = axios.create({
-    baseURL:
-        process.env.NEXT_PUBLIC_GRACE_SERVICE_URL! ?? "http://localhost:4002",
+    baseURL: process.env.NEXT_PUBLIC_GRACE_SERVICE_URL ?? "http://localhost:4002",
     headers: {
         "Content-Type": "application/json",
     },
+    adapter: USE_DEMO_DATA ? createMockAdapter("grace") : undefined,
 });
 
 graceClient.interceptors.request.use(

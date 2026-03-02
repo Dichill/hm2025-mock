@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ForgotPasswordForm } from "./components/ForgotPasswordForm";
 import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase/supabase-client";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 export default function ForgotPasswordPage() {
     const [isClient, setIsClient] = useState(false);
@@ -18,6 +19,9 @@ export default function ForgotPasswordPage() {
         // Check if user is already logged in
         const checkSession = async () => {
             try {
+                if (USE_DEMO_DATA) {
+                    return;
+                }
                 const { data } = await supabase.auth.getSession();
 
                 if (data.session) {

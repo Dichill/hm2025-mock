@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase/supabase-client";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 /**
  * Custom hook to fetch and return the current authenticated user
@@ -12,6 +13,10 @@ export const useUser = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
+                if (USE_DEMO_DATA) {
+                    setUser({ id: "demo-judge-1" });
+                    return;
+                }
                 const { data, error } = await supabase.auth.getUser();
                 if (error) {
                     console.error("Error fetching user:", error);

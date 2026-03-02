@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import supabase from "@/lib/supabase/supabase-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 type PasswordResetStatus = "idle" | "submitting" | "success" | "error";
 
@@ -41,6 +42,15 @@ function ResetPasswordFormContent() {
         }
 
         try {
+            if (USE_DEMO_DATA) {
+                await new Promise((resolve) => setTimeout(resolve, 500));
+                setStatus("success");
+                setTimeout(() => {
+                    router.push("/login");
+                }, 1000);
+                return;
+            }
+
             const token = searchParams.get("token");
             if (!token) {
                 throw new Error("Password reset token is missing");

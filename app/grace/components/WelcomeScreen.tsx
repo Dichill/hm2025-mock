@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase/supabase-client";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 interface WelcomeScreenProps {
     userName: string;
@@ -14,6 +15,10 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
 
     const handleSignOut = async () => {
         try {
+            if (USE_DEMO_DATA) {
+                router.push("/");
+                return;
+            }
             await supabase.auth.signOut();
             router.push("/login");
         } catch (error) {

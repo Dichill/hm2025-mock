@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import supabase from "@/lib/supabase/supabase-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getUserData } from "@/core/user/api/user";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 export function LoginForm() {
     const [email, setEmail] = useState<string>("");
@@ -25,6 +26,9 @@ export function LoginForm() {
 
         const checkSession = async () => {
             try {
+                if (USE_DEMO_DATA) {
+                    return;
+                }
                 const { data } = await supabase.auth.getSession();
 
                 if (data.session) {
@@ -64,6 +68,21 @@ export function LoginForm() {
         setError(null);
 
         try {
+            if (USE_DEMO_DATA) {
+                if (!email.trim() || !password.trim()) {
+                    throw new Error("Email and password are required");
+                }
+                const normalizedEmail = email.toLowerCase();
+                if (normalizedEmail.includes("admin")) {
+                    router.push("/admin");
+                } else if (normalizedEmail.includes("judge")) {
+                    router.push("/grace");
+                } else {
+                    router.push("/dashboard");
+                }
+                return;
+            }
+
             const { error } = await supabase.auth.signInWithPassword({
                 email,
                 password,

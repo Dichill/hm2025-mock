@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import supabase from "@/lib/supabase/supabase-client";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 type VerificationStatusType =
     | "loading"
@@ -124,6 +125,9 @@ function VerificationContent() {
 
         const checkSession = async () => {
             try {
+                if (USE_DEMO_DATA) {
+                    return;
+                }
                 const { data } = await supabase.auth.getSession();
 
                 if (data.session) {
@@ -140,6 +144,26 @@ function VerificationContent() {
 
         const checkVerification = async () => {
             try {
+                if (USE_DEMO_DATA) {
+                    const tokenParam = searchParams.get("t");
+                    const emailParam = searchParams.get("email");
+                    if (tokenParam) {
+                        setToken(tokenParam);
+                    }
+                    const demoEmail =
+                        emailParam ||
+                        (isClient && typeof window !== "undefined"
+                            ? sessionStorage.getItem("registeredEmail")
+                            : null) ||
+                        "demo.hacker@hackmesa.org";
+                    setUserEmail(demoEmail);
+                    setVerificationStatus("pending");
+                    setSuccessMessage(
+                        "Demo mode is enabled. Enter any 6-digit code to continue."
+                    );
+                    return;
+                }
+
                 const { data: session } = await supabase.auth.getSession();
 
                 if (session?.session) {

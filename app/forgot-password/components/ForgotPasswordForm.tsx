@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import supabase from "@/lib/supabase/supabase-client";
 import Link from "next/link";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 type ForgotPasswordStatus = "idle" | "submitting" | "success" | "error";
 
@@ -31,6 +32,12 @@ export function ForgotPasswordForm() {
         }
 
         try {
+            if (USE_DEMO_DATA) {
+                await new Promise((resolve) => setTimeout(resolve, 500));
+                setStatus("success");
+                return;
+            }
+
             const redirectTo = `${window.location.origin}/reset-password`;
 
             const { error } = await supabase.auth.resetPasswordForEmail(email, {

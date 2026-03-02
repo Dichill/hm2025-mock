@@ -7,6 +7,7 @@ import { User } from "@/app/dashboard/types";
 import AdminNavBar from "./components/AdminNavBar";
 import { getUserData } from "@/core/user/api/user";
 import { UserDataResponse } from "@/core/user/types/user.dto";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 /**
  * Client-side layout component for the admin section
@@ -32,6 +33,14 @@ export default function ClientLayout({
         const checkAuth = async () => {
             try {
                 setLoading(true);
+                if (USE_DEMO_DATA) {
+                    setUser({
+                        id: "demo-admin-1",
+                        email: "admin@hackmesa.org",
+                    } as User);
+                    setIsAdmin(true);
+                    return;
+                }
                 const { data: sessionData } = await supabase.auth.getSession();
 
                 if (!sessionData.session) {
@@ -94,6 +103,10 @@ export default function ClientLayout({
      */
     const handleSignOut = async () => {
         try {
+            if (USE_DEMO_DATA) {
+                router.push("/");
+                return;
+            }
             await supabase.auth.signOut({ scope: "local" });
             router.push("/login");
         } catch (error) {

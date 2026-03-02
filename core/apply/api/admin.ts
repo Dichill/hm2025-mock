@@ -3,14 +3,7 @@ import { UpdateApplicationStatusDto } from "../types/application.dto";
 import { ApplicationResponseDto } from "../types/apply.dto";
 import axios from "axios";
 
-/**
- * Updates the status of a hackathon application and manages associated user roles.
- * When status is set to APPROVED, automatically assigns the HACKER role to the user.
- *
- * @param {UpdateApplicationStatusDto} updateData - The application ID and new status
- * @returns {Promise<ApplicationResponseDto>} The updated application data
- * @throws {Error} If the request fails or returns an error status
- */
+
 export async function updateApplicationStatus(
     updateData: UpdateApplicationStatusDto
 ): Promise<ApplicationResponseDto> {

@@ -11,6 +11,7 @@ import supabase from "@/lib/supabase/supabase-client";
 import { getUserData } from "@/core/user/api/user";
 import { User } from "@/app/grace/types";
 import { UserDataResponse } from "@/core/user/types/user.dto";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 type UserContextType = {
     user: User | null;
@@ -40,6 +41,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
+                if (USE_DEMO_DATA) {
+                    setState({
+                        user: {
+                            id: "demo-judge-1",
+                            email: "judge@hackmesa.org",
+                        } as User,
+                        userDetails: {
+                            userId: "demo-judge-1",
+                            email: "judge@hackmesa.org",
+                            roles: ["JUDGE"],
+                            emailConfirmed: true,
+                        },
+                        userName: "Demo Judge",
+                        isAuthenticated: true,
+                        userRoles: ["JUDGE"],
+                        loading: false,
+                    });
+                    return;
+                }
                 // Step 1: Check authentication status
                 const { data: sessionData } = await supabase.auth.getSession();
 

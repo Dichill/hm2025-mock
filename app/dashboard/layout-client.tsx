@@ -6,6 +6,7 @@ import DashboardNavBar from "@/app/components/DashboardNavBar/DashboardNavBar";
 import supabase from "@/lib/supabase/supabase-client";
 import { User, DashboardStatus } from "./types";
 import { getUserData } from "@/core/user/api/user";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 export default function ClientLayout({
     children,
@@ -26,6 +27,15 @@ export default function ClientLayout({
         const checkAuth = async () => {
             try {
                 setLoading(true);
+                if (USE_DEMO_DATA) {
+                    setUser({
+                        id: "demo-user-1",
+                        email: "demo.hacker@hackmesa.org",
+                    } as User);
+                    setDashboardStatus("authenticated");
+                    setUserRoles(["HACKER"]);
+                    return;
+                }
                 const { data: sessionData } = await supabase.auth.getSession();
 
                 if (!sessionData.session) {
@@ -116,6 +126,10 @@ export default function ClientLayout({
 
     const handleSignOut = async () => {
         try {
+            if (USE_DEMO_DATA) {
+                router.push("/");
+                return;
+            }
             await supabase.auth.signOut();
             setDashboardStatus("unauthenticated");
             router.push("/login");

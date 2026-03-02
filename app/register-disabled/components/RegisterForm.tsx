@@ -6,6 +6,7 @@ import { register } from "@/core/user/api/user";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase/supabase-client";
+import { USE_DEMO_DATA } from "@/core/mock/demo-mode";
 
 export function RegisterForm() {
     const [isClient, setIsClient] = useState(false);
@@ -37,6 +38,9 @@ export function RegisterForm() {
 
         const checkSession = async () => {
             try {
+                if (USE_DEMO_DATA) {
+                    return;
+                }
                 const { data } = await supabase.auth.getSession();
 
                 if (data.session) {
